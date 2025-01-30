@@ -76,3 +76,140 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Editor.js Styles */
+.codex-editor {
+  @apply font-sans;
+}
+
+.codex-editor__redactor {
+  @apply px-0 !important;
+}
+
+.ce-block__content {
+  @apply max-w-full !important;
+  @apply px-0 !important;
+}
+
+.ce-toolbar__content {
+  @apply max-w-full !important;
+  @apply px-0 !important;
+}
+
+.ce-toolbar__actions {
+  @apply right-0 !important;
+}
+
+.ce-block--selected .ce-block__content {
+  @apply bg-blue-50/50;
+}
+
+.ce-inline-toolbar {
+  @apply border border-gray-200 shadow-lg;
+}
+
+.ce-inline-toolbar__buttons {
+  @apply p-1;
+}
+
+.ce-inline-tool {
+  @apply p-2 hover:bg-gray-100 rounded;
+}
+
+.ce-inline-tool--active {
+  @apply text-blue-500;
+}
+
+.ce-conversion-toolbar {
+  @apply border border-gray-200 shadow-lg;
+}
+
+.ce-conversion-tool {
+  @apply p-2 hover:bg-gray-100;
+}
+
+.ce-conversion-tool--focused {
+  @apply bg-gray-100;
+}
+
+.ce-toolbar__plus {
+  @apply hover:bg-gray-100 rounded-lg;
+}
+
+.ce-toolbar__settings-btn {
+  @apply hover:bg-gray-100 rounded-lg;
+}
+
+/* Block Specific Styles */
+.ce-header {
+  @apply font-bold mb-4;
+}
+
+h1.ce-header {
+  @apply text-3xl;
+}
+
+h2.ce-header {
+  @apply text-2xl;
+}
+
+h3.ce-header {
+  @apply text-xl;
+}
+
+.ce-paragraph {
+  @apply leading-7 mb-4;
+}
+
+.ce-code {
+  @apply font-mono bg-gray-900 text-white p-4 rounded-lg mb-4;
+}
+
+.cdx-checklist__item {
+  @apply flex items-start mb-2;
+}
+
+.cdx-checklist__item-checkbox {
+  @apply mr-2 mt-1;
+}
+
+.cdx-checklist__item-text {
+  @apply flex-1;
+}
+
+.ce-block--selected .cdx-checklist__item {
+  @apply bg-transparent;
+}
+
+.cdx-quote {
+  @apply border-l-4 border-gray-300 pl-4 italic my-4;
+}
+
+.ce-delimiter {
+  @apply text-center text-gray-400 my-4;
+}
+
+.cdx-warning {
+  @apply bg-yellow-50 border border-yellow-200 p-4 rounded-lg my-4;
+}
+
+.cdx-warning__title {
+  @apply font-bold text-yellow-800 mb-2;
+}
+
+.cdx-warning__message {
+  @apply text-yellow-700;
+}
+
+.ce-block table {
+  @apply w-full border-collapse mb-4;
+}
+
+.ce-block td,
+.ce-block th {
+  @apply border border-gray-300 p-2;
+}
+
+.ce-block th {
+  @apply bg-gray-50 font-semibold;
+}

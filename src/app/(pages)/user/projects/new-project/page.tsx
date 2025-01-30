@@ -4,6 +4,7 @@ import placeholder from "../../../../../../public/images/placeholder.svg"
 import { LeftSidebar } from "@/components/left-sidebar"
 import { Header } from "@/components/header"
 import { RightSidebar } from "@/components/right-sidebar"
+import Editor from "@/components/editor"
 
 
 export  function NewProject() {
@@ -24,31 +25,7 @@ export  function NewProject() {
 
       <Card>
         <CardContent className="p-6">
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold mb-4">1. Fóruns Oficiais e Comunidades</h2>
-              <p className="text-muted-foreground mb-2">
-                Fóruns Oficiais: Criados pela equipe do Brio, abrangendo áreas fundamentais:
-              </p>
-              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li>Filosofia, Biologia, Física, Matemática, Política, Literatura, História e outros</li>
-                <li>Comunidades específicas (ex: Engenharia Aeroespacial, IA, Neurociência)</li>
-                <li>Moderação por usuários, com supervisão da plataforma</li>
-                <li>Destaque para comunidades mais engajadas</li>
-              </ul>
-            </div>
-
-            <div>
-              <h2 className="text-xl font-semibold mb-4">2. Colaborações e Parcerias</h2>
-              <p className="text-muted-foreground mb-2">Com Instituições de Ensino e Governo:</p>
-              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li>Concursos, bolsas de estudo e cursos acessíveis</li>
-                <li>Eventos educacionais presenciais e online</li>
-                <li>Oficinas, hackathons e desafios acadêmicos</li>
-                <li>Espaço para divulgação de oportunidades acadêmicas</li>
-              </ul>
-            </div>
-          </div>
+          <Editor />
         </CardContent>
       </Card>
     </div>
