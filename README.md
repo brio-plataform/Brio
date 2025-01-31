@@ -145,7 +145,7 @@ Serão criados pela equipe do Brio e incluem temas amplos, tradicionais e fundam
 
 ### Posicionamento Político:
 
-*   O Brio assume sua posição de esquerda radical, combatendo ideologias que promovam fascismo, opressão ou desigualdade.
+*   O Brio assume sua posição de combater ideologias que promovam fascismo, opressão ou desigualdade.
 *   Embora o foco seja o conhecimento, não há espaço para relativismo em temas que afetam diretamente a dignidade humana.
 
 ## 6. Experiência do Usuário
