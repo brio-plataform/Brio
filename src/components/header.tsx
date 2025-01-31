@@ -17,15 +17,28 @@ import {
   MessageSquare,
   Calendar,
 } from "lucide-react"
+import { useQueryState, parseAsString } from 'nuqs'
 
 export function Header() {
+  const [projectName] = useQueryState(
+    'name',
+    parseAsString.withDefault("New Project")
+  );
+  
+  const [projectDescription] = useQueryState(
+    'description',
+    parseAsString.withDefault("New Project Description")
+  );
+
   return (
     <div className="flex flex-col border-b gap-4 py-4 bg-background w-full">
       {/* Primeira Linha: Título e Estatísticas */}
       <div className="flex items-center justify-between px-6">
         <div className="flex flex-col">
-          <h1 className="text-2xl font-bold">Brio Platform</h1>
-          <p className="text-sm text-muted-foreground">Plataforma de Conhecimento Colaborativo</p>
+          <h1 className="text-2xl font-bold">{projectName}</h1>
+          <p className="text-sm text-muted-foreground">
+            {projectDescription}
+          </p>
         </div>
         <div className="flex items-center gap-4">
           {/* Estatísticas */}
