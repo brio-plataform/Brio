@@ -32,29 +32,43 @@ export function RightSidebar() {
   return (
     <div
       className={cn(
-        "relative border-l bg-muted/40 transition-all duration-300 ease-in-out",
+        "border-l bg-muted transition-all duration-300 ease-in-out fixed right-0 top-0 h-full max-w-[300px] z-10",
         isCollapsed ? "w-16" : "w-80",
       )}
     >
-      <ScrollArea className="h-full">
+      {/* Parte fixa (botão e título) */}
+      <div
+        className={cn(
+          "p-4 bg-muted fixed top-0 z-10", // Adicionei z-10 para garantir que fique acima do conteúdo
+          isCollapsed ? "w-16" : "w-80",
+        )}
+      >
+        <div className="flex items-center justify-start gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className={cn(isCollapsed ? "mx-auto" : "")}
+          >
+            {isCollapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Button>
+
+          {!isCollapsed && (
+            <>
+              <h2 className="text-lg font-semibold ml-2">Sobre o Projeto</h2>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Conteúdo rolável */}
+      <ScrollArea
+        className={cn(
+          "h-full",
+          isCollapsed ? "pt-16" : "pt-20", // Ajuste dinâmico do padding-top
+        )}
+      >
         <div className={cn("p-4", isCollapsed ? "flex flex-col items-center" : "")}>
-          <div className="flex items-center justify-start gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleSidebar}
-              className={cn("mb-4", isCollapsed ? "mx-auto" : "")}
-            >
-              {isCollapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-            </Button>
-
-            {!isCollapsed && (
-              <>
-                <h2 className="text-lg font-semibold mb-4 ml-2">Sobre o Projeto</h2>
-              </>
-            )}
-          </div>
-
           {!isCollapsed && (
             <>
               <p className="text-sm text-muted-foreground mb-6">

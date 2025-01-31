@@ -52,8 +52,8 @@ export function LeftSidebar() {
   return (
     <div
       className={cn(
-        "relative border-r bg-muted/40 transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-16" : "w-64",
+        "border-r bg-muted transition-all duration-300 ease-in-out fixed left-0 top-0 h-full z-10",
+        isCollapsed ? "w-16" : "w-[285px]",
       )}
     >
       <ScrollArea className="h-full">
