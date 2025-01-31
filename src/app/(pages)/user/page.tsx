@@ -15,6 +15,9 @@ import {
   Star,
   GitFork,
   MessageSquare,
+  Trophy,
+  Calendar,
+  Library,
 } from "lucide-react"
 import placeholder from "../../../../public/images/placeholder.svg"
 
@@ -185,6 +188,48 @@ export default function ProfilePage() {
                 ))}
               </TabsContent>
             </Tabs>
+
+            {/* Recompensas e Reconhecimento */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recompensas e Reconhecimento</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">Top Contribuidor 2023</Badge>
+                  <Badge variant="secondary">Estudo Mais Referenciado</Badge>
+                  <Badge variant="secondary">Pensador do Mês</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Eventos Participados */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Eventos Participados</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[1, 2].map((item) => (
+                    <div key={item} className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold mb-2">Conferência Internacional de Ciência de Dados 2023</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Palestra sobre "Aplicações de Machine Learning em Saúde".
+                        </p>
+                        <div className="flex gap-2">
+                          <Badge>Palestrante</Badge>
+                          <Badge>Saúde</Badge>
+                        </div>
+                      </div>
+                      <Button variant="outline">
+                        Ver Detalhes
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Right Column */}
@@ -241,6 +286,34 @@ export default function ProfilePage() {
                 <Button variant="outline" className="w-full">
                   Enviar Mensagem
                 </Button>
+              </CardContent>
+            </Card>
+
+            {/* Biblioteca Pessoal */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Biblioteca Pessoal</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[1, 2].map((item) => (
+                    <div key={item} className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold mb-2">Dom Quixote</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Clássico da literatura espanhola.
+                        </p>
+                        <div className="flex gap-2">
+                          <Badge>Literatura</Badge>
+                          <Badge>Clássico</Badge>
+                        </div>
+                      </div>
+                      <Button variant="outline">
+                        Ler Agora
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           </div>

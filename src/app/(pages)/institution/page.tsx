@@ -195,6 +195,62 @@ export default function InstitutionalProfile() {
                 ))}
               </TabsContent>
             </Tabs>
+
+            {/* Repositório Institucional */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Repositório Institucional</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[1, 2, 3].map((item) => (
+                    <div key={item} className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold mb-2">Título do Trabalho</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Descrição breve do trabalho publicado.
+                        </p>
+                        <div className="flex gap-2">
+                          <Badge>Versão 1.0</Badge>
+                          <Badge>Atualizado em 2024</Badge>
+                        </div>
+                      </div>
+                      <Button variant="ghost" size="icon">
+                        <Bookmark className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Eventos e Oportunidades */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Eventos e Oportunidades</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[1, 2].map((item) => (
+                    <div key={item} className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold mb-2">Hackathon de Inovação 2024</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Participe do maior evento de inovação da região.
+                        </p>
+                        <div className="flex gap-2">
+                          <Badge>Inscrições Abertas</Badge>
+                          <Badge>Premiação: R$ 50.000</Badge>
+                        </div>
+                      </div>
+                      <Button variant="outline">
+                        Saiba Mais
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Right Column */}
@@ -255,6 +311,60 @@ export default function InstitutionalProfile() {
                 <Button variant="outline" className="w-full">
                   Solicitar Informações
                 </Button>
+              </CardContent>
+            </Card>
+
+            {/* Ranking e Reconhecimento */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Ranking e Reconhecimento</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">Top 10 em Inovação</Badge>
+                  <Badge variant="secondary">Universidade Sustentável</Badge>
+                  <Badge variant="secondary">+1000 Citações em 2023</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Biblioteca do Brio */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Biblioteca do Brio</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[1, 2].map((item) => (
+                    <div key={item} className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold mb-2">Dom Quixote</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Clássico da literatura espanhola.
+                        </p>
+                        <div className="flex gap-2">
+                          <Badge>Literatura</Badge>
+                          <Badge>Clássico</Badge>
+                        </div>
+                      </div>
+                      <Button variant="outline">
+                        Ler Agora
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Moderação e Transparência */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Moderação e Transparência</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Nossa instituição segue as diretrizes do Brio para manter um ambiente seguro e produtivo. Qualquer conteúdo impróprio pode ser denunciado.
+                </p>
               </CardContent>
             </Card>
           </div>

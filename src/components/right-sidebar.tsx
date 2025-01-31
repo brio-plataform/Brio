@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Activity,
-  AlertCircle,
   Book,
   ChevronLeft,
   ChevronRight,
@@ -15,6 +14,11 @@ import {
   Star,
   Eye,
   GitFork,
+  Users,
+  MessageSquare,
+  Calendar,
+  Bookmark,
+  Trophy,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -34,31 +38,41 @@ export function RightSidebar() {
     >
       <ScrollArea className="h-full">
         <div className={cn("p-4", isCollapsed ? "flex flex-col items-center" : "")}>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className={cn("mb-4", isCollapsed ? "mx-auto" : "")}
-          >
-            {isCollapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-          </Button>
+          <div className="flex items-center justify-start gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className={cn("mb-4", isCollapsed ? "mx-auto" : "")}
+            >
+              {isCollapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+            </Button>
+
+            {!isCollapsed && (
+              <>
+                <h2 className="text-lg font-semibold mb-4 ml-2">Sobre o Projeto</h2>
+              </>
+            )}
+          </div>
 
           {!isCollapsed && (
             <>
-              <h2 className="text-lg font-semibold mb-4">About</h2>
               <p className="text-sm text-muted-foreground mb-6">
-                O Brio é uma plataforma de conhecimento colaborativo que visa democratizar o acesso à educação e promover debates construtivos em um ambiente digital estruturado.
+                Este projeto faz parte da plataforma Brio, promovendo conhecimento colaborativo e inovação através de debates construtivos e revisão por pares.
               </p>
             </>
           )}
 
           <div className={cn("space-y-4", isCollapsed ? "flex flex-col items-center" : "")}>
             {[
-              { icon: Book, label: "Readme" },
-              { icon: FileText, label: "MIT license" },
-              { icon: Shield, label: "Security policy" },
-              { icon: Activity, label: "Activity" },
-              { icon: AlertCircle, label: "Custom properties" },
+              { icon: Book, label: "Documentação" },
+              { icon: FileText, label: "Licença MIT" },
+              { icon: Shield, label: "Política de Segurança" },
+              { icon: Activity, label: "Atividades Recentes" },
+              { icon: Users, label: "Colaboradores" },
+              { icon: MessageSquare, label: "Discussões" },
+              { icon: Calendar, label: "Eventos Relacionados" },
+              { icon: Bookmark, label: "Recursos da Biblioteca" },
             ].map((item, index) => (
               <Button
                 key={index}
@@ -71,49 +85,56 @@ export function RightSidebar() {
             ))}
           </div>
 
-
           {!isCollapsed && (
             <>
+              {/* Estatísticas do Projeto */}
               <div className="mt-6 space-y-4">
                 <div className="flex items-center gap-2">
                   <Star className="h-4 w-4" />
                   <span className="text-sm font-medium">11.8k</span>
-                  <span className="text-sm text-muted-foreground">stars</span>
+                  <span className="text-sm text-muted-foreground">estrelas</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Eye className="h-4 w-4" />
                   <span className="text-sm font-medium">102</span>
-                  <span className="text-sm text-muted-foreground">watching</span>
+                  <span className="text-sm text-muted-foreground">visualizações</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <GitFork className="h-4 w-4" />
                   <span className="text-sm font-medium">3.1k</span>
                   <span className="text-sm text-muted-foreground">forks</span>
                 </div>
+                <div className="flex items-center gap-2">
+                  <Trophy className="h-4 w-4" />
+                  <span className="text-sm font-medium">5</span>
+                  <span className="text-sm text-muted-foreground">recompensas</span>
+                </div>
               </div>
 
+              {/* Revisões em Andamento */}
               <div className="mt-8">
                 <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                  Releases
-                  <span className="rounded-full bg-muted px-2 py-0.5 text-xs">25</span>
+                  Revisões em Andamento
+                  <span className="rounded-full bg-muted px-2 py-0.5 text-xs">3</span>
                 </h3>
                 <div className="space-y-2">
                   <div className="text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">v3.1.5 - "Spectre"</span>
-                      <span className="rounded-full bg-green-500/20 text-green-500 px-2 py-0.5 text-xs">latest</span>
+                      <span className="font-medium">Revisão: Análise de Dados</span>
+                      <span className="rounded-full bg-yellow-500/20 text-yellow-500 px-2 py-0.5 text-xs">pendente</span>
                     </div>
-                    <p className="text-muted-foreground text-xs">27 days ago</p>
+                    <p className="text-muted-foreground text-xs">2 dias atrás</p>
                   </div>
                   <Button variant="link" className="text-xs h-auto p-0">
-                    + 24 releases
+                    Ver Todas as Revisões
                   </Button>
                 </div>
               </div>
 
+              {/* Colaboradores */}
               <div className="mt-8">
                 <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                  Contributors
+                  Colaboradores
                   <span className="rounded-full bg-muted px-2 py-0.5 text-xs">83</span>
                 </h3>
                 <div className="flex flex-wrap gap-1">

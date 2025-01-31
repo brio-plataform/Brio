@@ -38,7 +38,7 @@ export default function Home() {
     <LeftSidebar />
     <div className="flex-1">
       <Header />
-      <NewProject />
+        <NewProject />
     </div>
     <RightSidebar />
     

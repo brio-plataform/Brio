@@ -119,7 +119,7 @@ export default function Editor() {
     <div className="relative">
       <div
         ref={holderRef}
-        className="min-h-[500px] w-full bg-white rounded-lg shadow-sm p-8"
+        className="min-h-[500px] w-full rounded-lg shadow-sm p-8"
       />
     </div>
   );

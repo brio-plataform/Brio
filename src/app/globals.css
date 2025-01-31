@@ -41,30 +41,30 @@ body {
     --radius: 0.5rem;
   }
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 240 10% 10%; /* Um pouco mais claro que o original */
+    --foreground: 0 0% 90%; /* Um pouco mais escuro que o branco puro */
+    --card: 240 10% 12%; /* Mais claro que o fundo principal */
+    --card-foreground: 0 0% 90%;
+    --popover: 240 10% 12%; /* Igual ao card */
+    --popover-foreground: 0 0% 90%;
+    --primary: 220 70% 60%; /* Azul mais vibrante */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 10% 15%; /* Mais claro que o fundo */
+    --secondary-foreground: 0 0% 90%;
+    --muted: 240 10% 18%; /* Mais claro que o secondary */
+    --muted-foreground: 240 5% 70%; /* Mais claro que o original */
+    --accent: 240 10% 20%; /* Mais claro que o muted */
+    --accent-foreground: 0 0% 90%;
+    --destructive: 0 62.8% 40%; /* Vermelho mais vibrante */
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --border: 240 10% 20%; /* Mais claro que o original */
+    --input: 240 10% 18%; /* Igual ao muted */
+    --ring: 240 10% 30%; /* Mais claro que o original */
+    --chart-1: 220 70% 60%; /* Azul mais vibrante */
+    --chart-2: 160 60% 50%; /* Verde mais vibrante */
+    --chart-3: 30 80% 60%; /* Laranja mais vibrante */
+    --chart-4: 280 65% 65%; /* Roxo mais vibrante */
+    --chart-5: 340 75% 60%; /* Rosa mais vibrante */
   }
 }
 
@@ -105,7 +105,7 @@ body {
 }
 
 .ce-inline-toolbar {
-  @apply border border-gray-200 shadow-lg;
+  @apply shadow-lg;
 }
 
 .ce-inline-toolbar__buttons {
@@ -133,11 +133,11 @@ body {
 }
 
 .ce-toolbar__plus {
-  @apply hover:bg-gray-100 rounded-lg;
+  @apply text-white hover:text-gray-900 hover:bg-gray-200 rounded-lg;
 }
 
 .ce-toolbar__settings-btn {
-  @apply hover:bg-gray-100 rounded-lg;
+  @apply text-white hover:text-gray-900 hover:bg-gray-200 rounded-lg;
 }
 
 /* Block Specific Styles */
