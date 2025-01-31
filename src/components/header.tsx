@@ -53,6 +53,10 @@ import { useQueryState, parseAsString } from 'nuqs'
 import { useState, useEffect } from 'react'
 import { ButtonSelect } from "@/components/ui/button-select"
 
+  // Adicione no início do arquivo
+import axios from 'axios';
+import { useEditorStore } from '@/store/useEditorStore';
+
 interface Collaborator {
   id: string;
   name: string;
@@ -98,11 +102,38 @@ export function Header() {
   const handleAutoSave = async () => {
     setAutoSaveStatus("Salvando...");
     try {
-      // Simulação de salvamento
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const projectContent = useEditorStore.getState().projectContent;
+      
+      if (!projectContent) {
+        throw new Error('Nenhum conteúdo para salvar');
+      }
+  
+      // Obter usuário logado (exemplo básico)
+      const userId = "1";
+      const projectId = "1";
+  
+      // Buscar dados atuais
+      const userResponse = await axios.get(`http://localhost:3001/users/${userId}`);
+      const userData = userResponse.data;
+  
+      // Atualizar projeto específico
+      const updatedProjects = userData.projects.map((project: any) => 
+        project.id === projectId ? { 
+          ...project, 
+          content: JSON.parse(projectContent),
+          updatedAt: new Date().toISOString()
+        } : project
+      );
+  
+      // Enviar atualização
+      await axios.patch(`http://localhost:3001/users/${userId}`, {
+        projects: updatedProjects
+      });
+  
       setAutoSaveStatus("Salvo às " + new Date().toLocaleTimeString());
       setHasChanges(false);
     } catch (error) {
+      console.error('Erro ao salvar:', error);
       setAutoSaveStatus("Erro ao salvar");
     }
   };

@@ -1,9 +1,13 @@
+"use client"
+
 import { Card, CardContent } from "./ui/card";
 import { ProjectBanner } from "./project/ProjectBanner";
 import { ProjectInfo } from "./project/ProjectInfo";
-import Editor from "./Editor";
+import Editor from "./editor";
+import { useEditorStore } from "@/store/useEditorStore";
 
 export function NewProject() {
+  const projectContent = useEditorStore((state) => state.projectContent);
 
   return (
     <div className="p-6 w-full">
