@@ -167,6 +167,57 @@ Serão criados pela equipe do Brio e incluem temas amplos, tradicionais e fundam
 *   **Acesso Gratuito, com Benefícios Extras:**
     *   Gratuito para acesso geral, com assinaturas ou doações opcionais para acesso a recursos avançados ou eventos premium.
 
+---
+
+### 7.1 Afiliações Institucionais e Perfis de Organizações
+
+#### Perfis Institucionais
+- **Criação de Perfis:**  
+  Instituições de ensino, pesquisa, empresas e ONGs podem criar perfis verificados.  
+  - *Exemplo:* Universidades, escolas, laboratórios.  
+  - **Verificação:** Via e-mail institucional (ex: `@usp.br`) ou documentação oficial.  
+
+- **Funcionalidades:**  
+  - Exibição de trabalhos acadêmicos (TCCs, artigos, projetos).  
+  - Estatísticas de contribuição (ex: "10.000 estudos publicados por alunos desta universidade").  
+  - Espaço para eventos, editais e oportunidades de bolsas.  
+
+#### Vínculo de Usuários a Instituições
+- **Afiliação Voluntária:**  
+  Usuários podem vincular-se a instituições como alunos, professores ou colaboradores.  
+  - *Exemplo:* Um aluno da UFMG publica seu TCC no perfil da universidade.  
+
+- **Validação:**  
+  - Instituições de ensino: e-mail institucional ou matrícula.  
+  - Empresas/ONGs: Aprovação pelo administrador do perfil.  
+
+#### Repositório Institucional
+- **Armazenamento de Trabalhos:**  
+  - TCCs, dissertações, teses e projetos atualizáveis.  
+  - *Exemplo:* Um projeto de 2015 pode ser aprimorado em 2024 por novos alunos.  
+
+- **Versionamento Coletivo:**  
+  - Membros podem propor melhorias, com histórico público de contribuições.  
+
+#### Visibilidade e Colaboração Interinstitucional
+- **Ranking de Instituições:**  
+  - Destaque para instituições com maior impacto (citações, engajamento).  
+  - Métricas: impacto social, inovação e relevância.  
+
+- **Parcerias entre Instituições:**  
+  - Facilidade para projetos colaborativos entre universidades, empresas e ONGs.  
+  - *Exemplo:* Pesquisa sobre energia solar entre USP, Harvard e uma startup.  
+
+#### Benefícios para Instituições
+- **Divulgação Científica:**  
+  - Perfis como vitrines para atrair alunos e patrocínios.  
+- **Dados Analíticos:**  
+  - Relatórios sobre tendências de pesquisa e impacto social.  
+- **Combate ao Desperdício:**  
+  - Evitar que trabalhos acadêmicos sejam esquecidos.  
+
+---
+
 ## 8. Biblioteca Integrada
 
 ### Livros Disponíveis para Todos:
@@ -193,3 +244,36 @@ Serão criados pela equipe do Brio e incluem temas amplos, tradicionais e fundam
 
 *  Ferramentas avançadas para pesquisa dentro dos livros (busca por palavras-chave, trechos específicos, etc.).
 *  Capacidade de citar trechos diretamente em estudos e artigos criados no Brio.
+
+## Integração com Funcionalidades Existentes
+- **Criação de Conteúdo (Seção 3.1):**  
+  Opção de vincular conteúdo a uma instituição durante a publicação.  
+  - *Exemplo:* Ao publicar um TCC, selecione "Vincular à Universidade Federal do Rio de Janeiro".  
+
+- **Feed Personalizado (Seção 3.5):**  
+  Usuários podem seguir perfis institucionais e receber atualizações.  
+  - *Exemplo:* Notificações sobre novos projetos da UNESP.  
+
+- **Biblioteca Integrada (Seção 8):**  
+  Busca por instituição + área do conhecimento (ex: "TCCs de Engenharia da Poli-USP").  
+
+- **Recompensas (Seção 3.4):**  
+  Selos de qualidade para instituições (ex: "Universidade Sustentável").  
+
+---
+
+## Posicionamento Político
+- **Compromisso Ético:** Combate a fascismo, opressão e desigualdade.  
+- **Sem Relativismo:** Não há espaço para discursos que afetem a dignidade humana.  
+
+---
+
+## Próximos Passos
+- **MVP Previsto:** Até o final do ano.  
+- **Open-Source:** Colabore no [GitHub]([https://github.com](https://github.com/ompo-dev/Brio)).  
+- **Nome Placeholder:** "Brio" pode ser alterado.  
+
+---
+
+**Slogan:**  
+*"Conhecimento, do povo, para o povo, pelo povo."*
