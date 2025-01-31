@@ -1,11 +1,7 @@
-import { NewProject } from "./newProject";
-import { Header } from "./header";
-
-export function Main() {
+export function Main({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col w-full">
-      <Header />
-      <NewProject />
+      {children}
     </div>
   )
 }

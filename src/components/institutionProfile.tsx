@@ -23,7 +23,7 @@ import placeholder from "../../public/images/placeholder.svg"
 
 export default function InstitutionalProfile() {
   return (
-    <div className="max-h-screen p-4 sm:p-8">
+    <div className="min-h-screen bg-background p-4 sm:p-8 w-full">
       <div className="mx-auto">
         {/* Header Section */}
         <div className="mb-16">
