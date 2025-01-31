@@ -1,5 +1,5 @@
 import { LeftSidebar } from "@/components/left-sidebar";
-import { RightSidebar } from "@/components/right-sidebar";
+import { Main } from "@/components/Main";
 import UserProfile from "@/components/userProfile";
 
 
@@ -10,10 +10,9 @@ export default function ProfilePage() {
           <LeftSidebar />
         </div>
         <div className="flex-1 transition-all duration-300">
-          <UserProfile />
-        </div>
-        <div className="sticky top-0 h-screen">
-          <RightSidebar />
+          <Main>
+            <UserProfile />
+          </Main>
         </div>
       </div>
   )
