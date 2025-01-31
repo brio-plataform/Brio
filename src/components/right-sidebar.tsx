@@ -20,6 +20,7 @@ import {
   Trophy,
   ChevronDown,
   LucideIcon,
+  ChevronRight,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Progress } from "@/components/ui/progress"
@@ -219,11 +220,11 @@ export function RightSidebar() {
                   onClick={toggleSidebar}
                   className={cn(isCollapsed ? "mx-auto" : "")}
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  {isCollapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right">
-                <p>{isCollapsed ? "Expandir sidebar" : "Recolher sidebar"}</p>
+                <p>{isCollapsed ? "Abrir" : "Fechar"}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

@@ -139,12 +139,12 @@ export function Header() {
       <div className="flex items-center justify-between px-6">
         <div className="flex flex-col gap-2 flex-1">
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-6">
+                <h1 className="text-2xl font-bold">{projectName}</h1>
                 <ButtonSelect
                   value={documentType}
                   onChange={(value) => setDocumentType(value as 'article' | 'thesis' | 'book' | 'research')}
                 />
-                <h1 className="text-2xl font-bold">{projectName}</h1>
               </div>
               <p className="text-sm text-muted-foreground mt-1">
                 {projectDescription}
@@ -159,7 +159,7 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
-                <Globe className="h-4 w-4" />
+                {visibility === 'private' ? <Lock className="h-4 w-4" /> : visibility === 'public' ? <Globe className="h-4 w-4" /> : <Building className="h-4 w-4" />}
                 {visibility === 'private' ? 'Privado' : visibility === 'public' ? 'Público' : 'Institucional'}
                 <ChevronDown className="h-4 w-4" />
               </Button>
