@@ -31,7 +31,7 @@ export function Header() {
   );
 
   return (
-    <div className="flex flex-col border-b gap-4 py-4 bg-background w-full">
+    <div className="flex flex-col border-b gap-4 py-4 bg-background w-full sticky top-0 z-40">
       {/* Primeira Linha: Título e Estatísticas */}
       <div className="flex items-center justify-between px-6">
         <div className="flex flex-col">

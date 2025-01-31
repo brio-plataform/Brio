@@ -32,8 +32,8 @@ export function RightSidebar() {
   return (
     <div
       className={cn(
-        "border-l bg-muted transition-all duration-300 ease-in-out fixed right-0 top-0 h-full max-w-[300px]",
-        isCollapsed ? "w-16" : "w-80",
+        "border-l bg-muted transition-all duration-300 ease-in-out h-full",
+        isCollapsed ? "w-16" : "w-[300px]",
       )}
     >
       {/* Parte fixa (botão e título) */}

@@ -52,7 +52,7 @@ export function LeftSidebar() {
   return (
     <div
       className={cn(
-        "border-r bg-muted transition-all duration-300 ease-in-out fixed left-0 top-0 h-full",
+        "border-r bg-muted transition-all duration-300 ease-in-out h-full",
         isCollapsed ? "w-16" : "w-[285px]",
       )}
     >
