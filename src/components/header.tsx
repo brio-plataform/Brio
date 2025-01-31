@@ -90,14 +90,7 @@ export function Header() {
   const [aiAssistant, setAiAssistant] = useState(false);
   const [currentVersion, setCurrentVersion] = useState("1.0.0");
   const [hasChanges, setHasChanges] = useState(false);
-
-  // Auto-save melhorado
-  useEffect(() => {
-    if (hasChanges) {
-      const timer = setTimeout(() => handleAutoSave(), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [hasChanges]);
+  const [projectId] = useState("1");
 
   const handleAutoSave = async () => {
     setAutoSaveStatus("Salvando...");
@@ -108,26 +101,10 @@ export function Header() {
         throw new Error('Nenhum conteúdo para salvar');
       }
   
-      // Obter usuário logado (exemplo básico)
-      const userId = "1";
-      const projectId = "1";
-  
-      // Buscar dados atuais
-      const userResponse = await axios.get(`http://localhost:3001/users/${userId}`);
-      const userData = userResponse.data;
-  
-      // Atualizar projeto específico
-      const updatedProjects = userData.projects.map((project: any) => 
-        project.id === projectId ? { 
-          ...project, 
-          content: JSON.parse(projectContent),
-          updatedAt: new Date().toISOString()
-        } : project
-      );
-  
-      // Enviar atualização
-      await axios.patch(`http://localhost:3001/users/${userId}`, {
-        projects: updatedProjects
+      // Atualizar diretamente no endpoint de projetos
+      await axios.patch(`http://localhost:3001/projects/${projectId}`, {
+        content: JSON.parse(projectContent),
+        updatedAt: new Date().toISOString()
       });
   
       setAutoSaveStatus("Salvo às " + new Date().toLocaleTimeString());
