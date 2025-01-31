@@ -134,19 +134,18 @@ export function LeftSidebar() {
   const renderMenuItem = (item: MenuItem) => {
     if (item.items) {
       return (
-        <Collapsible
-          key={item.label}
-          open={openSections.includes(item.label)}
-          onOpenChange={() => toggleSection(item.label)}
-        >
-          <CollapsibleTrigger asChild>
-            <TooltipProvider delayDuration={300}>
-              <Tooltip>
-                <TooltipTrigger asChild>
+        <TooltipProvider key={item.label} delayDuration={300}>
+          <Tooltip>
+            <Collapsible
+              open={openSections.includes(item.label)}
+              onOpenChange={() => toggleSection(item.label)}
+            >
+              <TooltipTrigger asChild>
+                <CollapsibleTrigger asChild>
                   <Button
                     variant="ghost"
                     className={cn(
-                      "w-full justify-start",
+                      "w-full justify-between",
                       isCollapsed && "w-10 h-10 p-0",
                     )}
                   >
@@ -160,39 +159,39 @@ export function LeftSidebar() {
                     {!isCollapsed && (
                       <ChevronDown
                         className={cn(
-                          "ml-auto h-4 w-4 transition-transform",
+                          "h-4 w-4 transition-transform",
                           openSections.includes(item.label) && "transform rotate-180"
                         )}
                       />
                     )}
                   </Button>
-                </TooltipTrigger>
-                {isCollapsed && (
-                  <TooltipContent side="right">
-                    <p>{item.label}</p>
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            </TooltipProvider>
-          </CollapsibleTrigger>
-          {!isCollapsed && (
-            <CollapsibleContent>
-              {item.items.map((subItem, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  asChild
-                  className="w-full justify-start pl-8"
-                >
-                  <Link href={subItem.href || "#"}>
-                    <subItem.icon className="h-4 w-4 mr-2" />
-                    <span>{subItem.label}</span>
-                  </Link>
-                </Button>
-              ))}
-            </CollapsibleContent>
-          )}
-        </Collapsible>
+                </CollapsibleTrigger>
+              </TooltipTrigger>
+              {isCollapsed && (
+                <TooltipContent side="right">
+                  <p>{item.label}</p>
+                </TooltipContent>
+              )}
+              {!isCollapsed && (
+                <CollapsibleContent className="py-2">
+                  {item.items.map((subItem, index) => (
+                    <Button
+                      key={index}
+                      variant="ghost"
+                      asChild
+                      className="w-full justify-start pl-8"
+                    >
+                      <Link href={subItem.href || "#"}>
+                        <subItem.icon className="h-4 w-4 mr-2" />
+                        <span>{subItem.label}</span>
+                      </Link>
+                    </Button>
+                  ))}
+                </CollapsibleContent>
+              )}
+            </Collapsible>
+          </Tooltip>
+        </TooltipProvider>
       )
     }
 

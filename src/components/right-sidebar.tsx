@@ -175,40 +175,29 @@ export function RightSidebar() {
   ]
 
   const renderButton = (section: MenuItem) => (
-    <TooltipProvider key={section.title} delayDuration={300}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            className={cn(
-              "w-full justify-start",
-              isCollapsed && "w-10 h-10 p-0",
-            )}
-          >
-            <div className={cn(
-              "flex items-center",
-              isCollapsed && "w-full justify-center"
-            )}>
-              <section.icon className="h-4 w-4" />
-              {!isCollapsed && <span className="ml-2">{section.title}</span>}
-            </div>
-            {!isCollapsed && (
-              <ChevronDown
-                className={cn(
-                  "ml-auto h-4 w-4 transition-transform",
-                  openSections.includes(section.title) && "transform rotate-180"
-                )}
-              />
-            )}
-          </Button>
-        </TooltipTrigger>
-        {isCollapsed && (
-          <TooltipContent side="right">
-            <p>{section.title}</p>
-          </TooltipContent>
-        )}
-      </Tooltip>
-    </TooltipProvider>
+    <Button
+      variant="ghost"
+      className={cn(
+        "w-full justify-between",
+        isCollapsed && "w-10 h-10 p-0",
+      )}
+    >
+      <div className={cn(
+        "flex items-center",
+        isCollapsed && "w-full justify-center"
+      )}>
+        <section.icon className="h-4 w-4" />
+        {!isCollapsed && <span className="ml-2">{section.title}</span>}
+      </div>
+      {!isCollapsed && (
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 transition-transform",
+            openSections.includes(section.title) && "transform rotate-180"
+          )}
+        />
+      )}
+    </Button>
   )
 
   return (
@@ -251,20 +240,30 @@ export function RightSidebar() {
           )}
 
           {sections.map((section) => (
-            <Collapsible
-              key={section.title}
-              open={openSections.includes(section.title)}
-              onOpenChange={() => toggleSection(section.title)}
-            >
-              <CollapsibleTrigger asChild>
-                {renderButton(section)}
-              </CollapsibleTrigger>
-              {!isCollapsed && (
-                <CollapsibleContent className="py-2">
-                  {section.content}
-                </CollapsibleContent>
-              )}
-            </Collapsible>
+            <TooltipProvider key={section.title} delayDuration={300}>
+              <Tooltip>
+                <Collapsible
+                  open={openSections.includes(section.title)}
+                  onOpenChange={() => toggleSection(section.title)}
+                >
+                  <TooltipTrigger asChild>
+                    <CollapsibleTrigger asChild>
+                      {renderButton(section)}
+                    </CollapsibleTrigger>
+                  </TooltipTrigger>
+                  {isCollapsed && (
+                    <TooltipContent side="right">
+                      <p>{section.title}</p>
+                    </TooltipContent>
+                  )}
+                  {!isCollapsed && (
+                    <CollapsibleContent className="py-2">
+                      {section.content}
+                    </CollapsibleContent>
+                  )}
+                </Collapsible>
+              </Tooltip>
+            </TooltipProvider>
           ))}
 
           {!isCollapsed && (
