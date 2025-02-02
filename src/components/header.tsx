@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select, SelectValue, SelectTrigger, SelectItem, SelectLabel, SelectGroup, SelectContent } from "@/components/ui/select"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -17,21 +16,16 @@ import {
   Tag,
   Search,
   Plus,
-  Code,
   Eye,
   GitFork,
-  Star,
   Users,
-  Book,
   MessageSquare,
-  Calendar,
   Save,
   Share,
   Settings,
   History,
   FileText,
   Download,
-  Upload,
   Clock,
   Brain,
   Library,
@@ -40,22 +34,17 @@ import {
   Globe,
   School,
   Building,
-  Award,
-  BookOpen,
-  Bookmark,
-  AlertCircle,
-  CheckCircle,
   Coffee,
   Activity,
   BarChart2
 } from "lucide-react"
-import { useQueryState, parseAsString } from 'nuqs'
+import { useQueryState } from 'nuqs'
 import { useState, useEffect } from 'react'
 import { ButtonSelect } from "@/components/ui/button-select"
-
-  // Adicione no início do arquivo
-import axios from 'axios';
-import { useEditorStore } from '@/store/useEditorStore';
+import { useGetProject } from '@/hooks/useGetProject'
+import { useUpdateProject } from '@/hooks/useUpdateProject'
+import { useParams } from 'next/navigation'
+import { useEditorStore } from '@/store/useEditorStore'
 
 interface Collaborator {
   id: string;
@@ -65,53 +54,178 @@ interface Collaborator {
   status: 'online' | 'offline' | 'away';
 }
 
-interface Institution {
-  id: string;
-  name: string;
-  type: 'university' | 'research' | 'company';
-}
-
 export function Header() {
-  // Estados principais
-  const [projectName, setProjectName] = useQueryState('name', parseAsString.withDefault("Novo Estudo"));
-  const [projectDescription, setProjectDescription] = useQueryState('description', parseAsString.withDefault("Descrição do Estudo"));
-  const [isEditing, setIsEditing] = useState(false);
-  const [autoSaveStatus, setAutoSaveStatus] = useState("Salvo");
+  const params = useParams();
+  const projectId = params.id as string;
+  
+  const { 
+    name: initialName, 
+    description: initialDescription, 
+    updatedAt,
+    versions = [],
+    content,
+    banner,
+    logo,
+    wordCount: initialWordCount,
+    citations: initialCitations,
+    model: initialModel,
+    visibility: initialVisibility,
+    progress: initialProgress,
+    type: initialType
+  } = useGetProject(projectId);
+
+  const { 
+    updateName, 
+    updateDescription, 
+    updateContent,
+    updateBanner,
+    updateLogo,
+    updateWordCount,
+    updateCitations,
+    updateModel,
+    updateVisibility,
+    updateProgress,
+    updateType,
+    isLoading: isSaving 
+  } = useUpdateProject(projectId);
+
+  // Usar useQueryState para nome e descrição com configuração de tipo
+  const [projectName, setProjectName] = useQueryState('name', {
+    defaultValue: "",
+    parse: (value) => value || ""
+  });
+  
+  const [projectDescription, setProjectDescription] = useQueryState('description', {
+    defaultValue: "",
+    parse: (value) => value || ""
+  });
+  
+  // Outros estados locais
+  const [documentType, setDocumentType] = useState<'article' | 'thesis' | 'book' | 'research'>(initialModel || 'article');
+  const [visibility, setVisibility] = useState<'private' | 'public' | 'institutional'>(initialVisibility || 'private');
+  const [progress, setProgress] = useState(initialProgress || 0);
+  const [wordCount, setWordCount] = useState(initialWordCount || 0);
+  const [citationCount, setCitationCount] = useState(initialCitations?.length || 0);
+
+  // Update states when initial data changes - só usa API se não tiver na URL
+  useEffect(() => {
+    if (projectName === "" && initialName) setProjectName(initialName);
+    if (projectDescription === "" && initialDescription) setProjectDescription(initialDescription);
+    if (initialModel) setDocumentType(initialModel);
+    if (initialVisibility) setVisibility(initialVisibility);
+    if (initialProgress) setProgress(initialProgress);
+    if (initialWordCount) setWordCount(initialWordCount);
+    if (initialCitations) setCitationCount(initialCitations.length);
+  }, [initialName, initialDescription, initialModel, initialVisibility, initialProgress, initialWordCount, initialCitations, setProjectName, setProjectDescription, projectName, projectDescription]);
+
+  // Handle model type change
+  const handleModelChange = async (value: 'article' | 'thesis' | 'book' | 'research') => {
+    setDocumentType(value);
+    try {
+      await updateModel(value);
+    } catch (error) {
+      console.error('Error updating model:', error);
+      setDocumentType(documentType); // Revert on error
+    }
+  };
+
+  // Handle progress change with form event
+  const handleProgressChange = async (event: React.FormEvent<HTMLDivElement>) => {
+    // Get the value from the progress element
+    const newProgress = Number((event.target as HTMLProgressElement).value);
+    setProgress(newProgress);
+    try {
+      await updateProgress(newProgress);
+    } catch (error) {
+      console.error('Error updating progress:', error);
+      setProgress(progress); // Revert on error
+    }
+  };
+
+  // Handle word count change
+  const handleWordCountChange = async (newCount: number) => {
+    setWordCount(newCount);
+    try {
+      await updateWordCount(newCount);
+    } catch (error) {
+      console.error('Error updating word count:', error);
+      setWordCount(wordCount); // Revert on error
+    }
+  };
+
+  // Modify the ButtonSelect onChange handler
+  const handleButtonSelectChange = (value: string) => {
+    handleModelChange(value as 'article' | 'thesis' | 'book' | 'research');
+  };
+
+  const [autoSaveStatus, setAutoSaveStatus] = useState(isSaving ? "Salvando..." : "Salvo");
   
   // Estados adicionais
-  const [documentType, setDocumentType] = useState<'article' | 'thesis' | 'book' | 'research'>('article');
-  const [visibility, setVisibility] = useState<'private' | 'public' | 'institutional'>('private');
-  const [progress, setProgress] = useState(0);
-  const [wordCount, setWordCount] = useState(0);
-  const [citationCount, setCitationCount] = useState(0);
   const [lastEdited, setLastEdited] = useState<Date>(new Date());
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
-  const [institution, setInstitution] = useState<Institution | null>(null);
   const [aiAssistant, setAiAssistant] = useState(false);
-  const [currentVersion, setCurrentVersion] = useState("1.0.0");
+  const [currentVersion, setCurrentVersion] = useState<string>("1.0.0");
   const [hasChanges, setHasChanges] = useState(false);
-  const [projectId] = useState("1");
+
+  const [projectBanner, setProjectBanner] = useQueryState('banner', {
+    defaultValue: banner || "",
+    parse: (value) => value || banner || ""
+  });
+
+  const [projectLogo, setProjectLogo] = useQueryState('logo', {
+    defaultValue: logo || "",
+    parse: (value) => value || logo || ""
+  });
 
   const handleAutoSave = async () => {
     setAutoSaveStatus("Salvando...");
     try {
-      const projectContent = useEditorStore.getState().projectContent;
+      const projectContent = useEditorStore.getState().projectContent || '{}';
       
-      if (!projectContent) {
-        throw new Error('Nenhum conteúdo para salvar');
-      }
-  
-      // Atualizar diretamente no endpoint de projetos
-      await axios.patch(`http://localhost:3001/projects/${projectId}`, {
-        content: JSON.parse(projectContent),
-        updatedAt: new Date().toISOString()
-      });
-  
+      await Promise.all([
+        updateName(projectName),
+        updateDescription(projectDescription),
+        updateContent(JSON.parse(projectContent)),
+        updateBanner(projectBanner),
+        updateLogo(projectLogo),
+        updateWordCount(wordCount),
+        updateModel(documentType),
+        updateVisibility(visibility),
+        updateProgress(progress),
+        updateType(initialType || 'institutional')
+      ]);
+
       setAutoSaveStatus("Salvo às " + new Date().toLocaleTimeString());
       setHasChanges(false);
     } catch (error) {
       console.error('Erro ao salvar:', error);
       setAutoSaveStatus("Erro ao salvar");
+    }
+  };
+
+  // Update lastEdited when project updates
+  useEffect(() => {
+    if (updatedAt) {
+      setLastEdited(new Date(updatedAt));
+    }
+  }, [updatedAt]);
+
+  // Update currentVersion when versions change
+  useEffect(() => {
+    const latestVersion = versions[versions.length - 1];
+    if (latestVersion) {
+      setCurrentVersion(latestVersion.version);
+    }
+  }, [versions]);
+
+  // Handle visibility change
+  const handleVisibilityChange = async (value: 'private' | 'public' | 'institutional') => {
+    setVisibility(value);
+    try {
+      await updateVisibility(value);
+    } catch (error) {
+      console.error('Error updating visibility:', error);
+      setVisibility(visibility); // Revert on error
     }
   };
 
@@ -138,7 +252,11 @@ export function Header() {
             <Brain className="h-3 w-3 mr-1" />
             IA Assistente {aiAssistant ? 'Ativo' : 'Inativo'}
           </Button>
-          <Progress value={progress} className="w-20 h-2" />
+          <Progress 
+            value={progress} 
+            className="w-20 h-2" 
+            onChange={handleProgressChange}
+          />
           <span className="text-xs text-muted-foreground">{progress}% concluído</span>
         </div>
       </div>
@@ -148,14 +266,14 @@ export function Header() {
         <div className="flex flex-col gap-2 flex-1">
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-6">
-                <h1 className="text-2xl font-bold">{projectName}</h1>
+                <h1 className="text-2xl font-bold">{projectName || ''}</h1>
                 <ButtonSelect
                   value={documentType}
-                  onChange={(value) => setDocumentType(value as 'article' | 'thesis' | 'book' | 'research')}
+                  onChange={handleButtonSelectChange}
                 />
               </div>
               <p className="text-sm text-muted-foreground mt-1">
-                {projectDescription}
+                {projectDescription || ''}
               </p>
             </div>
         </div>
@@ -173,13 +291,13 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setVisibility('private')}>
+              <DropdownMenuItem onClick={() => handleVisibilityChange('private')}>
                 <Lock className="h-4 w-4 mr-2" /> Privado
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setVisibility('public')}>
+              <DropdownMenuItem onClick={() => handleVisibilityChange('public')}>
                 <Globe className="h-4 w-4 mr-2" /> Público
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setVisibility('institutional')}>
+              <DropdownMenuItem onClick={() => handleVisibilityChange('institutional')}>
                 <Building className="h-4 w-4 mr-2" /> Institucional
               </DropdownMenuItem>
             </DropdownMenuContent>

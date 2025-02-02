@@ -31,7 +31,17 @@ export default function Editor({ initialContent, editable }: EditorProps) {
   };
 
   const editor = useCreateBlockNote({
-    initialContent: initialContent ? JSON.parse(initialContent) as PartialBlock[] : undefined,
+    initialContent: initialContent 
+      ? (Array.isArray(JSON.parse(initialContent)) 
+          ? JSON.parse(initialContent) 
+          : [{
+              type: "paragraph",
+              content: []
+            }]) as PartialBlock[]
+      : [{
+          type: "paragraph",
+          content: []
+        }],
   });
 
   useEffect(() => {

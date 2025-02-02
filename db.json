@@ -11,57 +11,29 @@
     {
       "id": "1",
       "userId": "1",
-      "name": "Project 1",
-      "description": "Project 1 description",
-      "content": [
+      "name": "Novo Estudo meud eu dvsdvds",
+      "description": "Descrição do Estud wsdwefwefwe o fewecwecwec",
+      "logo": "",
+      "createdAt": "2025-01-31T23:47:47.093Z",
+      "banner": "",
+      "wordCount": 0,
+      "citations": [],
+      "model": "thesis",
+      "visibility": "public",
+      "progress": 0,
+      "type": "institutional",
+      "version": [
         {
-          "id": "08291cb0-c652-41f2-8247-d14dd2618e14",
-          "type": "paragraph",
-          "props": {
-            "textColor": "default",
-            "backgroundColor": "default",
-            "textAlignment": "left"
-          },
-          "content": [
-            {
-              "type": "text",
-              "text": "dxdgsdgsgb",
-              "styles": {}
-            }
-          ],
-          "children": []
+          "version": "1.0.0",
+          "updatedAt": "2025-01-31T23:47:47.093Z"
         },
         {
-          "id": "8b6b1c14-90de-4074-849e-10c50a411e97",
-          "type": "heading",
-          "props": {
-            "textColor": "default",
-            "backgroundColor": "default",
-            "textAlignment": "left",
-            "level": 1
-          },
-          "content": [
-            {
-              "type": "text",
-              "text": "fsdgsrghergerhgert",
-              "styles": {}
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "26389eed-3e50-4e3b-9fd0-6203a03beac8",
-          "type": "paragraph",
-          "props": {
-            "textColor": "default",
-            "backgroundColor": "default",
-            "textAlignment": "left"
-          },
-          "content": [],
-          "children": []
+          "version": "1.0.1",
+          "updatedAt": "2025-01-31T23:47:47.093Z"
         }
       ],
-      "updatedAt": "2025-01-31T23:45:33.893Z"
+      "content": {},
+      "updatedAt": "2025-02-02T18:17:24.463Z"
     }
   ]
 }

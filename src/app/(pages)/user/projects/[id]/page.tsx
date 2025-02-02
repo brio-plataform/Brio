@@ -1,53 +1,43 @@
 "use client";
 
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { LeftSidebar } from "@/components/left-sidebar";
 import { RightSidebar } from "@/components/right-sidebar";
 import { Main } from "@/components/Main";
 import { Header } from "@/components/header";
 import { NewProject } from "@/components/newProject";
+import { useGetProject } from '@/hooks/useGetProject';
 
 export default function ProjectPage() {
   const params = useParams();
   const projectId = params.id as string;
-  const [loading, setLoading] = useState(true);
-  const [projectContent, setProjectContent] = useState<string | null>(null);
-  const [userId] = useState("1"); // ID deve vir de um sistema de autenticação
-
-  useEffect(() => {
-    const loadProject = async () => {
-      try {
-        // Buscar diretamente do endpoint de projetos
-        const response = await axios.get(
-          `http://localhost:3001/projects/${projectId}`
-        );
-        
-        // Verificar se o projeto pertence ao usuário
-        if (response.data.userId !== userId) {
-          throw new Error('Acesso não autorizado');
-        }
+  const [userId] = useState("1");
   
-        setProjectContent(JSON.stringify(response.data.content));
-        
-      } catch (error) {
-        console.error('Erro ao carregar projeto:', error);
-        setProjectContent(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    loadProject();
-  }, [projectId, userId]);
+  const { 
+    isLoading, 
+    error, 
+    name, 
+    description, 
+    content,
+    project 
+  } = useGetProject(projectId);
 
-  if (loading) {
+  // Verificação de autorização
+  if (project && project.userId !== userId) {
+    return <div>Acesso não autorizado</div>;
+  }
+
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
+  }
+
+  if (error) {
+    return <div>Erro ao carregar projeto: {error.message}</div>;
   }
 
   return (
@@ -58,8 +48,12 @@ export default function ProjectPage() {
       
       <div className="flex-1 transition-all duration-300">
         <Main>
-          <Header />
-          <NewProject initialContent={projectContent} />
+          <Header/>
+          <NewProject 
+            initialContent={content ? JSON.stringify(content) : undefined}
+            initialName={name}
+            initialDescription={description}
+          />
         </Main>
       </div>
 

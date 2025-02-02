@@ -7,15 +7,17 @@ import Editor from "./editor";
 
 interface NewProjectProps {
   initialContent?: string | null;
+  initialName?: string;
+  initialDescription?: string;
 }
 
-export function NewProject({ initialContent }: NewProjectProps) {
+export function NewProject({ initialContent, initialName, initialDescription }: NewProjectProps) {
   return (
     <div className="p-6 w-full">
       <ProjectBanner />
 
       <div className="mb-6">
-        <ProjectInfo />
+        <ProjectInfo/>
       </div>
 
       <div className="flex justify-center items-center pb-5 w-full">
