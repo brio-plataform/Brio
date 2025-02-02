@@ -1,4 +1,4 @@
-import { LeftSidebar } from "@/components/left-sidebar";
+import { LeftSidebar } from "@/components/Left-SideBar/left-sidebar";
 import { Main } from "@/components/Main";
 import UserProfile from "@/components/userProfile";
 

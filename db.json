@@ -11,15 +11,15 @@
     {
       "id": "1",
       "userId": "1",
-      "name": "Novo Estudo meud eu dvsdvds",
-      "description": "Descrição do Estud wsdwefwefwe o fewecwecwec",
+      "name": "Novo Estudo Meu",
+      "description": "Descrição do Estudo",
       "logo": "",
       "createdAt": "2025-01-31T23:47:47.093Z",
       "banner": "",
       "wordCount": 0,
       "citations": [],
-      "model": "thesis",
-      "visibility": "public",
+      "model": "article",
+      "visibility": "institutional",
       "progress": 0,
       "type": "institutional",
       "version": [
@@ -33,7 +33,7 @@
         }
       ],
       "content": {},
-      "updatedAt": "2025-02-02T19:18:45.087Z"
+      "updatedAt": "2025-02-02T21:04:37.876Z"
     }
   ]
 }

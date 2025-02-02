@@ -1,5 +1,5 @@
 import InstitutionalProfile from "@/components/institutionProfile";
-import { LeftSidebar } from "@/components/left-sidebar";
+import { LeftSidebar } from "@/components/Left-SideBar/left-sidebar";
 import { Main } from "@/components/Main";
 
 export default function ProfilePage() {

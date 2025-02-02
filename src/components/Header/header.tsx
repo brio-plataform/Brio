@@ -27,8 +27,6 @@ export function Header() {
     description: initialDescription, 
     updatedAt,
     versions = [],
-    banner,
-    logo,
     wordCount: initialWordCount,
     citations: initialCitations,
     model: initialModel,
@@ -41,8 +39,6 @@ export function Header() {
     updateName, 
     updateDescription, 
     updateContent,
-    updateBanner,
-    updateLogo,
     updateWordCount,
     updateModel,
     updateVisibility,
@@ -51,7 +47,6 @@ export function Header() {
     isLoading: isSaving 
   } = useUpdateProject(projectId);
 
-  // Usar useQueryState para nome e descrição com configuração de tipo
   const [projectName, setProjectName] = useQueryState('name', {
     defaultValue: "",
     parse: (value) => value || ""
@@ -62,14 +57,17 @@ export function Header() {
     parse: (value) => value || ""
   });
   
-  // Outros estados locais
   const [documentType, setDocumentType] = useState<'article' | 'thesis' | 'book' | 'research'>(initialModel || 'article');
   const [visibility, setVisibility] = useState<'private' | 'public' | 'institutional'>(initialVisibility || 'private');
   const [progress, setProgress] = useState(initialProgress || 0);
   const [wordCount, setWordCount] = useState(initialWordCount || 0);
   const [citationCount, setCitationCount] = useState(initialCitations?.length || 0);
+  const [autoSaveStatus, setAutoSaveStatus] = useState(isSaving ? "Salvando..." : "Salvo");
+  const [lastEdited, setLastEdited] = useState<Date>(new Date());
+  const [collaborators] = useState<Collaborator[]>([]);
+  const [aiAssistant] = useState(false);
+  const [currentVersion, setCurrentVersion] = useState<string>("1.0.0");
 
-  // Update states when initial data changes - só usa API se não tiver na URL
   useEffect(() => {
     if (projectName === "" && initialName) setProjectName(initialName);
     if (projectDescription === "" && initialDescription) setProjectDescription(initialDescription);
@@ -80,53 +78,30 @@ export function Header() {
     if (initialCitations) setCitationCount(initialCitations.length);
   }, [initialName, initialDescription, initialModel, initialVisibility, initialProgress, initialWordCount, initialCitations, setProjectName, setProjectDescription, projectName, projectDescription]);
 
-  // Handle model type change
   const handleModelChange = async (value: 'article' | 'thesis' | 'book' | 'research') => {
     setDocumentType(value);
     try {
       await updateModel(value);
     } catch (error) {
       console.error('Error updating model:', error);
-      setDocumentType(documentType); // Revert on error
+      setDocumentType(documentType);
     }
   };
 
-  // Handle progress change with form event
   const handleProgressChange = async (event: React.FormEvent<HTMLDivElement>) => {
-    // Get the value from the progress element
     const newProgress = Number((event.target as HTMLProgressElement).value);
     setProgress(newProgress);
     try {
       await updateProgress(newProgress);
     } catch (error) {
       console.error('Error updating progress:', error);
-      setProgress(progress); // Revert on error
+      setProgress(progress);
     }
   };
 
-  // Modify the ButtonSelect onChange handler
   const handleButtonSelectChange = (value: string) => {
     handleModelChange(value as 'article' | 'thesis' | 'book' | 'research');
   };
-
-  const [autoSaveStatus, setAutoSaveStatus] = useState(isSaving ? "Salvando..." : "Salvo");
-  
-  // Estados adicionais
-  const [lastEdited, setLastEdited] = useState<Date>(new Date());
-  const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
-  const [aiAssistant, setAiAssistant] = useState(false);
-  const [currentVersion, setCurrentVersion] = useState<string>("1.0.0");
-  const [hasChanges, setHasChanges] = useState(false);
-
-  const [projectBanner, setProjectBanner] = useQueryState('banner', {
-    defaultValue: banner || "",
-    parse: (value) => value || banner || ""
-  });
-
-  const [projectLogo, setProjectLogo] = useQueryState('logo', {
-    defaultValue: logo || "",
-    parse: (value) => value || logo || ""
-  });
 
   const handleAutoSave = async () => {
     setAutoSaveStatus("Salvando...");
@@ -137,8 +112,6 @@ export function Header() {
         updateName(projectName),
         updateDescription(projectDescription),
         updateContent(JSON.parse(projectContent)),
-        updateBanner(projectBanner),
-        updateLogo(projectLogo),
         updateWordCount(wordCount),
         updateModel(documentType),
         updateVisibility(visibility),
@@ -147,21 +120,18 @@ export function Header() {
       ]);
 
       setAutoSaveStatus("Salvo às " + new Date().toLocaleTimeString());
-      setHasChanges(false);
     } catch (error) {
       console.error('Erro ao salvar:', error);
       setAutoSaveStatus("Erro ao salvar");
     }
   };
 
-  // Update lastEdited when project updates
   useEffect(() => {
     if (updatedAt) {
       setLastEdited(new Date(updatedAt));
     }
   }, [updatedAt]);
 
-  // Update currentVersion when versions change
   useEffect(() => {
     const latestVersion = versions[versions.length - 1];
     if (latestVersion) {
@@ -169,14 +139,13 @@ export function Header() {
     }
   }, [versions]);
 
-  // Handle visibility change
   const handleVisibilityChange = async (value: 'private' | 'public' | 'institutional') => {
     setVisibility(value);
     try {
       await updateVisibility(value);
     } catch (error) {
       console.error('Error updating visibility:', error);
-      setVisibility(visibility); // Revert on error
+      setVisibility(visibility);
     }
   };
 
