@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { LeftSidebar } from "@/components/left-sidebar";
 import { RightSidebar } from "@/components/right-sidebar";
 import { Main } from "@/components/Main";
-import { Header } from "@/components/header";
+import { Header } from "@/components/Header/header";
 import { NewProject } from "@/components/newProject";
 import { useGetProject } from '@/hooks/useGetProject';
 
