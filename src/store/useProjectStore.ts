@@ -69,13 +69,7 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
         ...currentProject,
         ...projectData,
         updatedAt: new Date().toISOString(),
-        version: [
-          ...(currentProject.version || []),
-          {
-            version: crypto.randomUUID(),
-            updatedAt: new Date().toISOString()
-          }
-        ]
+        version: currentProject.version || []
       };
 
       console.log('Sending updated project:', updatedProject);
@@ -171,13 +165,7 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
         ...currentProject,
         content: JSON.parse(editorContent),
         updatedAt: new Date().toISOString(),
-        version: [
-          ...(currentProject.version || []),
-          {
-            version: crypto.randomUUID(),
-            updatedAt: new Date().toISOString()
-          }
-        ]
+        version: currentProject.version || []
       };
 
       const response = await fetch(`http://localhost:3001/projects/${currentProject.id}`, {

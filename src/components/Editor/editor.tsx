@@ -3,9 +3,8 @@ import "@blocknote/core/fonts/inter.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView, Theme } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
-import { useEditorStore } from "@/store/useEditorStore";
-import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
-import { useEffect } from "react";
+import { PartialBlock } from "@blocknote/core";
+import { useEffect, useState } from "react";
 import { useProjectStore } from '@/store/useProjectStore';
 
 interface EditorProps {
@@ -14,8 +13,8 @@ interface EditorProps {
 }
 
 export default function Editor({ initialContent, editable }: EditorProps) {
-  const { setProjectContent } = useEditorStore();
   const { setEditorContent, saveEditorContent } = useProjectStore();
+  const [hasChanges, setHasChanges] = useState(false);
   
   const customTheme: Theme = {
     colors: {
@@ -52,19 +51,23 @@ export default function Editor({ initialContent, editable }: EditorProps) {
     const unsubscribe = editor.onEditorContentChange(() => {
       const content = JSON.stringify(editor.topLevelBlocks, null, 2);
       setEditorContent(content);
+      setHasChanges(true);
     });
 
     return () => unsubscribe;
   }, [editor]);
 
-  // Para auto-save
+  // Auto-save otimizado
   useEffect(() => {
     const interval = setInterval(() => {
-      saveEditorContent();
-    }, 30000); // auto-save a cada 30 segundos
+      if (hasChanges) {
+        saveEditorContent();
+        setHasChanges(false);
+      }
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [hasChanges]);
 
   return <BlockNoteView editor={editor} editable={editable} theme={customTheme} />;
 }

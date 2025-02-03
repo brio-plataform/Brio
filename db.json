@@ -11,8 +11,8 @@
     {
       "id": "1",
       "userId": "1",
-      "name": "Novo Estudo Meu fdhhfg",
-      "description": "Descrição do Estudo",
+      "name": "Novo Estudo Meu fdhhf",
+      "description": "Descrição do Estud",
       "logo": "",
       "createdAt": "2025-01-31T23:47:47.093Z",
       "banner": "",
@@ -26,14 +26,6 @@
         {
           "version": "1.0.0",
           "updatedAt": "2025-01-31T23:47:47.093Z"
-        },
-        {
-          "version": "4855fb7a-dc9d-4545-8c27-f80a581fa14e",
-          "updatedAt": "2025-02-03T15:09:19.262Z"
-        },
-        {
-          "version": "efbc1922-849a-4279-aa79-98fd8b127788",
-          "updatedAt": "2025-02-03T15:09:33.579Z"
         }
       ],
       "content": [
@@ -45,30 +37,7 @@
             "backgroundColor": "default",
             "textAlignment": "left"
           },
-          "content": [
-            {
-              "type": "text",
-              "text": " texto mais texto aaaaaaaaaaaa",
-              "styles": {}
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "6234d99a-95d0-438f-84ea-c3ea00063d7f",
-          "type": "paragraph",
-          "props": {
-            "textColor": "default",
-            "backgroundColor": "default",
-            "textAlignment": "left"
-          },
-          "content": [
-            {
-              "type": "text",
-              "text": "muito com gostei ",
-              "styles": {}
-            }
-          ],
+          "content": [],
           "children": []
         },
         {
@@ -83,7 +52,7 @@
           "content": [
             {
               "type": "text",
-              "text": "oiiiii",
+              "text": "oiiiiia2aaaaaaaaaa",
               "styles": {}
             }
           ],
@@ -101,7 +70,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-03T18:36:01.343Z"
+      "updatedAt": "2025-02-03T23:03:26.160Z"
     }
   ]
 }
