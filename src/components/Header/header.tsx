@@ -5,10 +5,10 @@ import { useState, useEffect } from 'react'
 import { useGetProject } from '@/hooks/useGetProject'
 import { useUpdateProject } from '@/hooks/useUpdateProject'
 import { useParams } from 'next/navigation'
-import { useEditorStore } from '@/store/useEditorStore'
 import { HeaderTop } from './header-top'
 import { HeaderCore } from './header-core'
 import { HeaderBottom } from './header-bottom'
+import { useProjectStore } from '@/store/useProjectStore'
 
 interface Collaborator {
   id: string;
@@ -32,7 +32,8 @@ export function Header() {
     model: initialModel,
     visibility: initialVisibility,
     progress: initialProgress,
-    type: initialType
+    type: initialType,
+    project
   } = useGetProject(projectId);
 
   const { 
@@ -67,6 +68,14 @@ export function Header() {
   const [collaborators] = useState<Collaborator[]>([]);
   const [aiAssistant] = useState(false);
   const [currentVersion, setCurrentVersion] = useState<string>("1.0.0");
+
+  const { setCurrentProject, saveProject } = useProjectStore();
+
+  useEffect(() => {
+    if (project) {
+      setCurrentProject(project);
+    }
+  }, [project, setCurrentProject]);
 
   useEffect(() => {
     if (projectName === "" && initialName) setProjectName(initialName);
@@ -106,18 +115,15 @@ export function Header() {
   const handleAutoSave = async () => {
     setAutoSaveStatus("Salvando...");
     try {
-      const projectContent = useEditorStore.getState().projectContent || '{}';
-      
-      await Promise.all([
-        updateName(projectName),
-        updateDescription(projectDescription),
-        updateContent(JSON.parse(projectContent)),
-        updateWordCount(wordCount),
-        updateModel(documentType),
-        updateVisibility(visibility),
-        updateProgress(progress),
-        updateType(initialType || 'institutional')
-      ]);
+      await saveProject({
+        name: projectName,
+        description: projectDescription,
+        model: documentType,
+        visibility: visibility,
+        progress: progress,
+        wordCount: wordCount,
+        updatedAt: new Date().toISOString(),
+      });
 
       setAutoSaveStatus("Salvo às " + new Date().toLocaleTimeString());
     } catch (error) {

@@ -32,10 +32,14 @@ export function useGetProject(projectId: string) {
 
   useEffect(() => {
     const fetchProject = async () => {
+      if (!projectId) return;
+      
       try {
         const response = await axios.get(`http://localhost:3001/projects/${projectId}`);
+        console.log('Fetched project:', response.data); // Debug log
         setProject(response.data);
       } catch (err) {
+        console.error('Error fetching project:', err); // Debug log
         setError(err as Error);
       } finally {
         setIsLoading(false);

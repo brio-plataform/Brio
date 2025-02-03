@@ -82,9 +82,15 @@ export function HeaderCore({
           Compartilhar
         </Button>
         
-        <Button variant="default" size="sm" className="gap-2" onClick={handleAutoSave}>
+        <Button 
+          variant="default" 
+          size="sm" 
+          className="gap-2" 
+          onClick={handleAutoSave}
+          disabled={autoSaveStatus === "Salvando..."}
+        >
           <Save className="h-4 w-4" />
-          Salvar
+          {autoSaveStatus === "Salvando..." ? "Salvando..." : "Salvar"}
         </Button>
       </div>
     </div>
