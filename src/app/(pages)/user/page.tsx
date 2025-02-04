@@ -1,9 +1,8 @@
 import { LeftSidebar } from "@/components/Left-SideBar/left-sidebar";
 import { Main } from "@/components/Main";
-import UserProfile from "@/components/userProfile";
+import UserProfile from "@/components/Profile/User/userProfile";
 
-
-export default function ProfilePage() {
+export default function UserPage() {
   return (
       <div className="flex w-full h-full min-h-screen relative">
         <div className="sticky top-0 h-screen">

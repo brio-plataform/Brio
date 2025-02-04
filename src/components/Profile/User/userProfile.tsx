@@ -16,7 +16,8 @@ import {
   GitFork,
   MessageSquare,
 } from "lucide-react"
-import placeholder from "../../public/images/placeholder.svg"
+
+import placeholder from "../../../../public/images/placeholder.svg"
 
 export default function UserProfile() {
   return (
