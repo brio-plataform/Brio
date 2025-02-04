@@ -43,13 +43,13 @@ export function ButtonSelect({ value, onChange }: ButtonSelectProps) {
 
   return (
     <div className="inline-flex -space-x-px divide-x divide-primary-foreground/30 rounded-lg shadow-sm shadow-black/5 rtl:space-x-reverse">
-      <Button className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 bg-muted py-1 px-2">
+      <Button className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 bg-muted py-1 px-2 h-8">
         {selectedType?.label || "Selecione o tipo"}
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 bg-muted py-1 px-2 "
+            className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 bg-muted py-1 px-2 h-8"
             size="icon"
             aria-label="Opções"
           >

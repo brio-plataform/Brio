@@ -11,16 +11,16 @@
     {
       "id": "1",
       "userId": "1",
-      "name": "Novo Estudo Meu fdhhf",
-      "description": "Descrição do Estud",
-      "logo": "",
+      "name": "Novo Estudo",
+      "description": "Descrição do Estudo",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_%28with_h-alpha%29.jpg",
       "createdAt": "2025-01-31T23:47:47.093Z",
-      "banner": "",
+      "banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_h-alpha%29.jpg",
       "wordCount": 0,
       "citations": [],
       "model": "thesis",
       "visibility": "institutional",
-      "progress": 0,
+      "progress": 40,
       "type": "institutional",
       "version": [
         {
@@ -29,35 +29,6 @@
         }
       ],
       "content": [
-        {
-          "id": "04456b0a-27ba-4e8a-9a41-4d1b90509c66",
-          "type": "paragraph",
-          "props": {
-            "textColor": "default",
-            "backgroundColor": "default",
-            "textAlignment": "left"
-          },
-          "content": [],
-          "children": []
-        },
-        {
-          "id": "0837285c-ff53-46f9-b7a8-7987169bff0c",
-          "type": "heading",
-          "props": {
-            "textColor": "default",
-            "backgroundColor": "default",
-            "textAlignment": "left",
-            "level": 1
-          },
-          "content": [
-            {
-              "type": "text",
-              "text": "oiiiiia2aaaaaaaaaa",
-              "styles": {}
-            }
-          ],
-          "children": []
-        },
         {
           "id": "ea06690e-b09d-462a-99cd-7c3ef3bd4e90",
           "type": "paragraph",
@@ -70,7 +41,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-03T23:03:26.160Z"
+      "updatedAt": "2025-02-04T02:38:20.038Z"
     }
   ]
 }

@@ -64,7 +64,7 @@ export default function Editor({ initialContent, editable }: EditorProps) {
         saveEditorContent();
         setHasChanges(false);
       }
-    }, 3000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [hasChanges]);
