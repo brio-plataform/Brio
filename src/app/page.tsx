@@ -207,5 +207,5 @@ const features = [
     title: "Validação Acadêmica",
     description: "Sistema de revisão por pares para garantir qualidade e credibilidade."
   },
-  // Adicione mais features conforme necessário
+  // Adicione mais features conforme necessário 
 ];
