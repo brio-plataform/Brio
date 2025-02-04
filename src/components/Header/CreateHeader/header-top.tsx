@@ -22,7 +22,7 @@ export function HeaderTop({
   handleProgressChange
 }: HeaderTopProps) {
   return (
-    <div className="flex items-center justify-between px-4 py-1 bg-muted/30">
+    <div className="flex items-center justify-between px-4 py-2 bg-muted/30">
       <div className="flex items-center gap-4 text-sm text-muted-foreground">
         <span className="flex items-center gap-1">
           <Clock className="h-3 w-3" />

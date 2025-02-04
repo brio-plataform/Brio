@@ -3,7 +3,7 @@
 import { LeftSidebar } from "@/components/Left-SideBar/left-sidebar";
 import { RightSidebar } from "@/components/Right-SideBar/right-sidebar";
 import { Main } from "@/components/Main";
-import { Header } from "@/components/Header/header";
+import { Header } from "@/components/Header/CreateHeader/header";
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
@@ -13,6 +13,7 @@ import UnauthorizedPage from "@/components/Error/unauthorized";
 import ErrorPage from "@/components/Error/error-page";
 import LoadingProject from "@/components/Loading/loading-project";
 import { Project } from "@/components/Project/Project";
+import { ProjectViewerHeaderClient } from "@/components/Header/ViewHeader/ProjectViewerHeaderClient";
 
 export default function ProjectPage() {
 
@@ -50,8 +51,8 @@ export default function ProjectPage() {
       
       <div className="flex-1 transition-all duration-300">
         <Main>
-          <Header/>
-          <Project />
+          <ProjectViewerHeaderClient projectId={projectId} />
+          <Project editable={false} />
         </Main>
       </div>
 

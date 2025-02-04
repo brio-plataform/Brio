@@ -13,7 +13,11 @@ import { useGetProject } from '@/hooks/useGetProject';
 import UnauthorizedPage from "../Error/unauthorized";
 import LoadingEditor from "../Loading/loading-editor";
 
-export function Project() {
+interface ProjectProps {
+  editable?: boolean
+}
+
+export function Project({ editable }: ProjectProps) {
   const params = useParams();
   const projectId = params.id as string;
   const [userId] = useState("1");
@@ -51,7 +55,7 @@ export function Project() {
       <div className="flex justify-center items-center pb-5 w-full">
         <Card className="w-full">
           <CardContent className="p-4 min-h-[300px] w-full">
-            <Editor initialContent={content ? JSON.stringify(content) : undefined} />
+            <Editor initialContent={content ? JSON.stringify(content) : undefined} editable={editable} />
           </CardContent>
         </Card>
       </div>

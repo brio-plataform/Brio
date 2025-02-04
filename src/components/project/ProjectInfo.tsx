@@ -4,7 +4,6 @@ import { ImagePlus, Link } from "lucide-react";
 import { useGetProject } from '@/hooks/useGetProject';
 import { useUpdateProject } from '@/hooks/useUpdateProject';
 import { useParams } from 'next/navigation';
-import { useQueryState } from 'nuqs';
 import { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -22,15 +21,14 @@ export function ProjectInfo() {
   const { name, description, logo } = useGetProject(projectId);
   const { updateName, updateDescription, updateLogo } = useUpdateProject(projectId);
   
-  const [projectName, setProjectName] = useQueryState('name');
-  const [projectDescription, setProjectDescription] = useQueryState('description');
+  const [projectName, setProjectName] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
   const [projectLogo, setProjectLogo] = useState("");
   const [imageError, setImageError] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [showImageDialog, setShowImageDialog] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
 
-  // Sincroniza estados locais com dados do servidor
   useEffect(() => {
     if (name) setProjectName(name);
     if (description) setProjectDescription(description);
@@ -38,9 +36,8 @@ export function ProjectInfo() {
       setProjectLogo(logo);
       setImageError(false);
     }
-  }, [name, description, logo, setProjectName, setProjectDescription]);
+  }, [name, description, logo]);
 
-  // Define valores iniciais quando não houver dados
   useEffect(() => {
     if (!name && !projectName) setProjectName("New Project");
     if (!description && !projectDescription) setProjectDescription("New Project Description");

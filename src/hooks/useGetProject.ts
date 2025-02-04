@@ -6,6 +6,33 @@ interface Version {
   updatedAt: string;
 }
 
+interface Author {
+  name: string;
+  avatar: string;
+  institution: string;
+}
+
+interface Stats {
+  views: number;
+  stars: number;
+  forks: number;
+  comments: number;
+}
+
+interface ContentProps {
+  textColor: string;
+  backgroundColor: string;
+  textAlignment: string;
+}
+
+interface Content {
+  id: string;
+  type: string;
+  props: ContentProps;
+  content: any[];
+  children: any[];
+}
+
 interface Project {
   id: string;
   userId: string;
@@ -19,8 +46,10 @@ interface Project {
   visibility: 'private' | 'public' | 'institutional';
   progress: number;
   type: string;
+  author: Author;
+  stats: Stats;
   version: Version[];
-  content: any;
+  content: Content[];
   updatedAt: string;
   createdAt: string;
 }
@@ -35,11 +64,13 @@ export function useGetProject(projectId: string) {
       if (!projectId) return;
       
       try {
-        const response = await axios.get(`http://localhost:3001/projects/${projectId}`);
-        console.log('Fetched project:', response.data); // Debug log
+        const response = await axios.get<Project>(`http://localhost:3001/projects/${projectId}`);
+        console.log('Project data received:', response.data); // Debug log
+        console.log('Author:', response.data.author); // Debug author
+        console.log('Stats:', response.data.stats); // Debug stats
         setProject(response.data);
       } catch (err) {
-        console.error('Error fetching project:', err); // Debug log
+        console.error('Error fetching project:', err);
         setError(err as Error);
       } finally {
         setIsLoading(false);
@@ -49,25 +80,38 @@ export function useGetProject(projectId: string) {
     fetchProject();
   }, [projectId]);
 
-  return {
+  // Create a memoized object with the project data
+  const projectData = {
     project,
     isLoading,
     error,
+    // Basic project info
     name: project?.name,
     description: project?.description,
+    type: project?.type,
+    // Content and versions
     content: project?.content,
     versions: project?.version,
-    lastVersion: project?.version?.[project.version?.length - 1],
+    lastVersion: project?.version?.[project?.version?.length - 1],
+    // Metadata
     updatedAt: project?.updatedAt,
+    createdAt: project?.createdAt,
     userId: project?.userId,
+    // Media
     logo: project?.logo,
     banner: project?.banner,
-    createdAt: project?.createdAt,
+    // Stats and metrics
     wordCount: project?.wordCount,
     citations: project?.citations,
+    progress: project?.progress,
+    // Settings
     model: project?.model,
     visibility: project?.visibility,
-    progress: project?.progress,
-    type: project?.type
+    // Author and stats
+    author: project?.author,
+    stats: project?.stats
   };
+
+  console.log('Returned project data:', projectData); // Debug log
+  return projectData;
 } 
