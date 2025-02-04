@@ -275,5 +275,5 @@ Serão criados pela equipe do Brio e incluem temas amplos, tradicionais e fundam
 
 ---
 
-**Slogan:**  
+**Slogan:**
 *"Conhecimento, do povo, para o povo, pelo povo."*
