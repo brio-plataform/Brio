@@ -24,15 +24,15 @@ interface Project {
   createdAt: string;
 }
 
-interface ProjectStore {
+interface ProjectState {
   currentProject: Project | null;
   projects: Project[];
   loading: boolean;
   error: string | null;
   
   // Actions
-  setCurrentProject: (project: Project | null) => void;
-  saveProject: (project: Partial<Project>) => Promise<void>;
+  setCurrentProject: (project: Project) => void;
+  saveProject: (projectData: Partial<Project>) => Promise<void>;
   updateProjectContent: (content: any) => Promise<void>;
   fetchProjects: () => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
@@ -41,9 +41,11 @@ interface ProjectStore {
   editorContent: string | null;
   setEditorContent: (content: string) => void;
   saveEditorContent: () => Promise<void>;
+
+  updateProjectField: (field: string, value: any) => void;
 }
 
-export const useProjectStore = create<ProjectStore>((set, get) => ({
+export const useProjectStore = create<ProjectState>((set, get) => ({
   currentProject: null,
   projects: [],
   loading: false,
@@ -56,55 +58,12 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   },
 
   saveProject: async (projectData) => {
-    set({ loading: true });
-    try {
-      const currentProject = get().currentProject;
-      console.log('Current project before save:', currentProject);
-      
-      if (!currentProject?.id) {
-        throw new Error('No project selected');
-      }
-
-      const updatedProject = {
-        ...currentProject,
+    set((state) => ({
+      currentProject: state.currentProject ? {
+        ...state.currentProject,
         ...projectData,
-        updatedAt: new Date().toISOString(),
-        version: currentProject.version || []
-      };
-
-      console.log('Sending updated project:', updatedProject);
-
-      const response = await fetch(`http://localhost:3001/projects/${currentProject.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedProject)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save project');
-      }
-
-      const savedProject = await response.json();
-      console.log('Saved project response:', savedProject);
-      
-      set((state) => ({
-        currentProject: savedProject,
-        projects: state.projects.map(p => 
-          p.id === savedProject.id ? savedProject : p
-        ),
-        loading: false,
-        error: null
-      }));
-
-      return savedProject;
-    } catch (error) {
-      console.error('Error in saveProject:', error);
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to save project', 
-        loading: false 
-      });
-      throw error;
-    }
+      } : null,
+    }));
   },
 
   updateProjectContent: async (content) => {
@@ -187,4 +146,11 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
       set({ error: 'Failed to save editor content', loading: false });
     }
   },
+
+  updateProjectField: (field, value) => set((state) => ({
+    currentProject: state.currentProject ? {
+      ...state.currentProject,
+      [field]: value
+    } : null
+  })),
 })) 

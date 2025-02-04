@@ -65,9 +65,6 @@ export function useGetProject(projectId: string) {
       
       try {
         const response = await axios.get<Project>(`http://localhost:3001/projects/${projectId}`);
-        console.log('Project data received:', response.data); // Debug log
-        console.log('Author:', response.data.author); // Debug author
-        console.log('Stats:', response.data.stats); // Debug stats
         setProject(response.data);
       } catch (err) {
         console.error('Error fetching project:', err);
@@ -111,7 +108,5 @@ export function useGetProject(projectId: string) {
     author: project?.author,
     stats: project?.stats
   };
-
-  console.log('Returned project data:', projectData); // Debug log
   return projectData;
 } 

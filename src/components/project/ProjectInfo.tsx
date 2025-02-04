@@ -1,10 +1,10 @@
 "use client"
 
-import { ImagePlus, Link } from "lucide-react";
+import { ImagePlus } from "lucide-react";
 import { useGetProject } from '@/hooks/useGetProject';
 import { useUpdateProject } from '@/hooks/useUpdateProject';
 import { useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -14,38 +14,22 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { useProjectStore } from '@/store/useProjectStore';
 
 export function ProjectInfo() {
   const params = useParams();
   const projectId = params.id as string;
-  const { name, description, logo } = useGetProject(projectId);
-  const { updateName, updateDescription, updateLogo } = useUpdateProject(projectId);
+  const { logo } = useGetProject(projectId);
+  const { updateLogo, updateName, updateDescription } = useUpdateProject(projectId);
   
-  const [projectName, setProjectName] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
-  const [projectLogo, setProjectLogo] = useState("");
+  const { currentProject, updateProjectField } = useProjectStore();
   const [imageError, setImageError] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [showImageDialog, setShowImageDialog] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
 
-  useEffect(() => {
-    if (name) setProjectName(name);
-    if (description) setProjectDescription(description);
-    if (logo) {
-      setProjectLogo(logo);
-      setImageError(false);
-    }
-  }, [name, description, logo]);
-
-  useEffect(() => {
-    if (!name && !projectName) setProjectName("New Project");
-    if (!description && !projectDescription) setProjectDescription("New Project Description");
-  }, [name, description, projectName, projectDescription]);
-
   const handleImageError = () => {
     setImageError(true);
-    setProjectLogo("");
     updateLogo(""); // Limpa a URL no banco
   };
 
@@ -56,7 +40,7 @@ export function ProjectInfo() {
       try {
         const imageUrl = URL.createObjectURL(file);
         await updateLogo(imageUrl);
-        setProjectLogo(imageUrl);
+        setImageUrl(imageUrl);
         setImageError(false);
       } catch (error) {
         console.error('Error uploading logo:', error);
@@ -74,9 +58,6 @@ export function ProjectInfo() {
     setIsUploading(true);
     try {
       await updateLogo(imageUrl);
-      setProjectLogo(imageUrl);
-      setImageError(false);
-      setShowImageDialog(false);
       setImageUrl("");
     } catch (error) {
       console.error('Error setting logo URL:', error);
@@ -87,12 +68,12 @@ export function ProjectInfo() {
   };
 
   const handleNameChange = async (value: string) => {
-    setProjectName(value);
+    updateProjectField('name', value);
     await updateName(value);
   };
 
   const handleDescriptionChange = async (value: string) => {
-    setProjectDescription(value);
+    updateProjectField('description', value);
     await updateDescription(value);
   };
 
@@ -103,9 +84,9 @@ export function ProjectInfo() {
           className="relative w-16 h-16 rounded-lg overflow-hidden group cursor-pointer"
           onClick={() => setShowImageDialog(true)}
         >
-          {projectLogo && !imageError ? (
+          {logo && !imageError ? (
             <img 
-              src={projectLogo} 
+              src={logo} 
               alt="Project" 
               className="w-full h-full object-cover"
               onError={handleImageError}
@@ -121,13 +102,13 @@ export function ProjectInfo() {
         <div>
           <input
             type="text"
-            value={projectName || ''}
+            value={currentProject?.name || ''}
             onChange={(e) => handleNameChange(e.target.value)}
             className="text-3xl font-bold bg-transparent border-none focus:outline-none w-full"
           />
           <input
             type="text"
-            value={projectDescription || ''}
+            value={currentProject?.description || ''}
             onChange={(e) => handleDescriptionChange(e.target.value)}
             className="text-muted-foreground bg-transparent border-none focus:outline-none w-full"
           />

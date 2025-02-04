@@ -51,7 +51,7 @@ export default function ProjectPage() {
       
       <div className="flex-1 transition-all duration-300">
         <Main>
-          <ProjectViewerHeaderClient projectId={projectId} />
+          <Header/>
           <Project editable={false} />
         </Main>
       </div>
