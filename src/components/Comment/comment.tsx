@@ -44,10 +44,10 @@ export function Comment({
       <div className="flex gap-3">
         <Avatar className="h-8 w-8">
           <AvatarImage src={author.avatar} alt={author.name} />
-          <AvatarFallback>{author.name[0]}</AvatarFallback>
+          <AvatarFallback className="bg-gray-500 text-muted-foreground">{author.name[0]}</AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0">
-          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg px-3 py-2">
+          <div className=" rounded-lg px-3 py-2">
             <div className="flex items-center gap-2 mb-1">
               <span className="font-semibold text-sm">{author.name}</span>
               {author.institution && <span className="text-xs text-muted-foreground">• {author.institution}</span>}

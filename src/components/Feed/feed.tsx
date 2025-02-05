@@ -143,13 +143,13 @@ const sampleFeedData: FeedItemProps[] = [
 
 export function Feed() {
   return (
-        <div className="flex flex-col w-full justify-center items-center p-12 gap-4">
-          <BannerCarousel />
-          <CreatePost />
-          {sampleFeedData.map((item, index) => (
+    <div className="flex flex-col w-full justify-center items-center p-12 gap-4">
+      <BannerCarousel />
+      <CreatePost />
+      {sampleFeedData.map((item, index) => (
             <FeedItem key={index} {...item} />
-          ))}
-        </div>
+      ))}
+    </div>
   )
 }
 

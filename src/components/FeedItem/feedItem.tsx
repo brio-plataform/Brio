@@ -25,6 +25,7 @@ import { Modal } from "@/components/Modal/modal"
 import { Comment } from "@/components/Comment/comment"
 import { LinkPreview } from "@/components/LinkPreview/linkPreview"
 import { cn } from "@/lib/utils"
+import { Input } from "../ui/input"
 
 interface Citation {
   type: "person" | "article" | "post" | "media"
@@ -154,11 +155,11 @@ export function FeedItem({
 
   return (
     <>
-      <Card className="w-full max-w-2xl mb-4 bg-white dark:bg-gray-800">
+      <Card className="w-full max-w-7xl mb-4 bg-muted/30">
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar>
             <AvatarImage src={author.avatar} alt={author.name} />
-            <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback className="bg-gray-500 text-muted-foreground">{author.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <div className="flex items-center gap-2">
@@ -268,7 +269,7 @@ export function FeedItem({
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon">
+                  <Button variant="outline" size="sm">
                     <Share2 className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -286,10 +287,10 @@ export function FeedItem({
               <form onSubmit={handleSubmitComment} className="flex gap-3 mb-4">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Your avatar" />
-                  <AvatarFallback>YO</AvatarFallback>
+                  <AvatarFallback className="bg-gray-500 text-muted-foreground">U</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 flex gap-2">
-                  <Textarea
+                  <Input
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Write a comment..."

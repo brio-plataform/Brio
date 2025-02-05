@@ -92,7 +92,7 @@ export function BannerCarousel() {
   }, [isAutoPlaying, nextBanner]) // Added nextBanner to dependencies
 
   return (
-    <Card className="w-full max-w-2xl mb-4 overflow-hidden relative group">
+    <Card className="w-full max-w-7xl mb-4 overflow-hidden relative group">
       <div className="relative">
         {banners.map((banner, index) => (
           <div

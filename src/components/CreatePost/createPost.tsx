@@ -83,7 +83,7 @@ interface UserTooltipProps {
 
 function UserTooltip({ user }: UserTooltipProps) {
   return (
-    <div className="w-72 rounded-lg bg-background border shadow-lg p-4 space-y-3">
+    <div className="w-full rounded-lg bg-background border shadow-lg p-4 space-y-3">
       <div className="flex gap-3">
         <Avatar className="h-12 w-12">
           <AvatarImage src={user.avatar} />
@@ -208,7 +208,7 @@ export function CreatePost() {
   }, [])
 
   return (
-    <Card className="w-full max-w-2xl mb-4">
+    <Card className="w-full max-w-7xl mb-4">
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
           <Avatar>
