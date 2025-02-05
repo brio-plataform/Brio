@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Progress } from "@/components/ui/progress"
 import Link from "next/link"
 import {
   Book,
@@ -31,7 +32,8 @@ import {
   Target,
   Lightbulb,
   ChevronDown,
-  User
+  User,
+  Clock
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -127,6 +129,45 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
         { icon: Lightbulb, label: "Ideias", href: "/ideas" },
         { icon: Clipboard, label: "Relatórios", href: "/reports" },
       ]
+    },
+    {
+      icon: Clock,
+      label: "Revisões",
+      items: [
+        {
+          icon: FileText,
+          label: "Análise de Dados (65%)",
+          href: "/reviews/1",
+          metadata: {
+            progress: 65,
+            timeLeft: "2 dias",
+            reviewer: "Maria Silva",
+            status: "em andamento"
+          }
+        },
+        {
+          icon: FileText,
+          label: "Metodologia (90%)",
+          href: "/reviews/2",
+          metadata: {
+            progress: 90,
+            timeLeft: "1 dia",
+            reviewer: "João Santos",
+            status: "revisão final"
+          }
+        },
+        {
+          icon: FileText,
+          label: "Resultados (30%)",
+          href: "/reviews/3",
+          metadata: {
+            progress: 30,
+            timeLeft: "5 dias",
+            reviewer: "Ana Costa",
+            status: "iniciado"
+          }
+        }
+      ]
     }
   ]
 
@@ -179,17 +220,32 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
               {!state.isCollapsed && (
                 <CollapsibleContent className="py-2">
                   {item.items.map((subItem, index) => (
-                    <Button
-                      key={index}
-                      variant="ghost"
-                      asChild
-                      className="w-full justify-start pl-8"
-                    >
-                      <Link href={subItem.href || "#"}>
-                        <subItem.icon className="h-4 w-4 mr-2" />
-                        <span>{subItem.label}</span>
-                      </Link>
-                    </Button>
+                    <div key={index} className="space-y-1">
+                      <Button
+                        variant="ghost"
+                        asChild
+                        className="w-full justify-start pl-8"
+                      >
+                        <Link href={subItem.href || "#"}>
+                          <subItem.icon className="h-4 w-4 mr-2" />
+                          <span>{subItem.label}</span>
+                        </Link>
+                      </Button>
+                      {subItem.metadata && (
+                        <div className="pl-8 pr-4">
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <Clock className="h-3 w-3" />
+                            <span>Restam {subItem.metadata.timeLeft}</span>
+                            <span>•</span>
+                            <span>{subItem.metadata.reviewer}</span>
+                          </div>
+                          <Progress 
+                            value={subItem.metadata.progress} 
+                            className="h-1 mt-1" 
+                          />
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </CollapsibleContent>
               )}

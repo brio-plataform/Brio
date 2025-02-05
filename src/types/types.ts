@@ -440,34 +440,71 @@ interface ProjectViewerHeaderProps {
 // Tipos relacionados ao Left Sidebar
 import { LucideIcon } from "lucide-react"
 
-interface SidebarMenuItem {
-  icon: LucideIcon
-  label: string
-  href?: string
-  items?: Omit<SidebarMenuItem, 'items'>[]
-}
-
-interface SidebarSection {
-  items: SidebarMenuItem[]
+// Tipos base compartilhados
+interface BaseSidebarState {
   isCollapsed: boolean
   openSections: string[]
 }
 
-interface SidebarState {
-  isCollapsed: boolean
-  openSections: string[]
-}
-
-interface SidebarProps {
+interface BaseSidebarProps {
   defaultCollapsed?: boolean
   className?: string
 }
 
-interface SidebarItemProps {
-  item: SidebarMenuItem
-  isCollapsed: boolean
-  isOpen?: boolean
-  onToggle?: (label: string) => void
+// Tipos específicos para LeftSidebar
+interface ReviewMetadata {
+  progress: number
+  timeLeft: string
+  reviewer: string
+  status: 'iniciado' | 'em andamento' | 'revisão final'
+}
+
+interface SidebarMenuItem {
+  icon: LucideIcon
+  label: string
+  href?: string
+  items?: (Omit<SidebarMenuItem, 'items'> & {
+    metadata?: ReviewMetadata
+  })[]
+}
+
+type SidebarState = BaseSidebarState
+type SidebarProps = BaseSidebarProps
+
+// Tipos específicos para RightSidebar
+interface RightSidebarMenuItem {
+  icon: LucideIcon
+  title: string
+  content: React.ReactNode
+}
+
+interface RightSidebarReview {
+  title: string
+  reviewer: string
+  progress: number
+  timeLeft: string
+  status: 'iniciado' | 'em andamento' | 'revisão final'
+}
+
+interface RightSidebarMetrics {
+  stars: number
+  views: number
+  forks: number
+  rewards: number
+}
+
+interface RightSidebarCollaborator {
+  id: string
+  name: string
+  avatar: string
+}
+
+type RightSidebarState = BaseSidebarState
+interface RightSidebarProps extends BaseSidebarProps {
+  projectDescription?: string
+  metrics?: RightSidebarMetrics
+  collaborators?: RightSidebarCollaborator[]
+  reviews?: RightSidebarReview[]
 }
 
 export type {
@@ -516,8 +553,13 @@ export type {
   ProjectViewerData,
   ProjectAuthor,
   SidebarMenuItem,
-  SidebarSection,
   SidebarState,
   SidebarProps,
-  SidebarItemProps
+  RightSidebarMenuItem,
+  RightSidebarReview,
+  RightSidebarState,
+  RightSidebarProps,
+  RightSidebarMetrics,
+  RightSidebarCollaborator,
+  ReviewMetadata
 } 
