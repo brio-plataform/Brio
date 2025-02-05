@@ -1,11 +1,10 @@
 "use client"
 
-import { ImagePlus, Link } from "lucide-react";
+import { ImagePlus } from "lucide-react";
 import { useGetProject } from '@/hooks/useGetProject';
 import { useUpdateProject } from '@/hooks/useUpdateProject';
 import { useParams } from 'next/navigation';
-import { useQueryState } from 'nuqs';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -15,40 +14,26 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { useProjectStore } from '@/store/useProjectStore';
 
-export function ProjectInfo() {
+interface ProjectInfoProps {
+  editable?: boolean;
+}
+
+export function ProjectInfo({ editable = true }: ProjectInfoProps) {
   const params = useParams();
   const projectId = params.id as string;
-  const { name, description, logo } = useGetProject(projectId);
-  const { updateName, updateDescription, updateLogo } = useUpdateProject(projectId);
+  const { logo } = useGetProject(projectId);
+  const { updateLogo, updateName, updateDescription } = useUpdateProject(projectId);
   
-  const [projectName, setProjectName] = useQueryState('name');
-  const [projectDescription, setProjectDescription] = useQueryState('description');
-  const [projectLogo, setProjectLogo] = useState("");
+  const { currentProject, updateProjectField } = useProjectStore();
   const [imageError, setImageError] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [showImageDialog, setShowImageDialog] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
 
-  // Sincroniza estados locais com dados do servidor
-  useEffect(() => {
-    if (name) setProjectName(name);
-    if (description) setProjectDescription(description);
-    if (logo) {
-      setProjectLogo(logo);
-      setImageError(false);
-    }
-  }, [name, description, logo, setProjectName, setProjectDescription]);
-
-  // Define valores iniciais quando não houver dados
-  useEffect(() => {
-    if (!name && !projectName) setProjectName("New Project");
-    if (!description && !projectDescription) setProjectDescription("New Project Description");
-  }, [name, description, projectName, projectDescription]);
-
   const handleImageError = () => {
     setImageError(true);
-    setProjectLogo("");
     updateLogo(""); // Limpa a URL no banco
   };
 
@@ -59,7 +44,7 @@ export function ProjectInfo() {
       try {
         const imageUrl = URL.createObjectURL(file);
         await updateLogo(imageUrl);
-        setProjectLogo(imageUrl);
+        setImageUrl(imageUrl);
         setImageError(false);
       } catch (error) {
         console.error('Error uploading logo:', error);
@@ -77,9 +62,6 @@ export function ProjectInfo() {
     setIsUploading(true);
     try {
       await updateLogo(imageUrl);
-      setProjectLogo(imageUrl);
-      setImageError(false);
-      setShowImageDialog(false);
       setImageUrl("");
     } catch (error) {
       console.error('Error setting logo URL:', error);
@@ -90,12 +72,12 @@ export function ProjectInfo() {
   };
 
   const handleNameChange = async (value: string) => {
-    setProjectName(value);
+    updateProjectField('name', value);
     await updateName(value);
   };
 
   const handleDescriptionChange = async (value: string) => {
-    setProjectDescription(value);
+    updateProjectField('description', value);
     await updateDescription(value);
   };
 
@@ -103,12 +85,12 @@ export function ProjectInfo() {
     <>
       <div className="flex items-center gap-4 mb-4 mt-4">
         <div 
-          className="relative w-16 h-16 rounded-lg overflow-hidden group cursor-pointer"
-          onClick={() => setShowImageDialog(true)}
+          className={`relative w-16 h-16 rounded-lg overflow-hidden ${editable ? 'group cursor-pointer' : ''}`}
+          onClick={() => editable && setShowImageDialog(true)}
         >
-          {projectLogo && !imageError ? (
+          {logo && !imageError ? (
             <img 
-              src={projectLogo} 
+              src={logo} 
               alt="Project" 
               className="w-full h-full object-cover"
               onError={handleImageError}
@@ -117,22 +99,26 @@ export function ProjectInfo() {
             <div className="w-full h-full bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500" />
           )}
           
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <ImagePlus className="w-6 h-6 text-white" />
-          </div>
+          {editable && (
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <ImagePlus className="w-6 h-6 text-white" />
+            </div>
+          )}
         </div>
         <div>
           <input
             type="text"
-            value={projectName || ''}
-            onChange={(e) => handleNameChange(e.target.value)}
+            value={currentProject?.name || ''}
+            onChange={(e) => editable && handleNameChange(e.target.value)}
             className="text-3xl font-bold bg-transparent border-none focus:outline-none w-full"
+            readOnly={!editable}
           />
           <input
             type="text"
-            value={projectDescription || ''}
-            onChange={(e) => handleDescriptionChange(e.target.value)}
+            value={currentProject?.description || ''}
+            onChange={(e) => editable && handleDescriptionChange(e.target.value)}
             className="text-muted-foreground bg-transparent border-none focus:outline-none w-full"
+            readOnly={!editable}
           />
         </div>
       </div>

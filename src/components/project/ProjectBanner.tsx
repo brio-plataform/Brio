@@ -15,7 +15,11 @@ import {
 import { Input } from "../ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
-export function ProjectBanner() {
+interface ProjectBannerProps {
+  editable?: boolean;
+}
+
+export function ProjectBanner({ editable = true }: ProjectBannerProps) {
   const params = useParams();
   const projectId = params.id as string;
   const { banner } = useGetProject(projectId);
@@ -116,7 +120,7 @@ export function ProjectBanner() {
       <div className="relative w-full h-60 mb-6 rounded-3xl overflow-hidden group">
         {bannerImage && !imageError ? (
           <>
-            <div className={`relative w-full h-full ${isRepositioning ? 'cursor-row-resize' : ''}`}>
+            <div className={`relative w-full h-full ${isRepositioning && editable ? 'cursor-row-resize' : ''}`}>
               <img 
                 src={bannerImage} 
                 alt="Banner" 
@@ -124,7 +128,7 @@ export function ProjectBanner() {
                 style={{ objectPosition: `center ${bannerPosition}%` }}
                 onError={handleImageError}
               />
-              {isRepositioning && (
+              {isRepositioning && editable && (
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                   <div className="text-white text-center">
                     <Move className="w-8 h-8 mx-auto mb-2" />
@@ -133,23 +137,25 @@ export function ProjectBanner() {
                 </div>
               )}
             </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              className={`absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-30 ${
-                isRepositioning ? 'bg-primary text-primary-foreground' : ''
-              }`}
-              onClick={() => setIsRepositioning(!isRepositioning)}
-            >
-              <Move className="w-4 h-4 mr-2" />
-              {isRepositioning ? 'Concluir' : 'Reposicionar'}
-            </Button>
+            {editable && (
+              <Button
+                variant="secondary"
+                size="sm"
+                className={`absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-30 ${
+                  isRepositioning ? 'bg-primary text-primary-foreground' : ''
+                }`}
+                onClick={() => setIsRepositioning(!isRepositioning)}
+              >
+                <Move className="w-4 h-4 mr-2" />
+                {isRepositioning ? 'Concluir' : 'Reposicionar'}
+              </Button>
+            )}
           </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500" />
         )}
 
-        {!isRepositioning && (
+        {!isRepositioning && editable && (
           <div 
             onClick={() => setShowImageDialog(true)}
             className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer z-20"

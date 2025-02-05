@@ -1,6 +1,5 @@
 "use client"
 
-import { useQueryState } from 'nuqs'
 import { useState, useEffect } from 'react'
 import { useGetProject } from '@/hooks/useGetProject'
 import { useUpdateProject } from '@/hooks/useUpdateProject'
@@ -21,6 +20,8 @@ interface Collaborator {
 export function Header() {
   const params = useParams();
   const projectId = params.id as string;
+  
+  const { currentProject } = useProjectStore();
   
   const { 
     name: initialName, 
@@ -48,22 +49,11 @@ export function Header() {
     isLoading: isSaving 
   } = useUpdateProject(projectId);
 
-  const [projectName, setProjectName] = useQueryState('name', {
-    defaultValue: "",
-    parse: (value) => value || ""
-  });
-  
-  const [projectDescription, setProjectDescription] = useQueryState('description', {
-    defaultValue: "",
-    parse: (value) => value || ""
-  });
-  
   const [documentType, setDocumentType] = useState<'article' | 'thesis' | 'book' | 'research'>(initialModel || 'article');
   const [visibility, setVisibility] = useState<'private' | 'public' | 'institutional'>(initialVisibility || 'private');
   const [progress, setProgress] = useState(initialProgress || 0);
   const [wordCount, setWordCount] = useState(initialWordCount || 0);
   const [citationCount, setCitationCount] = useState(initialCitations?.length || 0);
-  const [autoSaveStatus, setAutoSaveStatus] = useState(isSaving ? "Salvando..." : "Salvo");
   const [lastEdited, setLastEdited] = useState<Date>(new Date());
   const [collaborators] = useState<Collaborator[]>([]);
   const [aiAssistant] = useState(false);
@@ -78,14 +68,12 @@ export function Header() {
   }, [project, setCurrentProject]);
 
   useEffect(() => {
-    if (projectName === "" && initialName) setProjectName(initialName);
-    if (projectDescription === "" && initialDescription) setProjectDescription(initialDescription);
     if (initialModel) setDocumentType(initialModel);
     if (initialVisibility) setVisibility(initialVisibility);
     if (initialProgress) setProgress(initialProgress);
     if (initialWordCount) setWordCount(initialWordCount);
     if (initialCitations) setCitationCount(initialCitations.length);
-  }, [initialName, initialDescription, initialModel, initialVisibility, initialProgress, initialWordCount, initialCitations, setProjectName, setProjectDescription, projectName, projectDescription]);
+  }, [initialModel, initialVisibility, initialProgress, initialWordCount, initialCitations, setDocumentType, setVisibility, setProgress, setWordCount, setCitationCount]);
 
   const handleModelChange = async (value: 'article' | 'thesis' | 'book' | 'research') => {
     setDocumentType(value);
@@ -110,26 +98,6 @@ export function Header() {
 
   const handleButtonSelectChange = (value: string) => {
     handleModelChange(value as 'article' | 'thesis' | 'book' | 'research');
-  };
-
-  const handleAutoSave = async () => {
-    setAutoSaveStatus("Salvando...");
-    try {
-      await saveProject({
-        name: projectName,
-        description: projectDescription,
-        model: documentType,
-        visibility: visibility,
-        progress: progress,
-        wordCount: wordCount,
-        updatedAt: new Date().toISOString(),
-      });
-
-      setAutoSaveStatus("Salvo às " + new Date().toLocaleTimeString());
-    } catch (error) {
-      console.error('Erro ao salvar:', error);
-      setAutoSaveStatus("Erro ao salvar");
-    }
   };
 
   useEffect(() => {
@@ -167,14 +135,12 @@ export function Header() {
       />
       
       <HeaderCore 
-        projectName={projectName}
-        projectDescription={projectDescription}
+        projectName={currentProject?.name || ''}
+        projectDescription={currentProject?.description || ''}
         documentType={documentType}
         visibility={visibility}
-        autoSaveStatus={autoSaveStatus}
         handleButtonSelectChange={handleButtonSelectChange}
         handleVisibilityChange={handleVisibilityChange}
-        handleAutoSave={handleAutoSave}
       />
       
       <HeaderBottom 
