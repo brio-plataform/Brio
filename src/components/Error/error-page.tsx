@@ -1,17 +1,15 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { AlertCircle, HomeIcon, RotateCcw } from "lucide-react"
-
-interface ErrorPageProps {
-  title?: string;
-  message?: string;
-  error?: Error | string;
-}
+import type { ErrorPageProps } from "@/types/types"
 
 export default function ErrorPage({ 
   title = "Ops, algo deu errado",
   message = "Não foi possível carregar o projeto",
-  error
+  error,
+  showReload = true,
+  showHome = true,
+  customActions
 }: ErrorPageProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
@@ -29,20 +27,25 @@ export default function ErrorPage({
           </div>
         )}
         <div className="space-y-4">
-          <Button 
-            onClick={() => window.location.reload()} 
-            variant="outline" 
-            className="w-full"
-          >
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Tentar novamente
-          </Button>
-          <Button asChild variant="ghost" className="w-full">
-            <Link href="/projects" className="flex items-center justify-center">
-              <HomeIcon className="mr-2 h-4 w-4" />
-              Voltar para projetos
-            </Link>
-          </Button>
+          {showReload && (
+            <Button 
+              onClick={() => window.location.reload()} 
+              variant="outline" 
+              className="w-full"
+            >
+              <RotateCcw className="mr-2 h-4 w-4" />
+              Tentar novamente
+            </Button>
+          )}
+          {showHome && (
+            <Button asChild variant="ghost" className="w-full">
+              <Link href="/projects" className="flex items-center justify-center">
+                <HomeIcon className="mr-2 h-4 w-4" />
+                Voltar para projetos
+              </Link>
+            </Button>
+          )}
+          {customActions}
         </div>
       </div>
       <footer className="mt-16 text-center text-gray-400 text-sm">

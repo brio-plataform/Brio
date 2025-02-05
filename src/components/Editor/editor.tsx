@@ -6,17 +6,13 @@ import "@blocknote/mantine/style.css";
 import { PartialBlock } from "@blocknote/core";
 import { useEffect, useState } from "react";
 import { useProjectStore } from '@/store/useProjectStore';
+import type { EditorProps, EditorTheme } from '@/types/types';
 
-interface EditorProps {
-  initialContent?: string | null;
-  editable?: boolean;
-}
-
-export default function Editor({ initialContent, editable }: EditorProps) {
+export default function Editor({ initialContent, editable = true }: EditorProps) {
   const { setEditorContent, saveEditorContent } = useProjectStore();
   const [hasChanges, setHasChanges] = useState(false);
   
-  const customTheme: Theme = {
+  const customTheme: EditorTheme = {
     colors: {
       editor: {
         text: "white",
@@ -67,7 +63,7 @@ export default function Editor({ initialContent, editable }: EditorProps) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [hasChanges]);
+  }, [hasChanges, saveEditorContent]);
 
   return <BlockNoteView editor={editor} editable={editable} theme={customTheme} />;
 }

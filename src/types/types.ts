@@ -274,6 +274,97 @@ interface UpdateProjectHookReturn {
   error: Error | null
 }
 
+// Tipos relacionados ao Editor
+interface EditorProps {
+  initialContent?: string | null
+  editable?: boolean
+}
+
+interface EditorThemeColors {
+  editor: {
+    text: string
+    background: string
+  }
+  tooltip: {
+    text: string
+    background: string
+  }
+}
+
+interface EditorTheme {
+  colors: EditorThemeColors
+  borderRadius: number
+  fontFamily: string
+}
+
+interface EditorBlock {
+  type: "paragraph" | "heading" | "bulletListItem" | "numberedListItem" | "image"
+  content: Array<{
+    type: "text" | "link" | "image"
+    text?: string
+    styles?: {
+      bold?: boolean
+      italic?: boolean
+      underline?: boolean
+      strike?: boolean
+      code?: boolean
+      textColor?: string
+      backgroundColor?: string
+    }
+    href?: string
+    url?: string
+  }>
+  props?: {
+    textAlignment?: "left" | "center" | "right"
+    level?: 1 | 2 | 3
+  }
+}
+
+interface EditorContent {
+  blocks: EditorBlock[]
+  version: string
+}
+
+interface EditorState {
+  content: EditorContent | null
+  hasChanges: boolean
+  isLoading: boolean
+  error: string | null
+  
+  // Actions
+  setContent: (content: EditorContent) => void
+  saveContent: () => Promise<void>
+  updateBlock: (blockId: string, block: Partial<EditorBlock>) => void
+  clearContent: () => void
+}
+
+// Tipos relacionados aos componentes de Error
+interface ErrorPageProps {
+  title?: string
+  message?: string
+  error?: Error | string
+  showReload?: boolean
+  showHome?: boolean
+  customActions?: React.ReactNode
+}
+
+interface UnauthorizedPageProps {
+  title?: string
+  message?: string
+  showLogin?: boolean
+  showHome?: boolean
+  customActions?: React.ReactNode
+  supportMessage?: string
+}
+
+interface ErrorAction {
+  icon: React.ElementType
+  label: string
+  href?: string
+  onClick?: () => void
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+}
+
 export type {
   User,
   Project,
@@ -298,5 +389,14 @@ export type {
   UpdateProjectHookReturn,
   ProjectModel,
   ProjectVisibility,
-  ProjectType
+  ProjectType,
+  EditorProps,
+  EditorTheme,
+  EditorBlock,
+  EditorContent,
+  EditorState,
+  EditorThemeColors,
+  ErrorPageProps,
+  UnauthorizedPageProps,
+  ErrorAction
 } 
