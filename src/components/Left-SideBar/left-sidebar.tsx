@@ -4,7 +4,6 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Link from "next/link"
-import { LucideIcon, User } from "lucide-react"
 import {
   Book,
   Calendar,
@@ -32,6 +31,7 @@ import {
   Target,
   Lightbulb,
   ChevronDown,
+  User
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -45,34 +45,38 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import type { SidebarMenuItem, SidebarProps, SidebarState } from '@/types/types'
 
-interface MenuItem {
-  icon: LucideIcon;
-  label: string;
-  href?: string;
-  items?: Omit<MenuItem, 'items'>[];
-}
+export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProps) {
+  const [state, setState] = useState<SidebarState>({
+    isCollapsed: defaultCollapsed,
+    openSections: []
+  })
 
-export function LeftSidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const [openSections, setOpenSections] = useState<string[]>([])
-
-  const toggleSidebar = () => setIsCollapsed(!isCollapsed)
+  const toggleSidebar = () => {
+    setState(prev => ({
+      ...prev,
+      isCollapsed: !prev.isCollapsed
+    }))
+  }
   
   const toggleSection = (section: string) => {
-    if (isCollapsed) {
-      setIsCollapsed(false)
-      setOpenSections([section])
+    if (state.isCollapsed) {
+      setState({
+        isCollapsed: false,
+        openSections: [section]
+      })
     } else {
-      setOpenSections(current => 
-        current.includes(section)
-          ? current.filter(item => item !== section)
-          : [...current, section]
-      )
+      setState(prev => ({
+        ...prev,
+        openSections: prev.openSections.includes(section)
+          ? prev.openSections.filter(item => item !== section)
+          : [...prev.openSections, section]
+      }))
     }
   }
 
-  const menuItems: MenuItem[] = [
+  const menuItems: SidebarMenuItem[] = [
     {
       icon: Home,
       label: "Início",
@@ -126,18 +130,18 @@ export function LeftSidebar() {
     }
   ]
 
-  const bottomItems: MenuItem[] = [
+  const bottomItems: SidebarMenuItem[] = [
     { icon: Settings, label: "Configurações", href: "/settings" },
     { icon: HelpCircle, label: "Ajuda", href: "/help" },
   ]
 
-  const renderMenuItem = (item: MenuItem) => {
+  const renderMenuItem = (item: SidebarMenuItem) => {
     if (item.items) {
       return (
         <TooltipProvider key={item.label} delayDuration={300}>
           <Tooltip>
             <Collapsible
-              open={openSections.includes(item.label)}
+              open={state.openSections.includes(item.label)}
               onOpenChange={() => toggleSection(item.label)}
             >
               <TooltipTrigger asChild>
@@ -146,33 +150,33 @@ export function LeftSidebar() {
                     variant="ghost"
                     className={cn(
                       "w-full justify-between",
-                      isCollapsed && "w-10 h-10 p-0",
+                      state.isCollapsed && "w-10 h-10 p-0",
                     )}
                   >
                     <div className={cn(
                       "flex items-center",
-                      isCollapsed && "w-full justify-center"
+                      state.isCollapsed && "w-full justify-center"
                     )}>
                       <item.icon className="h-4 w-4" />
-                      {!isCollapsed && <span className="ml-2">{item.label}</span>}
+                      {!state.isCollapsed && <span className="ml-2">{item.label}</span>}
                     </div>
-                    {!isCollapsed && (
+                    {!state.isCollapsed && (
                       <ChevronDown
                         className={cn(
                           "h-4 w-4 transition-transform",
-                          openSections.includes(item.label) && "transform rotate-180"
+                          state.openSections.includes(item.label) && "transform rotate-180"
                         )}
                       />
                     )}
                   </Button>
                 </CollapsibleTrigger>
               </TooltipTrigger>
-              {isCollapsed && (
+              {state.isCollapsed && (
                 <TooltipContent side="right">
                   <p>{item.label}</p>
                 </TooltipContent>
               )}
-              {!isCollapsed && (
+              {!state.isCollapsed && (
                 <CollapsibleContent className="py-2">
                   {item.items.map((subItem, index) => (
                     <Button
@@ -204,19 +208,19 @@ export function LeftSidebar() {
               asChild
               className={cn(
                 "w-full justify-start",
-                isCollapsed && "w-10 h-10 p-0"
+                state.isCollapsed && "w-10 h-10 p-0"
               )}
             >
               <Link href={item.href || "#"} className={cn(
                 "flex items-center",
-                isCollapsed && "w-full justify-center"
+                state.isCollapsed && "w-full justify-center"
               )}>
                 <item.icon className="h-4 w-4" />
-                {!isCollapsed && <span className="ml-2">{item.label}</span>}
+                {!state.isCollapsed && <span className="ml-2">{item.label}</span>}
               </Link>
             </Button>
           </TooltipTrigger>
-          {isCollapsed && (
+          {state.isCollapsed && (
             <TooltipContent side="right">
               <p>{item.label}</p>
             </TooltipContent>
@@ -230,12 +234,13 @@ export function LeftSidebar() {
     <div
       className={cn(
         "border-r bg-muted transition-all duration-300 ease-in-out h-full flex flex-col",
-        isCollapsed ? "w-16" : "w-fit max-w-[278px]",
+        state.isCollapsed ? "w-16" : "w-fit max-w-[278px]",
+        className
       )}
     >
       <div className="px-3 py-2">
         <div className="flex items-center justify-between">
-          {!isCollapsed && (
+          {!state.isCollapsed && (
             <div className="flex items-center gap-2 px-2">
               <span className="h-6 w-6 rounded-md bg-foreground flex items-center justify-center text-background font-bold">
                 B
@@ -250,13 +255,13 @@ export function LeftSidebar() {
                   variant="ghost"
                   size="icon"
                   onClick={toggleSidebar}
-                  className={cn("ml-auto", isCollapsed && "mx-auto")}
+                  className={cn("ml-auto", state.isCollapsed && "mx-auto")}
                 >
-                  {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+                  {state.isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side={isCollapsed ? "right" : "left"}>
-                <p>{isCollapsed ? "Expandir sidebar" : "Recolher sidebar"}</p>
+              <TooltipContent side={state.isCollapsed ? "right" : "left"}>
+                <p>{state.isCollapsed ? "Expandir sidebar" : "Recolher sidebar"}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -266,7 +271,7 @@ export function LeftSidebar() {
       <ScrollArea className="flex-1">
         <div className={cn(
           "space-y-2 py-4",
-          isCollapsed ? "px-3" : "px-3"
+          state.isCollapsed ? "px-3" : "px-3"
         )}>
           {menuItems.map(renderMenuItem)}
         </div>
@@ -274,7 +279,7 @@ export function LeftSidebar() {
 
       <div className={cn(
         "mt-auto py-4 border-t",
-        isCollapsed ? "px-3" : "px-3"
+        state.isCollapsed ? "px-3" : "px-3"
       )}>
         {bottomItems.map(renderMenuItem)}
       </div>

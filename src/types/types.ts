@@ -437,6 +437,39 @@ interface ProjectViewerHeaderProps {
   projectId: string
 }
 
+// Tipos relacionados ao Left Sidebar
+import { LucideIcon } from "lucide-react"
+
+interface SidebarMenuItem {
+  icon: LucideIcon
+  label: string
+  href?: string
+  items?: Omit<SidebarMenuItem, 'items'>[]
+}
+
+interface SidebarSection {
+  items: SidebarMenuItem[]
+  isCollapsed: boolean
+  openSections: string[]
+}
+
+interface SidebarState {
+  isCollapsed: boolean
+  openSections: string[]
+}
+
+interface SidebarProps {
+  defaultCollapsed?: boolean
+  className?: string
+}
+
+interface SidebarItemProps {
+  item: SidebarMenuItem
+  isCollapsed: boolean
+  isOpen?: boolean
+  onToggle?: (label: string) => void
+}
+
 export type {
   User,
   Project,
@@ -481,5 +514,10 @@ export type {
   ProjectViewerHeaderBottomProps,
   ProjectViewerHeaderProps,
   ProjectViewerData,
-  ProjectAuthor
+  ProjectAuthor,
+  SidebarMenuItem,
+  SidebarSection,
+  SidebarState,
+  SidebarProps,
+  SidebarItemProps
 } 
