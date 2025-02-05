@@ -348,6 +348,13 @@ export function FeedItem({
         </CardHeader>
         <CardContent>
           <h2 className="text-xl font-bold mb-2">{title}</h2>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {tags.map((tag) => (
+              <Badge key={tag} variant="secondary">
+                {tag}
+              </Badge>
+            ))}
+          </div>
           <div className="text-gray-600 dark:text-gray-300 mb-4 space-y-2">
             {content.summary.split("\n").map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
@@ -359,13 +366,6 @@ export function FeedItem({
                 <LinkPreview {...link} />
               </div>
             ))}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
           {references.length > 0 && (
             <div className="mt-4 border-t pt-4">
               <h4 className="text-sm font-semibold mb-2">References & Citations:</h4>
