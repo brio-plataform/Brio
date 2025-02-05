@@ -52,7 +52,7 @@
           "content": [
             {
               "type": "text",
-              "text": "Teste de leitura 1",
+              "text": "Teste de leitura 1 A",
               "styles": {}
             }
           ],
@@ -84,17 +84,6 @@
               "styles": {}
             }
           ],
-          "children": []
-        },
-        {
-          "id": "5fd8ddfb-10f6-48a3-9a3d-47f9e10c432e",
-          "type": "paragraph",
-          "props": {
-            "textColor": "default",
-            "backgroundColor": "default",
-            "textAlignment": "left"
-          },
-          "content": [],
           "children": []
         },
         {
@@ -504,7 +493,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-05T01:36:22.870Z"
+      "updatedAt": "2025-02-05T03:42:06.251Z"
     }
   ]
 }

@@ -1,5 +1,3 @@
-"use client"
-
 import { Eye, Star, GitFork, MessageSquare, Clock } from "lucide-react"
 
 interface ProjectViewerHeaderTopProps {
@@ -7,6 +5,7 @@ interface ProjectViewerHeaderTopProps {
     views: number
     stars: number
     forks: number
+    citations: number
     comments: number
   }
   lastUpdate: Date
@@ -27,6 +26,10 @@ export function ProjectViewerHeaderTop({ stats, lastUpdate }: ProjectViewerHeade
         <span className="flex items-center gap-1 justify-center">
           <GitFork className="h-3 w-3" />
           {stats.forks} forks
+        </span>
+        <span className="flex items-center gap-1 justify-center">
+          <GitFork className="h-3 w-3" />
+          {stats.citations} citações
         </span>
         <span className="flex items-center gap-1 justify-center">
           <MessageSquare className="h-3 w-3" />
