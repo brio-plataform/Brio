@@ -17,6 +17,7 @@ import {
   User,
   Send,
   MoreHorizontal,
+  UserPlus,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -25,6 +26,11 @@ import { Comment } from "@/components/Comment/comment"
 import { LinkPreview } from "@/components/LinkPreview/linkPreview"
 import { cn } from "@/lib/utils"
 import { Input } from "../ui/input"
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
 
 interface Citation {
   type: "person" | "article" | "post" | "media"
@@ -47,9 +53,20 @@ interface CommentType {
 
 export interface FeedItemProps {
   author: {
+    id: string
     name: string
     avatar: string
-    institution?: string
+    username?: string
+    bio?: string
+    mutualFriends?: Array<{
+      id: string
+      name: string
+      avatar: string
+    }>
+    institution?: {
+      name: string
+      link: string
+    }
   }
   title: string
   content: {
@@ -121,6 +138,41 @@ export function FeedItem({
     setNewComment("")
   }
 
+  const handleReplyToComment = (commentId: string, content: string) => {
+    const newReply: CommentType = {
+      id: Math.random().toString(36).substr(2, 9),
+      author: {
+        name: "Current User",
+        avatar: "/placeholder.svg?height=40&width=40",
+        institution: "Your Institution",
+      },
+      content: content,
+      timestamp: new Date(),
+      likes: 0,
+      replies: [],
+    }
+
+    const addReplyToComment = (comments: CommentType[]): CommentType[] => {
+      return comments.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            replies: [newReply, ...comment.replies]
+          }
+        }
+        if (comment.replies.length > 0) {
+          return {
+            ...comment,
+            replies: addReplyToComment(comment.replies)
+          }
+        }
+        return comment
+      })
+    }
+
+    setAllComments(addReplyToComment(allComments))
+  }
+
   const getCitationIcon = (type: Citation["type"]) => {
     switch (type) {
       case "person":
@@ -140,12 +192,14 @@ export function FeedItem({
     return commentsToRender.map((comment) => (
       <Comment
         key={comment.id}
+        id={comment.id}
         author={comment.author}
         content={comment.content}
         timestamp={comment.timestamp}
         likes={comment.likes}
         replies={comment.replies.length}
         level={level}
+        onReply={handleReplyToComment}
       >
         {comment.replies.length > 0 && renderComments(comment.replies, level + 1)}
       </Comment>
@@ -158,12 +212,117 @@ export function FeedItem({
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar>
             <AvatarImage src={author.avatar} alt={author.name} />
-            <AvatarFallback className="bg-gray-500 text-muted-foreground">{author.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback className="bg-gray-500 text-muted-foreground">
+              {author.name.charAt(0)}
+            </AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-semibold">{author.name}</h3>
-              {author.institution && <span className="text-sm text-muted-foreground">• {author.institution}</span>}
+              <HoverCard>
+                <div className="flex items-center gap-3">
+                  <div className="space-y-0.5">
+                    <HoverCardTrigger asChild>
+                      <button 
+                        onClick={() => window.location.href = `/profile/${author.id}`}
+                        className="text-md font-medium hover:underline"
+                      >
+                        {author.name}
+                      </button>
+                    </HoverCardTrigger>
+                  </div>
+                </div>
+                <HoverCardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={author.avatar} alt={author.name} />
+                        <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-0.5">
+                        <p className="text-sm font-medium">{author.name}</p>
+                        {author.institution?.name && (
+                          <p className="text-xs text-muted-foreground">
+                            {author.institution.name}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Button variant="ghost" className="text-muted-foreground hover:text-white">
+                            <UserPlus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Researcher at <strong className="font-medium text-foreground">{author.institution?.name}</strong>.
+                      {/* Você pode adicionar uma bio aqui se tiver essa informação */}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <div className="flex -space-x-1.5">
+                        {/* Exemplo de amigos mútuos - você precisará adicionar esses dados */}
+                        <Avatar className="h-5 w-5 ring-1 ring-background">
+                          <AvatarImage src="/avatar-20-04.jpg" alt="Friend 01" />
+                        </Avatar>
+                        <Avatar className="h-5 w-5 ring-1 ring-background">
+                          <AvatarImage src="/avatar-20-05.jpg" alt="Friend 02" />
+                        </Avatar>
+                        <Avatar className="h-5 w-5 ring-1 ring-background">
+                          <AvatarImage src="/avatar-20-06.jpg" alt="Friend 03" />
+                        </Avatar>
+                      </div>
+                      <div className="text-xs text-muted-foreground">3 mutual friends</div>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+              {author.institution && (
+                <>
+                  <span className="text-sm text-muted-foreground">•</span>
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto text-sm text-muted-foreground hover:text-white p-1"
+                      >
+                        {author.institution.name}
+                      </Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-80">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage src={`/institutions/${author.institution.name.toLowerCase().replace(/\s+/g, '-')}.jpg`} alt={author.institution.name} />
+                            <AvatarFallback>{author.institution.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div className="space-y-1">
+                            <h4 className="text-sm font-semibold">{author.institution.name}</h4>
+                            <p className="text-xs text-muted-foreground">Research Institution</p>
+                          </div>
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          <div className="flex items-center gap-4 mt-2">
+                            <div className="flex items-center gap-1">
+                              <User className="h-4 w-4" />
+                              <span>2.5k Researchers</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <FileText className="h-4 w-4" />
+                              <span>10k Publications</span>
+                            </div>
+                          </div>
+                        </div>
+                        <Button 
+                          className="w-full" 
+                          variant="outline"
+                          onClick={() => window.location.href = author.institution!.link}
+                        >
+                          View Institution Profile
+                        </Button>
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                </>
+              )}
             </div>
             <p className="text-sm text-muted-foreground">
               {new Date(timestamp).toLocaleDateString("pt-BR", {
@@ -310,7 +469,7 @@ export function FeedItem({
         <h2 className="text-2xl font-bold mb-4">{title}</h2>
         <div className="mb-4">
           <span className="font-semibold">Author:</span> {author.name}
-          {author.institution && <span> ({author.institution})</span>}
+          {author.institution && <span> ({author.institution.name})</span>}
         </div>
         <div className="prose dark:prose-invert max-w-none">
           {content.full.split("\n").map((paragraph, index) => (

@@ -7,9 +7,13 @@ import { ColumnFeed } from "../ColumnFeed/columnFeed"
 const sampleFeedData: FeedItemProps[] = [
   {
     author: {
+      id: "jane-smith",
       name: "Dr. Jane Smith",
       avatar: placeholder,
-      institution: "Harvard University",
+      institution: {
+        name: "Harvard University",
+        link: "/institution/harvard-university"
+      },
     },
     title: "The Impact of AI on Modern Education",
     content: {
@@ -81,9 +85,13 @@ const sampleFeedData: FeedItemProps[] = [
   },
   {
     author: {
+      id: "john-doe",
       name: "Prof. John Doe",
       avatar: placeholder,
-      institution: "MIT",
+      institution: {
+        name: "MIT",
+        link: "/institution/mit"
+      },
     },
     title: "Quantum Computing: A New Era of Information Processing",
     content: {
