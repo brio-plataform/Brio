@@ -365,6 +365,42 @@ interface ErrorAction {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
 }
 
+// Tipos relacionados ao Header
+interface HeaderCollaborator {
+  id: string
+  name: string
+  avatar: string
+  role: string
+  status: 'online' | 'offline' | 'away'
+}
+
+interface HeaderTopProps {
+  lastEdited: Date
+  wordCount: number
+  citationCount: number
+  aiAssistant: boolean
+  progress: number
+  handleProgressChange: (event: React.FormEvent<HTMLDivElement>) => void
+}
+
+interface HeaderCoreProps {
+  projectName: string
+  projectDescription: string
+  documentType: ProjectModel
+  visibility: ProjectVisibility
+  handleButtonSelectChange: (value: string) => void
+  handleVisibilityChange: (value: ProjectVisibility) => void
+}
+
+interface HeaderBottomProps {
+  currentVersion: string
+  collaborators: HeaderCollaborator[]
+}
+
+interface HeaderProps {
+  projectId: string
+}
+
 export type {
   User,
   Project,
@@ -398,5 +434,10 @@ export type {
   EditorThemeColors,
   ErrorPageProps,
   UnauthorizedPageProps,
-  ErrorAction
+  ErrorAction,
+  HeaderCollaborator,
+  HeaderTopProps,
+  HeaderCoreProps,
+  HeaderBottomProps,
+  HeaderProps
 } 

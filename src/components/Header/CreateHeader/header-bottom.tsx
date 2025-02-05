@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import type { HeaderBottomProps, HeaderCollaborator } from '@/types/types'
 
 interface Collaborator {
   id: string
@@ -17,11 +18,6 @@ interface Collaborator {
   avatar: string
   role: string
   status: 'online' | 'offline' | 'away'
-}
-
-interface HeaderBottomProps {
-  currentVersion: string
-  collaborators: Collaborator[]
 }
 
 export function HeaderBottom({
