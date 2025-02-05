@@ -1,8 +1,9 @@
 import { CreatePost } from "@/components/CreatePost/createPost"
 import { BannerCarousel } from "../Banner/banner"
-import { FeedItem, FeedItemProps } from "../FeedItem/feedItem"
+import { FeedItem } from "../FeedItem/feedItem"
 import placeholder from "../../../public/images/placeholder.svg"
 import { ColumnFeed } from "../ColumnFeed/columnFeed"
+import type { FeedItemProps } from "@/types/types"
 
 const sampleFeedData: FeedItemProps[] = [
   {

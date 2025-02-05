@@ -5,6 +5,7 @@ import { ThumbsUp, MessageSquare, Share2, MoreHorizontal, Send } from "lucide-re
 import { formatDistanceToNow } from "date-fns"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import type { CommentType } from "@/types/types"
 
 interface CommentProps {
   author: {

@@ -31,62 +31,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-
-interface Citation {
-  type: "person" | "article" | "post" | "media"
-  content: string
-  link: string
-}
-
-interface CommentType {
-  id: string
-  author: {
-    name: string
-    avatar: string
-    institution?: string
-  }
-  content: string
-  timestamp: Date
-  likes: number
-  replies: CommentType[]
-}
-
-export interface FeedItemProps {
-  author: {
-    id: string
-    name: string
-    avatar: string
-    username?: string
-    bio?: string
-    mutualFriends?: Array<{
-      id: string
-      name: string
-      avatar: string
-    }>
-    institution?: {
-      name: string
-      link: string
-    }
-  }
-  title: string
-  content: {
-    summary: string
-    full: string
-  }
-  tags: string[]
-  likes: number
-  comments: CommentType[]
-  forks: number
-  citations: number
-  references: Citation[]
-  links?: Array<{
-    url: string
-    title: string
-    description: string
-    image?: string
-  }>
-  timestamp: Date
-}
+import type { FeedItemProps, CommentType, Citation } from "@/types/types"
 
 export function FeedItem({
   author,

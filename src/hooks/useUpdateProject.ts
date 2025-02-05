@@ -1,27 +1,20 @@
 import axios from 'axios';
 import { useState } from 'react';
+import type { 
+  UpdateProjectData, 
+  UpdateProjectHookReturn, 
+  ProjectModel,
+  ProjectVisibility,
+  ProjectType,
+  ProjectVersion 
+} from '@/types/types';
 
 interface Version {
   version: string;
   updatedAt: string;
 }
 
-interface UpdateProjectData {
-  name?: string;
-  description?: string;
-  content?: any;
-  version?: Version[];
-  logo?: string;
-  banner?: string;
-  wordCount?: number;
-  citations?: string[];
-  model?: 'article' | 'thesis' | 'book' | 'research';
-  visibility?: 'private' | 'public' | 'institutional';
-  progress?: number;
-  type?: string;
-}
-
-export function useUpdateProject(projectId: string) {
+export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -80,11 +73,11 @@ export function useUpdateProject(projectId: string) {
     return updateProject({ citations });
   };
 
-  const updateModel = async (model: 'article' | 'thesis' | 'book' | 'research') => {
+  const updateModel = async (model: ProjectModel) => {
     return updateProject({ model });
   };
 
-  const updateVisibility = async (visibility: 'private' | 'public' | 'institutional') => {
+  const updateVisibility = async (visibility: ProjectVisibility) => {
     return updateProject({ visibility });
   };
 
@@ -92,7 +85,7 @@ export function useUpdateProject(projectId: string) {
     return updateProject({ progress });
   };
 
-  const updateType = async (type: string) => {
+  const updateType = async (type: ProjectType) => {
     return updateProject({ type });
   };
 

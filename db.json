@@ -11,14 +11,14 @@
     {
       "id": "1",
       "userId": "1",
-      "name": "Prototipo do Brio",
+      "name": "Protótipo do Brio",
       "description": "Criar uma plataforma aberta onde o conhecimento é central, acessível e democrático",
       "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_%28with_h-alpha%29.jpg",
       "createdAt": "2025-01-31T23:47:47.093Z",
       "banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_h-alpha%29.jpg",
       "wordCount": 0,
       "citations": [],
-      "model": "thesis",
+      "model": "research",
       "visibility": "institutional",
       "progress": 40,
       "type": "institutional",
@@ -191,7 +191,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-05T20:39:00.517Z"
+      "updatedAt": "2025-02-05T23:41:20.438Z"
     }
   ]
 }
