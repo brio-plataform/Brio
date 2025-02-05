@@ -1,5 +1,3 @@
-"use client"
-
 import { Star, Share2, GitFork, BookOpen, FileEdit, History, GitBranch, ChevronDown, Bookmark } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"

@@ -1,5 +1,3 @@
-"use client"
-
 import { Eye, Star, GitFork, MessageSquare, Clock } from "lucide-react"
 
 interface ProjectViewerHeaderTopProps {
