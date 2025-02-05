@@ -31,22 +31,6 @@ export function ProjectViewerHeader({ projectId }: ProjectViewerHeaderProps) {
     }
   }, [project, setCurrentProject])
 
-  const handleStar = () => {
-    // Implementar lógica de favoritar
-  }
-
-  const handleFork = () => {
-    // Implementar lógica de fork
-  }
-
-  const handleShare = () => {
-    // Implementar lógica de compartilhamento
-  }
-
-  const handleRead = () => {
-    // Implementar lógica de leitura
-  }
-
   const handleNavigate = (section: string) => {
     // Implementar lógica de navegação
   }
