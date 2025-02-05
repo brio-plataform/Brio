@@ -50,7 +50,9 @@ interface ProjectStats {
   views: number
   stars: number
   forks: number
+  citations: number
   comments: number
+  reviews?: number
 }
 
 // Tipos específicos para Project
@@ -401,6 +403,40 @@ interface HeaderProps {
   projectId: string
 }
 
+// Tipos relacionados ao Project Viewer Header
+interface ProjectViewerHeaderTopProps {
+  stats: ProjectStats
+  lastUpdate: Date
+}
+
+interface ProjectAuthor {
+  name: string
+  avatar: string
+  institution?: string
+}
+
+interface ProjectViewerData {
+  title: string
+  description: string
+  type: ProjectModel
+  author: ProjectAuthor
+  currentVersion: string
+  stats: ProjectStats
+  lastUpdate: Date
+}
+
+interface ProjectViewerHeaderCoreProps {
+  project: ProjectViewerData
+}
+
+interface ProjectViewerHeaderBottomProps {
+  onNavigate: (section: string) => void
+}
+
+interface ProjectViewerHeaderProps {
+  projectId: string
+}
+
 export type {
   User,
   Project,
@@ -439,5 +475,11 @@ export type {
   HeaderTopProps,
   HeaderCoreProps,
   HeaderBottomProps,
-  HeaderProps
+  HeaderProps,
+  ProjectViewerHeaderTopProps,
+  ProjectViewerHeaderCoreProps,
+  ProjectViewerHeaderBottomProps,
+  ProjectViewerHeaderProps,
+  ProjectViewerData,
+  ProjectAuthor
 } 

@@ -6,10 +6,7 @@ import { ProjectViewerHeaderBottom } from './project-viewer-header-bottom'
 import { useGetProject } from '@/hooks/useGetProject'
 import { useProjectStore } from '@/store/useProjectStore'
 import { useEffect } from 'react'
-
-interface ProjectViewerHeaderProps {
-  projectId: string;
-}
+import type { ProjectViewerHeaderProps, ProjectViewerData, ProjectStats } from '@/types/types'
 
 export function ProjectViewerHeader({ projectId }: ProjectViewerHeaderProps) {
   const { 
@@ -35,7 +32,7 @@ export function ProjectViewerHeader({ projectId }: ProjectViewerHeaderProps) {
     // Implementar lógica de navegação
   }
 
-  const defaultStats = {
+  const defaultStats: ProjectStats = {
     views: 0,
     stars: 0,
     forks: 0,
@@ -44,17 +41,17 @@ export function ProjectViewerHeader({ projectId }: ProjectViewerHeaderProps) {
     comments: 0
   }
   
-  const projectData = {
+  const projectData: ProjectViewerData = {
     title: name || "Untitled Project",
     description: description || "No description available",
-    type: model as "article" | "thesis" | "book" | "research",
+    type: model || "article",
     currentVersion: versions?.[0]?.version || "1.0.0",
     author: author || {
       name: "Unknown Author",
       avatar: "/default-avatar.jpg",
       institution: "No Institution"
     },
-    stats: { ...defaultStats, ...stats },  // <-- Garante todas as propriedades
+    stats: { ...defaultStats, ...stats },
     lastUpdate: updatedAt ? new Date(updatedAt) : new Date()
   }
   

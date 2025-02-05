@@ -7,10 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-interface ProjectViewerHeaderBottomProps {
-  onNavigate: (section: string) => void
-}
+import type { ProjectViewerHeaderBottomProps } from '@/types/types'
 
 export function ProjectViewerHeaderBottom({ onNavigate }: ProjectViewerHeaderBottomProps) {
   return (
