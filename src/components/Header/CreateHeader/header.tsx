@@ -54,7 +54,6 @@ export function Header() {
   const [progress, setProgress] = useState(initialProgress || 0);
   const [wordCount, setWordCount] = useState(initialWordCount || 0);
   const [citationCount, setCitationCount] = useState(initialCitations?.length || 0);
-  const [autoSaveStatus, setAutoSaveStatus] = useState(isSaving ? "Salvando..." : "Salvo");
   const [lastEdited, setLastEdited] = useState<Date>(new Date());
   const [collaborators] = useState<Collaborator[]>([]);
   const [aiAssistant] = useState(false);
@@ -101,26 +100,6 @@ export function Header() {
     handleModelChange(value as 'article' | 'thesis' | 'book' | 'research');
   };
 
-  const handleAutoSave = async () => {
-    setAutoSaveStatus("Salvando...");
-    try {
-      await saveProject({
-        name: currentProject?.name,
-        description: currentProject?.description,
-        model: documentType,
-        visibility: visibility,
-        progress: progress,
-        wordCount: wordCount,
-        updatedAt: new Date().toISOString(),
-      });
-
-      setAutoSaveStatus("Salvo às " + new Date().toLocaleTimeString());
-    } catch (error) {
-      console.error('Erro ao salvar:', error);
-      setAutoSaveStatus("Erro ao salvar");
-    }
-  };
-
   useEffect(() => {
     if (updatedAt) {
       setLastEdited(new Date(updatedAt));
@@ -160,10 +139,8 @@ export function Header() {
         projectDescription={currentProject?.description || ''}
         documentType={documentType}
         visibility={visibility}
-        autoSaveStatus={autoSaveStatus}
         handleButtonSelectChange={handleButtonSelectChange}
         handleVisibilityChange={handleVisibilityChange}
-        handleAutoSave={handleAutoSave}
       />
       
       <HeaderBottom 

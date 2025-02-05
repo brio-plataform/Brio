@@ -46,10 +46,10 @@ export function Project({ editable }: ProjectProps) {
 
   return (
     <div className="p-6 w-full">
-      <ProjectBanner />
+      <ProjectBanner editable={editable} />
 
       <div className="mb-6">
-        <ProjectInfo/>
+        <ProjectInfo editable={editable} />
       </div>
 
       <div className="flex justify-center items-center pb-5 w-full">

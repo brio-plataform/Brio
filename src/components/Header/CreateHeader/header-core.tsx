@@ -1,6 +1,6 @@
 "use client"
 
-import { Lock, Globe, Building, ChevronDown, Download, Share, Save } from "lucide-react"
+import { Lock, Globe, Building, ChevronDown, Download, Share, Rocket } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ButtonSelect } from "@/components/ui/button-select"
 import {
@@ -15,10 +15,8 @@ interface HeaderCoreProps {
   projectDescription: string
   documentType: 'article' | 'thesis' | 'book' | 'research'
   visibility: 'private' | 'public' | 'institutional'
-  autoSaveStatus: string
   handleButtonSelectChange: (value: string) => void
   handleVisibilityChange: (value: 'private' | 'public' | 'institutional') => void
-  handleAutoSave: () => void
 }
 
 export function HeaderCore({
@@ -26,10 +24,8 @@ export function HeaderCore({
   projectDescription,
   documentType,
   visibility,
-  autoSaveStatus,
   handleButtonSelectChange,
   handleVisibilityChange,
-  handleAutoSave
 }: HeaderCoreProps) {
   return (
     <div className="flex items-center justify-between px-6">
@@ -49,7 +45,6 @@ export function HeaderCore({
       </div>
 
       <div className="flex items-center gap-3">
-        <span className="text-sm text-muted-foreground">{autoSaveStatus}</span>
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -85,12 +80,10 @@ export function HeaderCore({
         <Button 
           variant="default" 
           size="sm" 
-          className="gap-2" 
-          onClick={handleAutoSave}
-          disabled={autoSaveStatus === "Salvando..."}
+          className="gap-2 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600"
         >
-          <Save className="h-4 w-4" />
-          {autoSaveStatus === "Salvando..." ? "Salvando..." : "Salvar"}
+          <Rocket className="h-4 w-4" />
+          Publicar
         </Button>
       </div>
     </div>

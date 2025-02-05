@@ -16,7 +16,11 @@ import { Button } from "../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useProjectStore } from '@/store/useProjectStore';
 
-export function ProjectInfo() {
+interface ProjectInfoProps {
+  editable?: boolean;
+}
+
+export function ProjectInfo({ editable = true }: ProjectInfoProps) {
   const params = useParams();
   const projectId = params.id as string;
   const { logo } = useGetProject(projectId);
@@ -81,8 +85,8 @@ export function ProjectInfo() {
     <>
       <div className="flex items-center gap-4 mb-4 mt-4">
         <div 
-          className="relative w-16 h-16 rounded-lg overflow-hidden group cursor-pointer"
-          onClick={() => setShowImageDialog(true)}
+          className={`relative w-16 h-16 rounded-lg overflow-hidden ${editable ? 'group cursor-pointer' : ''}`}
+          onClick={() => editable && setShowImageDialog(true)}
         >
           {logo && !imageError ? (
             <img 
@@ -95,22 +99,26 @@ export function ProjectInfo() {
             <div className="w-full h-full bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500" />
           )}
           
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <ImagePlus className="w-6 h-6 text-white" />
-          </div>
+          {editable && (
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <ImagePlus className="w-6 h-6 text-white" />
+            </div>
+          )}
         </div>
         <div>
           <input
             type="text"
             value={currentProject?.name || ''}
-            onChange={(e) => handleNameChange(e.target.value)}
+            onChange={(e) => editable && handleNameChange(e.target.value)}
             className="text-3xl font-bold bg-transparent border-none focus:outline-none w-full"
+            readOnly={!editable}
           />
           <input
             type="text"
             value={currentProject?.description || ''}
-            onChange={(e) => handleDescriptionChange(e.target.value)}
+            onChange={(e) => editable && handleDescriptionChange(e.target.value)}
             className="text-muted-foreground bg-transparent border-none focus:outline-none w-full"
+            readOnly={!editable}
           />
         </div>
       </div>
