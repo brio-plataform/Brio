@@ -45,7 +45,7 @@ interface CommentType {
   replies: CommentType[]
 }
 
-interface FeedItemProps {
+export interface FeedItemProps {
   author: {
     name: string
     avatar: string
@@ -340,3 +340,4 @@ export function FeedItem({
     </>
   )
 }
+
