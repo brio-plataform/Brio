@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
-  ThumbsUp,
   MessageSquare,
   GitBranch,
   BookOpen,
@@ -23,7 +22,6 @@ import {
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Modal } from "@/components/Modal/modal"
 import { Comment } from "@/components/Comment/comment"
 import { LinkPreview } from "@/components/LinkPreview/linkPreview"
 import { cn } from "@/lib/utils"
@@ -51,7 +49,6 @@ export function FeedItem({
   const [likeCount, setLikeCount] = useState(likes)
   const [isLiked, setIsLiked] = useState(false)
   const [isDesLiked, setIsDesLiked] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [newComment, setNewComment] = useState("")
   const [allComments, setAllComments] = useState(comments)
@@ -388,9 +385,6 @@ export function FeedItem({
               </Button>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => setIsModalOpen(true)}>
-                Read More
-              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
@@ -430,38 +424,6 @@ export function FeedItem({
           )}
         </CardFooter>
       </Card>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2 className="text-2xl font-bold mb-4">{title}</h2>
-        <div className="mb-4">
-          <span className="font-semibold">Author:</span> {author.name}
-          {author.institution && <span> ({author.institution.name})</span>}
-        </div>
-        <div className="prose dark:prose-invert max-w-none">
-          {content.full.split("\n").map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </div>
-        {references.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-xl font-semibold mb-2">References & Citations:</h3>
-            <ul className="list-disc pl-5">
-              {references.map((ref, index) => (
-                <li key={index}>
-                  <a
-                    href={ref.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    {ref.content} ({ref.type})
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </Modal>
     </>
   )
 }

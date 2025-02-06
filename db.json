@@ -220,11 +220,28 @@
             "backgroundColor": "default",
             "textAlignment": "left"
           },
+          "content": [
+            {
+              "type": "text",
+              "text": "fdhgdrfehtyiyuotoyu",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "1f1ffb43-febd-4c06-80bc-115fff5fed6d",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
           "content": [],
           "children": []
         }
       ],
-      "updatedAt": "2025-02-06T14:39:05.369Z"
+      "updatedAt": "2025-02-06T19:05:25.699Z"
     }
   ]
 }
