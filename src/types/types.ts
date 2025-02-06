@@ -479,6 +479,7 @@ interface RightSidebarMenuItem {
 }
 
 interface RightSidebarReview {
+  id: string
   title: string
   reviewer: string
   progress: number
@@ -497,14 +498,35 @@ interface RightSidebarCollaborator {
   id: string
   name: string
   avatar: string
+  status?: 'online' | 'offline' | 'away'
 }
 
-type RightSidebarState = BaseSidebarState
-interface RightSidebarProps extends BaseSidebarProps {
-  projectDescription?: string
+interface RightSidebarSection {
+  title: string
+  icon: LucideIcon
+  content: React.ReactNode
+}
+
+interface RightSidebarState {
+  isCollapsed: boolean
+  openSections: string[]
+  description?: string
   metrics?: RightSidebarMetrics
   collaborators?: RightSidebarCollaborator[]
-  reviews?: RightSidebarReview[]
+  reviews: RightSidebarReview[]
+  sections: RightSidebarSection[]
+}
+
+interface RightSidebarProps {
+  defaultCollapsed?: boolean
+  className?: string
+  description?: string
+  metrics?: RightSidebarMetrics
+  collaborators?: RightSidebarCollaborator[]
+  reviews: RightSidebarReview[]
+  sections: RightSidebarSection[]
+  onSectionToggle?: (section: string) => void
+  onCollapse?: (collapsed: boolean) => void
 }
 
 export type {
@@ -561,5 +583,6 @@ export type {
   RightSidebarProps,
   RightSidebarMetrics,
   RightSidebarCollaborator,
+  RightSidebarSection,
   ReviewMetadata
 } 
