@@ -11,14 +11,14 @@
     {
       "id": "1",
       "userId": "1",
-      "name": "Protótipo do Brio",
-      "description": "Criar uma plataforma aberta onde o conhecimento é central, acessível e democrático",
+      "name": "test test tes",
+      "description": "drescription ",
       "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_%28with_h-alpha%29.jpg",
       "createdAt": "2025-01-31T23:47:47.093Z",
       "banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_h-alpha%29.jpg",
       "wordCount": 0,
       "citations": [],
-      "model": "research",
+      "model": "article",
       "visibility": "institutional",
       "progress": 40,
       "type": "institutional",
@@ -41,7 +41,7 @@
       ],
       "content": [
         {
-          "id": "ea06690e-b09d-462a-99cd-7c3ef3bd4e90",
+          "id": "2b501742-b822-4583-b869-59f0a9eddbd1",
           "type": "heading",
           "props": {
             "textColor": "default",
@@ -59,7 +59,7 @@
           "children": []
         },
         {
-          "id": "aa28c703-fd65-4013-a7f2-691b1f233a5d",
+          "id": "fec33e9e-bb44-4c27-97e5-5f003f8617d4",
           "type": "paragraph",
           "props": {
             "textColor": "default",
@@ -70,7 +70,18 @@
           "children": []
         },
         {
-          "id": "90443211-b815-4f20-9741-04fde0d7fd61",
+          "id": "6421ed12-f8b6-4beb-985c-cfe5e81a5006",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "326c4771-074f-4d55-8521-0fc09f28c8bc",
           "type": "image",
           "props": {
             "backgroundColor": "default",
@@ -84,7 +95,18 @@
           "children": []
         },
         {
-          "id": "77b12dc3-00a5-4f59-aa21-872362a44fb6",
+          "id": "98b5ed36-25ad-43bd-9078-b8afa4d14988",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "8f49d1e9-15a8-418f-a445-7f3abf9ce0f0",
           "type": "bulletListItem",
           "props": {
             "textColor": "default",
@@ -108,7 +130,7 @@
           "children": []
         },
         {
-          "id": "983a06c5-da42-4191-ba39-9c5c25d8f44e",
+          "id": "bbeac682-4167-4992-824b-e03421d4228e",
           "type": "bulletListItem",
           "props": {
             "textColor": "default",
@@ -132,7 +154,7 @@
           "children": []
         },
         {
-          "id": "27c572de-408f-434a-bd60-26bbf3bd6163",
+          "id": "eb6c7815-95fb-41c5-8c5a-f2c34c1a3ab4",
           "type": "bulletListItem",
           "props": {
             "textColor": "default",
@@ -156,7 +178,7 @@
           "children": []
         },
         {
-          "id": "c6dccd96-a303-448e-aee3-b75ff0f3997c",
+          "id": "fa000aa3-aafb-4f51-8e5d-268e588463b1",
           "type": "bulletListItem",
           "props": {
             "textColor": "default",
@@ -180,6 +202,17 @@
           "children": []
         },
         {
+          "id": "b8620864-c2c5-44f5-a618-d4e5c299fe6d",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
           "id": "cdce3b14-dca6-4d86-834c-da5aac6f8c64",
           "type": "paragraph",
           "props": {
@@ -191,7 +224,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-06T00:13:29.735Z"
+      "updatedAt": "2025-02-06T14:39:05.369Z"
     }
   ]
 }

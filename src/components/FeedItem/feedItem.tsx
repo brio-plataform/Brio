@@ -18,6 +18,8 @@ import {
   Send,
   MoreHorizontal,
   UserPlus,
+  ArrowBigUp,
+  ArrowBigDown,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -48,6 +50,7 @@ export function FeedItem({
 }: FeedItemProps) {
   const [likeCount, setLikeCount] = useState(likes)
   const [isLiked, setIsLiked] = useState(false)
+  const [isDesLiked, setIsDesLiked] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [newComment, setNewComment] = useState("")
@@ -56,10 +59,25 @@ export function FeedItem({
   const handleLike = () => {
     if (isLiked) {
       setLikeCount(likeCount - 1)
+    } else if (isDesLiked) {
+      setLikeCount(likeCount + 1)
+      setIsDesLiked(false)
     } else {
       setLikeCount(likeCount + 1)
     }
     setIsLiked(!isLiked)
+  }
+
+  const handleDesLike = () => {
+    if (isDesLiked) {
+      setLikeCount(likeCount + 1)
+    } else if (isLiked) {
+      setLikeCount(likeCount - 1)
+      setIsLiked(false)
+    } else {
+      setLikeCount(likeCount - 1)
+    }
+    setIsDesLiked(!isDesLiked)
   }
 
   const handleSubmitComment = (e: React.FormEvent) => {
@@ -153,8 +171,17 @@ export function FeedItem({
 
   return (
     <>
-      <Card className="w-full max-w-7xl mb-4 bg-muted/30">
+      <Card className="w-full max-w-7xl mb-4 bg-muted/30 ">
         <CardHeader className="flex flex-row items-center gap-4">
+          <div className="flex flex-col items-center gap-1">
+            <Button variant="ghost" size="sm" onClick={handleLike}>
+              <ArrowBigUp className={cn("w-5 h-5 transition-colors", isLiked && "text-blue-500 [&>svg]:fill-blue-500")} />
+            </Button>
+            <span className="font-bold">{likeCount}</span>
+            <Button variant="ghost" size="sm" onClick={handleDesLike}>
+              <ArrowBigDown className={cn("w-5 h-5 transition-colors", isDesLiked && "text-red-500 [&>svg]:fill-red-500")} />
+            </Button>
+          </div>
           <Avatar>
             <AvatarImage src={author.avatar} alt={author.name} />
             <AvatarFallback className="bg-gray-500 text-muted-foreground">
@@ -291,7 +318,8 @@ export function FeedItem({
             </DropdownMenuContent>
           </DropdownMenu>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex items-start justify-start gap-4">
+          <div className="flex flex-col items-startspace-y-2">
           <h2 className="text-xl font-bold mb-2">{title}</h2>
           <div className="flex flex-wrap gap-2 mb-4">
             {tags.map((tag) => (
@@ -340,19 +368,11 @@ export function FeedItem({
               </div>
             </div>
           )}
+          </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <div className="flex justify-between items-center w-full">
             <div className="flex gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleLike}
-                className={cn("transition-colors", isLiked && "text-blue-500 [&>svg]:fill-blue-500")}
-              >
-                <ThumbsUp className="w-4 h-4 mr-2" />
-                {likeCount}
-              </Button>
               <Button variant="ghost" size="sm" onClick={() => setShowComments(!showComments)}>
                 <MessageSquare className="w-4 h-4 mr-2" />
                 {allComments.length}
