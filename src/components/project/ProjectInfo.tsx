@@ -15,6 +15,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useProjectStore } from '@/store/useProjectStore';
+import { ProjectInfoState, ProjectInfoHandlers } from '@/types/types';
 
 interface ProjectInfoProps {
   editable?: boolean;
@@ -27,58 +28,58 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
   const { updateLogo, updateName, updateDescription } = useUpdateProject(projectId);
   
   const { currentProject, updateProjectField } = useProjectStore();
-  const [imageError, setImageError] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [showImageDialog, setShowImageDialog] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
+  const [state, setState] = useState<ProjectInfoState>({
+    imageError: false,
+    isUploading: false,
+    showImageDialog: false,
+    imageUrl: ""
+  });
 
-  const handleImageError = () => {
-    setImageError(true);
-    updateLogo(""); // Limpa a URL no banco
-  };
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setIsUploading(true);
-      try {
-        const imageUrl = URL.createObjectURL(file);
-        await updateLogo(imageUrl);
-        setImageUrl(imageUrl);
-        setImageError(false);
-      } catch (error) {
-        console.error('Error uploading logo:', error);
-        handleImageError();
-      } finally {
-        setIsUploading(false);
+  const handlers: ProjectInfoHandlers = {
+    handleImageError: () => {
+      setState(prev => ({ ...prev, imageError: true }));
+      updateLogo("");
+    },
+    handleImageUpload: async (event) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        setState(prev => ({ ...prev, isUploading: true }));
+        try {
+          const imageUrl = URL.createObjectURL(file);
+          await updateLogo(imageUrl);
+          setState(prev => ({ ...prev, imageUrl }));
+          setState(prev => ({ ...prev, imageError: false }));
+        } catch (error) {
+          console.error('Error uploading logo:', error);
+          handlers.handleImageError();
+        } finally {
+          setState(prev => ({ ...prev, isUploading: false }));
+        }
       }
+    },
+    handleUrlSubmit: async (e) => {
+      e.preventDefault();
+      if (!state.imageUrl) return;
+      
+      setState(prev => ({ ...prev, isUploading: true }));
+      try {
+        await updateLogo(state.imageUrl);
+        setState(prev => ({ ...prev, imageUrl: "" }));
+      } catch (error) {
+        console.error('Error setting logo URL:', error);
+        handlers.handleImageError();
+      } finally {
+        setState(prev => ({ ...prev, isUploading: false }));
+      }
+    },
+    handleNameChange: async (value) => {
+      updateProjectField('name', value);
+      await updateName(value);
+    },
+    handleDescriptionChange: async (value) => {
+      updateProjectField('description', value);
+      await updateDescription(value);
     }
-  };
-
-  const handleUrlSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!imageUrl) return;
-    
-    setIsUploading(true);
-    try {
-      await updateLogo(imageUrl);
-      setImageUrl("");
-    } catch (error) {
-      console.error('Error setting logo URL:', error);
-      handleImageError();
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleNameChange = async (value: string) => {
-    updateProjectField('name', value);
-    await updateName(value);
-  };
-
-  const handleDescriptionChange = async (value: string) => {
-    updateProjectField('description', value);
-    await updateDescription(value);
   };
 
   return (
@@ -86,14 +87,14 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
       <div className="flex items-center gap-4 mb-4 mt-4">
         <div 
           className={`relative w-16 h-16 rounded-lg overflow-hidden ${editable ? 'group cursor-pointer' : ''}`}
-          onClick={() => editable && setShowImageDialog(true)}
+          onClick={() => editable && setState(prev => ({ ...prev, showImageDialog: true }))}
         >
-          {logo && !imageError ? (
+          {logo && !state.imageError ? (
             <img 
               src={logo} 
               alt="Project" 
               className="w-full h-full object-cover"
-              onError={handleImageError}
+              onError={handlers.handleImageError}
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500" />
@@ -109,22 +110,25 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
           <input
             type="text"
             value={currentProject?.name || ''}
-            onChange={(e) => editable && handleNameChange(e.target.value)}
+            onChange={(e) => editable && handlers.handleNameChange(e.target.value)}
             className="text-3xl font-bold bg-transparent border-none focus:outline-none w-full"
             readOnly={!editable}
           />
           <input
             type="text"
             value={currentProject?.description || ''}
-            onChange={(e) => editable && handleDescriptionChange(e.target.value)}
+            onChange={(e) => editable && handlers.handleDescriptionChange(e.target.value)}
             className="text-muted-foreground bg-transparent border-none focus:outline-none w-full"
             readOnly={!editable}
           />
         </div>
       </div>
 
-      <Dialog open={showImageDialog} onOpenChange={setShowImageDialog}>
-        <DialogContent>
+      <Dialog 
+        open={state.showImageDialog} 
+        onOpenChange={(value) => setState(prev => ({ ...prev, showImageDialog: value }))}
+      >
+        <DialogContent className="w-full">
           <DialogHeader>
             <DialogTitle>Adicionar logo do projeto</DialogTitle>
           </DialogHeader>
@@ -144,25 +148,25 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handleImageUpload}
+                  onChange={handlers.handleImageUpload}
                   className="hidden"
-                  disabled={isUploading}
+                  disabled={state.isUploading}
                 />
               </label>
             </TabsContent>
 
             <TabsContent value="url">
-              <form onSubmit={handleUrlSubmit} className="space-y-4">
+              <form onSubmit={handlers.handleUrlSubmit} className="space-y-4">
                 <div className="flex gap-2">
                   <Input
                     type="url"
                     placeholder="Cole a URL da imagem aqui"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    disabled={isUploading}
+                    value={state.imageUrl}
+                    onChange={(e) => setState(prev => ({ ...prev, imageUrl: e.target.value }))}
+                    disabled={state.isUploading}
                   />
-                  <Button type="submit" disabled={isUploading || !imageUrl}>
-                    {isUploading ? 'Carregando...' : 'Adicionar'}
+                  <Button type="submit" disabled={state.isUploading || !state.imageUrl}>
+                    {state.isUploading ? 'Carregando...' : 'Adicionar'}
                   </Button>
                 </div>
               </form>

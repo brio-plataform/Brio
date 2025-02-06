@@ -529,6 +529,46 @@ interface RightSidebarProps {
   onCollapse?: (collapsed: boolean) => void
 }
 
+// Tipos relacionados ao Project Component
+interface ProjectProps {
+  editable?: boolean
+}
+
+// Tipos relacionados ao ProjectBanner Component
+interface ProjectBannerProps {
+  editable?: boolean
+}
+
+interface ProjectBannerState {
+  bannerImage: string
+  bannerPosition: string
+  isRepositioning: boolean
+  imageError: boolean
+  isUploading: boolean
+  showImageDialog: boolean
+  imageUrl: string
+}
+
+// Tipos relacionados ao ProjectInfo Component
+interface ProjectInfoProps {
+  editable?: boolean
+}
+
+interface ProjectInfoState {
+  imageError: boolean
+  isUploading: boolean
+  showImageDialog: boolean
+  imageUrl: string
+}
+
+interface ProjectInfoHandlers {
+  handleImageError: () => void
+  handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>
+  handleUrlSubmit: (e: React.FormEvent) => Promise<void>
+  handleNameChange: (value: string) => Promise<void>
+  handleDescriptionChange: (value: string) => Promise<void>
+}
+
 export type {
   User,
   Project,
@@ -584,5 +624,11 @@ export type {
   RightSidebarMetrics,
   RightSidebarCollaborator,
   RightSidebarSection,
-  ReviewMetadata
+  ReviewMetadata,
+  ProjectProps,
+  ProjectBannerProps,
+  ProjectBannerState,
+  ProjectInfoProps,
+  ProjectInfoState,
+  ProjectInfoHandlers
 } 

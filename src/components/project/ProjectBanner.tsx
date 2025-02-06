@@ -14,6 +14,7 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { ProjectBannerState } from '@/types/types';
 
 interface ProjectBannerProps {
   editable?: boolean;
@@ -25,26 +26,27 @@ export function ProjectBanner({ editable = true }: ProjectBannerProps) {
   const { banner } = useGetProject(projectId);
   const { updateBanner } = useUpdateProject(projectId);
 
-  const [bannerImage, setBannerImage] = useState<string>("");
-  const [bannerPosition, setBannerPosition] = useState("50");
-  const [isRepositioning, setIsRepositioning] = useState(false);
-  const [imageError, setImageError] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [showImageDialog, setShowImageDialog] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
+  const [state, setState] = useState<ProjectBannerState>({
+    bannerImage: "",
+    bannerPosition: "50",
+    isRepositioning: false,
+    imageError: false,
+    isUploading: false,
+    showImageDialog: false,
+    imageUrl: ""
+  });
 
   // Atualiza o estado local quando o banner é carregado do servidor
   useEffect(() => {
     if (banner) {
-      setBannerImage(banner);
-      setImageError(false);
+      setState(prev => ({ ...prev, bannerImage: banner, imageError: false }));
     }
   }, [banner]);
 
   const handleBannerUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setIsUploading(true);
+      setState(prev => ({ ...prev, isUploading: true }));
       try {
         // 1. Criar URL temporária
         const imageUrl = URL.createObjectURL(file);
@@ -53,49 +55,45 @@ export function ProjectBanner({ editable = true }: ProjectBannerProps) {
         await updateBanner(imageUrl);
         
         // 3. Atualizar estado local
-        setBannerImage(imageUrl);
-        setImageError(false);
+        setState(prev => ({ ...prev, bannerImage: imageUrl, imageError: false }));
       } catch (error) {
         console.error('Error uploading banner:', error);
         handleImageError();
       } finally {
-        setIsUploading(false);
+        setState(prev => ({ ...prev, isUploading: false }));
       }
     }
   };
 
   const handleUrlSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!imageUrl) return;
+    if (!state.imageUrl) return;
     
-    setIsUploading(true);
+    setState(prev => ({ ...prev, isUploading: true }));
     try {
-      await updateBanner(imageUrl);
-      setBannerImage(imageUrl);
-      setImageError(false);
-      setShowImageDialog(false);
-      setImageUrl("");
+      await updateBanner(state.imageUrl);
+      setState(prev => ({ ...prev, bannerImage: state.imageUrl, imageError: false, showImageDialog: false, imageUrl: "" }));
     } catch (error) {
       console.error('Error setting banner URL:', error);
       handleImageError();
     } finally {
-      setIsUploading(false);
+      setState(prev => ({ ...prev, isUploading: false }));
     }
   };
 
   const handleWheel = useCallback((e: WheelEvent) => {
-    if (!isRepositioning) return;
+    if (!state.isRepositioning) return;
     
     e.preventDefault();
-    const currentPosition = Number(bannerPosition);
+    const currentPosition = Number(state.bannerPosition);
     const delta = e.deltaY * 0.1;
     const newPosition = Math.max(0, Math.min(100, currentPosition + delta));
     
-    setBannerPosition(newPosition.toString());
-  }, [isRepositioning, bannerPosition]);
+    setState(prev => ({ ...prev, bannerPosition: newPosition.toString() }));
+  }, [state.isRepositioning, state.bannerPosition]);
 
   useEffect(() => {
-    if (isRepositioning) {
+    if (state.isRepositioning) {
       document.addEventListener('wheel', handleWheel, { passive: false });
       document.body.style.cursor = 'row-resize';
     } else {
@@ -107,28 +105,27 @@ export function ProjectBanner({ editable = true }: ProjectBannerProps) {
       document.removeEventListener('wheel', handleWheel);
       document.body.style.cursor = '';
     };
-  }, [isRepositioning, handleWheel]);
+  }, [state.isRepositioning, handleWheel]);
 
   const handleImageError = () => {
-    setImageError(true);
-    setBannerImage("");
+    setState(prev => ({ ...prev, imageError: true, bannerImage: "" }));
     updateBanner(""); // Limpa a URL no banco
   };
 
   return (
     <>
       <div className="relative w-full h-60 mb-6 rounded-3xl overflow-hidden group">
-        {bannerImage && !imageError ? (
+        {state.bannerImage && !state.imageError ? (
           <>
-            <div className={`relative w-full h-full ${isRepositioning && editable ? 'cursor-row-resize' : ''}`}>
+            <div className={`relative w-full h-full ${state.isRepositioning && editable ? 'cursor-row-resize' : ''}`}>
               <img 
-                src={bannerImage} 
+                src={state.bannerImage} 
                 alt="Banner" 
                 className="w-full h-full object-cover transition-all duration-300"
-                style={{ objectPosition: `center ${bannerPosition}%` }}
+                style={{ objectPosition: `center ${state.bannerPosition}%` }}
                 onError={handleImageError}
               />
-              {isRepositioning && editable && (
+              {state.isRepositioning && editable && (
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                   <div className="text-white text-center">
                     <Move className="w-8 h-8 mx-auto mb-2" />
@@ -142,12 +139,12 @@ export function ProjectBanner({ editable = true }: ProjectBannerProps) {
                 variant="secondary"
                 size="sm"
                 className={`absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-30 ${
-                  isRepositioning ? 'bg-primary text-primary-foreground' : ''
+                  state.isRepositioning ? 'bg-primary text-primary-foreground' : ''
                 }`}
-                onClick={() => setIsRepositioning(!isRepositioning)}
+                onClick={() => setState(prev => ({ ...prev, isRepositioning: !state.isRepositioning }))}
               >
                 <Move className="w-4 h-4 mr-2" />
-                {isRepositioning ? 'Concluir' : 'Reposicionar'}
+                {state.isRepositioning ? 'Concluir' : 'Reposicionar'}
               </Button>
             )}
           </>
@@ -155,23 +152,26 @@ export function ProjectBanner({ editable = true }: ProjectBannerProps) {
           <div className="absolute inset-0 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500" />
         )}
 
-        {!isRepositioning && editable && (
+        {!state.isRepositioning && editable && (
           <div 
-            onClick={() => setShowImageDialog(true)}
+            onClick={() => setState(prev => ({ ...prev, showImageDialog: true }))}
             className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer z-20"
           >
             <div className="flex flex-col items-center gap-2">
               <ImagePlus className="w-8 h-8 text-white" />
               <span className="text-white text-sm">
-                {isUploading ? 'Carregando...' : 'Clique para adicionar uma imagem de capa'}
+                {state.isUploading ? 'Carregando...' : 'Clique para adicionar uma imagem de capa'}
               </span>
             </div>
           </div>
         )}
       </div>
 
-      <Dialog open={showImageDialog} onOpenChange={setShowImageDialog}>
-        <DialogContent>
+      <Dialog 
+        open={state.showImageDialog} 
+        onOpenChange={() => setState(prev => ({ ...prev, showImageDialog: false }))}
+      >
+        <DialogContent className="w-full">
           <DialogHeader>
             <DialogTitle>Adicionar imagem de capa</DialogTitle>
           </DialogHeader>
@@ -193,7 +193,7 @@ export function ProjectBanner({ editable = true }: ProjectBannerProps) {
                   accept="image/*"
                   onChange={handleBannerUpload}
                   className="hidden"
-                  disabled={isUploading}
+                  disabled={state.isUploading}
                 />
               </label>
             </TabsContent>
@@ -204,12 +204,12 @@ export function ProjectBanner({ editable = true }: ProjectBannerProps) {
                   <Input
                     type="url"
                     placeholder="Cole a URL da imagem aqui"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    disabled={isUploading}
+                    value={state.imageUrl}
+                    onChange={(e) => setState(prev => ({ ...prev, imageUrl: e.target.value }))}
+                    disabled={state.isUploading}
                   />
-                  <Button type="submit" disabled={isUploading || !imageUrl}>
-                    {isUploading ? 'Carregando...' : 'Adicionar'}
+                  <Button type="submit" disabled={state.isUploading || !state.imageUrl}>
+                    {state.isUploading ? 'Carregando...' : 'Adicionar'}
                   </Button>
                 </div>
               </form>
