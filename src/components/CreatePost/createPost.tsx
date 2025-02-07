@@ -691,50 +691,6 @@ export function CreatePost() {
                       ))}
                     </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <div className="flex gap-2">
-                      <Button variant="ghost" size="icon" onClick={handleAttachment}>
-                        <Paperclip className="h-4 w-4" />
-                      </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <FileText className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>Usar template</DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          {templates.map((template) => (
-                            <DropdownMenuItem key={template.id} onClick={() => setSelectedTemplate(template.id)}>
-                              <div className="flex flex-col">
-                                <span>{template.name}</span>
-                                <span className="text-xs text-muted-foreground">{template.description}</span>
-                              </div>
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                      <Button variant="ghost" size="icon">
-                        <Smile className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <Calendar className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="gap-2">
-                        Agendar
-                        <Calendar className="h-4 w-4" />
-                      </Button>
-                      <Button type="submit" size="sm" disabled={!title.trim() || !content.trim()}>
-                        Publicar agora
-                      </Button>
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -1055,23 +1011,49 @@ export function CreatePost() {
                 </div>
               )}
 
-              <div className="flex justify-between items-center mt-6">
+              <div className="flex justify-between items-center">
                 <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" onClick={handleAttachment}>
                     <Paperclip className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Calendar className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    Salvar rascunho
-                  </Button>
-                  <Button type="submit" size="sm">
-                    Publicar
-                  </Button>
-                </div>
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <FileText className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem>Usar template</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          {templates.map((template) => (
+                            <DropdownMenuItem key={template.id} onClick={() => setSelectedTemplate(template.id)}>
+                              <div className="flex flex-col">
+                                <span>{template.name}</span>
+                                <span className="text-xs text-muted-foreground">{template.description}</span>
+                              </div>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <Button variant="ghost" size="icon">
+                        <Smile className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <Calendar className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" className="gap-2">
+                        Agendar
+                        <Calendar className="h-4 w-4" />
+                      </Button>
+                      <Button type="submit" size="sm" disabled={!title.trim() || !content.trim()}>
+                        Publicar agora
+                    </Button>
+                  </div>
               </div>
             </DialogContent>
           </Dialog>
