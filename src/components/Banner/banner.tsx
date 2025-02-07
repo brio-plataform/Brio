@@ -105,7 +105,7 @@ export function BannerCarousel() {
   }, [isAutoPlaying])
 
   return (
-    <Card className="w-full max-w-7xl mb-4 overflow-hidden relative group h-[250px]">
+    <Card className="w-full max-w-7xl overflow-hidden relative group h-[250px]">
       <div className="relative h-full">
         {banners.map((banner, index) => (
           <div

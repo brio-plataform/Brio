@@ -168,7 +168,7 @@ export function FeedItem({
 
   return (
     <>
-      <Card className="w-full max-w-7xl mb-4 bg-muted/30 ">
+      <Card className="w-full max-w-7xl bg-muted/30 ">
         <CardHeader className="flex flex-row items-center gap-4">
 
           <Avatar>

@@ -19,7 +19,6 @@ import {
   Clock,
   Trophy,
   ChevronDown,
-  LucideIcon,
   ChevronRight,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -163,7 +162,6 @@ const defaultSections: RightSidebarSection[] = [
 
 export function RightSidebar({
   defaultCollapsed = false,
-  className,
   description = "Este projeto faz parte da plataforma Brio, promovendo conhecimento colaborativo e inovação através de debates construtivos e revisão por pares.",
   metrics = defaultMetrics,
   reviews = defaultReviews,

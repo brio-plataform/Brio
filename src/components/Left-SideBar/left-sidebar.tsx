@@ -13,12 +13,10 @@ import {
   FileText,
   HelpCircle,
   Home,
-  Layout,
   List,
   Search,
   Settings,
   Users,
-  Wrench,
   Folder,
   Star,
   MessageSquare,
@@ -82,7 +80,7 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
     {
       icon: Home,
       label: "Início",
-      href: "/"
+      href: "/feed"
     },
     {
       icon: Search,
@@ -105,6 +103,7 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
       label: "Acadêmico",
       items: [
         { icon: Building2, label: "Instituições", href: "/institutions" },
+        { icon: MessageSquare, label: "Forums", href: "/forum" },
         { icon: GraduationCap, label: "Cursos", href: "/courses" },
         { icon: Book, label: "Biblioteca", href: "/library" },
       ]
