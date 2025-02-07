@@ -5,40 +5,26 @@ import { ThumbsUp, MessageSquare, Share2, MoreHorizontal, Send } from "lucide-re
 import { formatDistanceToNow } from "date-fns"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import type { CommentType, CommentAuthor, CommentMetrics, CommentState } from "@/types/types"
-
-interface CommentProps {
-  id: string
-  author: CommentAuthor
-  content: string
-  timestamp: Date
-  initialMetrics?: CommentMetrics
-  level?: number
-  children?: ReactNode
-  onReply: (commentId: string, content: string) => void
-  onLike?: () => void
-  onShare?: () => void
-  onReport?: () => void
-}
+import { CommentProps, CommentMetrics, CommentState } from "@/types/types"
 
 export function Comment({
   id,
   author,
   content,
   timestamp,
-  initialMetrics,
-  level = 0,
-  children,
+  likes,
+  replies,
+  level,
   onReply,
-  onLike,
   onShare,
   onReport,
+  children
 }: CommentProps) {
   // Estado local
   const [metrics, setMetrics] = useState<CommentMetrics>({
-    likes: initialMetrics?.likes || 0,
-    replies: initialMetrics?.replies || 0,
-    isLiked: initialMetrics?.isLiked || false
+    likes: likes,
+    replies: replies,
+    isLiked: false
   })
   
   const [state, setState] = useState<CommentState>({
@@ -54,7 +40,6 @@ export function Comment({
       isLiked: !prev.isLiked,
       likes: prev.isLiked ? prev.likes - 1 : prev.likes + 1
     }))
-    onLike?.()
   }
 
   const handleSubmitReply = (e: React.FormEvent) => {
@@ -84,7 +69,7 @@ export function Comment({
     }))
   }
 
-  if (level > 3) return null // Limit nesting depth
+  if (level > 7) return null // Limit nesting depth
 
   return (
     <div className="group">
@@ -95,8 +80,8 @@ export function Comment({
             {author.name[0]}
           </AvatarFallback>
         </Avatar>
-        <div className="flex-1 min-w-0">
-          <div className="rounded-lg px-3 py-2">
+        <div className="flex-1 min-w-0 gap-2">
+          <div className="rounded-lg px-3">
             <div className="flex items-center gap-2 mb-1">
               <span className="font-semibold text-sm">{author.name}</span>
               {author.institution && (

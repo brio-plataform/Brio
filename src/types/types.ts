@@ -118,41 +118,45 @@ interface Institution {
 }
 
 // Tipos relacionados aos Comments
-export interface CommentAuthor {
+interface CommentAuthor {
   name: string
   avatar: string
   institution?: string
 }
 
-export interface CommentActions {
-  like: () => void
-  reply: () => void
-  share: () => void
-  report: () => void
-}
-
-export interface CommentMetrics {
+interface CommentMetrics {
   likes: number
   replies: number
-  isLiked?: boolean
+  isLiked: boolean
 }
 
-export interface CommentState {
+interface CommentState {
   isReplying: boolean
   showReplies: boolean
   replyContent: string
 }
 
-export interface CommentType {
+interface CommentType {
   id: string
   author: CommentAuthor
   content: string
   timestamp: Date
-  metrics: CommentMetrics
-  level?: number
+  likes: number
   replies?: CommentType[]
-  state?: CommentState
-  actions?: CommentActions
+}
+
+interface CommentProps {
+  id: string
+  author: CommentAuthor
+  content: string
+  timestamp: Date
+  likes: number
+  replies: number
+  level: number
+  onReply: (commentId: string, content: string) => void
+  onShare?: () => void
+  onReport?: () => void
+  children?: React.ReactNode
 }
 
 // Tipos relacionados ao Feed
@@ -721,6 +725,7 @@ export interface Template {
   description: string
 }
 
+// Lista única de exportações no final do arquivo
 export type {
   User,
   Project,
@@ -781,5 +786,10 @@ export type {
   ProjectBannerState,
   ProjectInfoProps,
   ProjectInfoState,
-  ProjectInfoHandlers
+  ProjectInfoHandlers,
+  CommentProps,
+  CommentType,
+  CommentAuthor,
+  CommentMetrics,
+  CommentState
 } 
