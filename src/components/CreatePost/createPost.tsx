@@ -19,8 +19,6 @@ import {
   Calendar,
   Paperclip,
   X,
-  Minus,
-  Maximize2,
   Trash2,
   ChevronDown,
   AlignLeft,
@@ -29,6 +27,8 @@ import {
   List,
   MessageSquare,
   Upload,
+  Layout,
+  HelpCircle,
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -40,7 +40,6 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
-import Image from "next/image"
 
 interface Mention {
   id: string
@@ -169,6 +168,7 @@ export function CreatePost() {
   const [references, setReferences] = useState<BaseReference[]>([])
   const [referenceType, setReferenceType] = useState<BaseReference['type']>('profile')
   const [currentReference, setCurrentReference] = useState('')
+  const [postType, setPostType] = useState<'text' | 'study' | 'question' | 'event'>('text')
 
   const mentions: Mention[] = [
     {
@@ -722,36 +722,65 @@ export function CreatePost() {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="flex gap-2 mt-4 border-t pt-4">
+        <div className="grid grid-cols-4 gap-2 mt-4 border-t pt-4">
           <Button
             variant="ghost"
-            className="flex-1"
+            className="flex flex-col items-center py-3 h-auto hover:bg-blue-50/10 dark:hover:bg-blue-900/20 transition-all group"
             onClick={() => {
               setIsDialogOpen(true)
+              setPostType('text')
             }}
           >
-            <FileText className="h-5 w-5 mr-2 text-blue-500" />
-            Texto
+            <div className="rounded-full bg-blue-50 dark:bg-blue-900/50 p-2 mb-1 group-hover:scale-110 transition-transform">
+              <FileText className="h-4 w-4 text-blue-500" />
+            </div>
+            <span className="text-sm font-medium">Artigo</span>
+            <span className="text-xs text-muted-foreground">Compartilhe</span>
           </Button>
+          
           <Button
             variant="ghost"
-            className="flex-1"
+            className="flex flex-col items-center py-3 h-auto hover:bg-purple-50/10 dark:hover:bg-purple-900/20 transition-all group"
             onClick={() => {
               setIsDialogOpen(true)
+              setPostType('study')
             }}
           >
-            <ImageIcon className="h-5 w-5 mr-2 text-purple-500" />
-            Mídia
+            <div className="rounded-full bg-purple-50 dark:bg-purple-900/50 p-2 mb-1 group-hover:scale-110 transition-transform">
+              <Layout className="h-4 w-4 text-purple-500" />
+            </div>
+            <span className="text-sm font-medium">Estudo</span>
+            <span className="text-xs text-muted-foreground">Pesquise</span>
           </Button>
+
           <Button
             variant="ghost"
-            className="flex-1"
+            className="flex flex-col items-center py-3 h-auto hover:bg-green-50/10 dark:hover:bg-green-900/20 transition-all group"
             onClick={() => {
               setIsDialogOpen(true)
+              setPostType('question')
             }}
           >
-            <LinkIcon className="h-5 w-5 mr-2 text-green-500" />
-            Link
+            <div className="rounded-full bg-green-50 dark:bg-green-900/50 p-2 mb-1 group-hover:scale-110 transition-transform">
+              <HelpCircle className="h-4 w-4 text-green-500" />
+            </div>
+            <span className="text-sm font-medium">Pergunta</span>
+            <span className="text-xs text-muted-foreground">Debata</span>
+          </Button>
+
+          <Button
+            variant="ghost"
+            className="flex flex-col items-center py-3 h-auto hover:bg-amber-50/10 dark:hover:bg-amber-900/20 transition-all group"
+            onClick={() => {
+              setIsDialogOpen(true)
+              setPostType('event')
+            }}
+          >
+            <div className="rounded-full bg-amber-50 dark:bg-amber-900/50 p-2 mb-1 group-hover:scale-110 transition-transform">
+              <Calendar className="h-4 w-4 text-amber-500" />
+            </div>
+            <span className="text-sm font-medium">Evento</span>
+            <span className="text-xs text-muted-foreground">Organize</span>
           </Button>
         </div>
       </CardContent>
