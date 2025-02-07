@@ -11,14 +11,14 @@
     {
       "id": "1",
       "userId": "1",
-      "name": "Prototipo do Brio",
-      "description": "Criar uma plataforma aberta onde o conhecimento é central, acessível e democrático",
+      "name": "oiiiiiiiiiiii",
+      "description": "drescription ",
       "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_%28with_h-alpha%29.jpg",
       "createdAt": "2025-01-31T23:47:47.093Z",
       "banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_h-alpha%29.jpg",
       "wordCount": 0,
       "citations": [],
-      "model": "thesis",
+      "model": "article",
       "visibility": "institutional",
       "progress": 40,
       "type": "institutional",
@@ -41,7 +41,7 @@
       ],
       "content": [
         {
-          "id": "ea06690e-b09d-462a-99cd-7c3ef3bd4e90",
+          "id": "ebe6c493-de25-428b-9729-ef53bab67942",
           "type": "heading",
           "props": {
             "textColor": "default",
@@ -59,7 +59,7 @@
           "children": []
         },
         {
-          "id": "aa28c703-fd65-4013-a7f2-691b1f233a5d",
+          "id": "5be60b58-0862-47db-bc4a-0e34f48bdb7e",
           "type": "paragraph",
           "props": {
             "textColor": "default",
@@ -70,7 +70,18 @@
           "children": []
         },
         {
-          "id": "90443211-b815-4f20-9741-04fde0d7fd61",
+          "id": "77206a05-de1b-4f0f-a73c-df3204d2ec7d",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "f24741da-f701-4ae5-ae4b-8325c30da7c3",
           "type": "image",
           "props": {
             "backgroundColor": "default",
@@ -84,7 +95,18 @@
           "children": []
         },
         {
-          "id": "77b12dc3-00a5-4f59-aa21-872362a44fb6",
+          "id": "a255c374-8ff1-4a0d-bd90-4e337286d3d6",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "108e4dae-023e-4cc8-a90f-72db8cf3e9ba",
           "type": "bulletListItem",
           "props": {
             "textColor": "default",
@@ -108,7 +130,7 @@
           "children": []
         },
         {
-          "id": "983a06c5-da42-4191-ba39-9c5c25d8f44e",
+          "id": "cc5272c2-bbab-4897-8321-04b3ed0a412e",
           "type": "bulletListItem",
           "props": {
             "textColor": "default",
@@ -132,7 +154,7 @@
           "children": []
         },
         {
-          "id": "27c572de-408f-434a-bd60-26bbf3bd6163",
+          "id": "1e801985-68ca-441a-bac1-92117a6d8965",
           "type": "bulletListItem",
           "props": {
             "textColor": "default",
@@ -156,7 +178,7 @@
           "children": []
         },
         {
-          "id": "c6dccd96-a303-448e-aee3-b75ff0f3997c",
+          "id": "a43eca33-d8c6-4102-8daa-c4f42cf88440",
           "type": "bulletListItem",
           "props": {
             "textColor": "default",
@@ -180,7 +202,35 @@
           "children": []
         },
         {
-          "id": "cdce3b14-dca6-4d86-834c-da5aac6f8c64",
+          "id": "280f08cb-980b-449e-a14e-e7e1d1fffddc",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "7040d3e5-aa50-485a-bff2-e0b2652793a0",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "fdhgdrfehtyiyuotoyu",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "1f1ffb43-febd-4c06-80bc-115fff5fed6d",
           "type": "paragraph",
           "props": {
             "textColor": "default",
@@ -191,7 +241,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-05T20:39:00.517Z"
+      "updatedAt": "2025-02-06T19:17:20.515Z"
     }
   ]
 }

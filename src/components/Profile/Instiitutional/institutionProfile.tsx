@@ -19,7 +19,7 @@ import {
   Library,
 } from "lucide-react"
 
-import placeholder from "../../public/images/placeholder.svg"
+import placeholder from "../../../../public/images/placeholder.svg"
 
 export default function InstitutionalProfile() {
   return (

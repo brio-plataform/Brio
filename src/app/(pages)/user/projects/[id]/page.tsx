@@ -56,7 +56,7 @@ export default function ProjectPage() {
       </div>
 
       <div className="sticky top-0 h-screen">
-        <RightSidebar />
+        <RightSidebar reviews={[]} sections={[]} />
       </div>
     </div>
   );

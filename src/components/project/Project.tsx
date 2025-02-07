@@ -17,7 +17,7 @@ interface ProjectProps {
   editable?: boolean
 }
 
-export function Project({ editable }: ProjectProps) {
+export function Project({ editable = true }: ProjectProps) {
   const params = useParams();
   const projectId = params.id as string;
   const [userId] = useState("1");

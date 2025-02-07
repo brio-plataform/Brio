@@ -5,19 +5,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Calendar, Trophy, Sparkles, GraduationCap, BookOpen, MessageSquare, Library, Users } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-interface Banner {
-  id: number
-  title: string
-  description: string
-  type: "event" | "promotion" | "award" | "course" | "study" | "forum" | "library" | "partnership"
-  date?: string
-  link: string
-  bgColor: string
-  textColor: string
-  buttonText?: string
-  institution?: string
-}
+import type { Banner } from "@/types/types"
 
 const banners: Banner[] = [
   {
@@ -117,7 +105,7 @@ export function BannerCarousel() {
   }, [isAutoPlaying])
 
   return (
-    <Card className="w-full max-w-7xl mb-4 overflow-hidden relative group h-[250px]">
+    <Card className="w-full max-w-7xl overflow-hidden relative group h-[250px]">
       <div className="relative h-full">
         {banners.map((banner, index) => (
           <div

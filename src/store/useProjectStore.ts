@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import type { ProjectState } from '@/types/types'
 
 interface Version {
   version: string;
@@ -22,27 +23,6 @@ interface Project {
   content: any;
   updatedAt: string;
   createdAt: string;
-}
-
-interface ProjectState {
-  currentProject: Project | null;
-  projects: Project[];
-  loading: boolean;
-  error: string | null;
-  
-  // Actions
-  setCurrentProject: (project: Project) => void;
-  saveProject: (projectData: Partial<Project>) => Promise<void>;
-  updateProjectContent: (content: any) => Promise<void>;
-  fetchProjects: () => Promise<void>;
-  deleteProject: (id: string) => Promise<void>;
-  
-  // Novas actions para o editor
-  editorContent: string | null;
-  setEditorContent: (content: string) => void;
-  saveEditorContent: () => Promise<void>;
-
-  updateProjectField: (field: string, value: any) => void;
 }
 
 export const useProjectStore = create<ProjectState>((set, get) => ({

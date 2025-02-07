@@ -208,7 +208,7 @@ export function CreatePost() {
   }, [])
 
   return (
-    <Card className="w-full max-w-7xl mb-4">
+    <Card className="w-full max-w-7xl">
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
           <Avatar>

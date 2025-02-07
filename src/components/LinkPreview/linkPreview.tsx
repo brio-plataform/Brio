@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
+import type { LinkPreview } from "@/types/types"
 
 interface LinkPreviewProps {
   url: string

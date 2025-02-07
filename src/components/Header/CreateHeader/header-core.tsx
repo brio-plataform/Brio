@@ -9,15 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-interface HeaderCoreProps {
-  projectName: string
-  projectDescription: string
-  documentType: 'article' | 'thesis' | 'book' | 'research'
-  visibility: 'private' | 'public' | 'institutional'
-  handleButtonSelectChange: (value: string) => void
-  handleVisibilityChange: (value: 'private' | 'public' | 'institutional') => void
-}
+import type { HeaderCoreProps } from '@/types/types'
 
 export function HeaderCore({
   projectName,

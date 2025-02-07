@@ -3,15 +3,7 @@
 import { Clock, FileText, Quote, Brain } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-
-interface HeaderTopProps {
-  lastEdited: Date
-  wordCount: number
-  citationCount: number
-  aiAssistant: boolean
-  progress: number
-  handleProgressChange: (event: React.FormEvent<HTMLDivElement>) => void
-}
+import type { HeaderTopProps } from '@/types/types'
 
 export function HeaderTop({
   lastEdited,

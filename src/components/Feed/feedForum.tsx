@@ -1,9 +1,9 @@
 import { CreatePost } from "@/components/CreatePost/createPost"
-import { BannerCarousel } from "../Banner/banner"
 import { FeedItem } from "../FeedItem/feedItem"
 import placeholder from "../../../public/images/placeholder.svg"
 import { ColumnFeed } from "../ColumnFeed/columnFeed"
 import type { FeedItemProps } from "@/types/types"
+import { ForumHeader } from "../Header/ForumHeader/forumHeader"
 
 const sampleFeedData: FeedItemProps[] = [
   {
@@ -151,11 +151,11 @@ const sampleFeedData: FeedItemProps[] = [
   },
 ]
 
-export function Feed() {
+export function FeedForum() {
   return (
     <div className="flex w-full justify-center items-start px-8 py-4 gap-8">
         <div className="flex flex-col w-full justify-center items-center gap-8">
-            <BannerCarousel />
+            <ForumHeader name={"Programming Hub"} description={"Programming Hub is a community for programmers to share their knowledge and learn from each other."} image={"/images/placeholder.svg"} memberCount={1000} postCount={100} />
             <CreatePost />
             {sampleFeedData.map((item, index) => (
                     <FeedItem key={index} {...item} />

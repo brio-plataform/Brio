@@ -8,14 +8,7 @@ import { HeaderTop } from './header-top'
 import { HeaderCore } from './header-core'
 import { HeaderBottom } from './header-bottom'
 import { useProjectStore } from '@/store/useProjectStore'
-
-interface Collaborator {
-  id: string;
-  name: string;
-  avatar: string;
-  role: string;
-  status: 'online' | 'offline' | 'away';
-}
+import type { HeaderCollaborator, ProjectModel, ProjectVisibility } from '@/types/types'
 
 export function Header() {
   const params = useParams();
@@ -49,13 +42,13 @@ export function Header() {
     isLoading: isSaving 
   } = useUpdateProject(projectId);
 
-  const [documentType, setDocumentType] = useState<'article' | 'thesis' | 'book' | 'research'>(initialModel || 'article');
-  const [visibility, setVisibility] = useState<'private' | 'public' | 'institutional'>(initialVisibility || 'private');
+  const [documentType, setDocumentType] = useState<ProjectModel>(initialModel || 'article');
+  const [visibility, setVisibility] = useState<ProjectVisibility>(initialVisibility || 'private');
   const [progress, setProgress] = useState(initialProgress || 0);
   const [wordCount, setWordCount] = useState(initialWordCount || 0);
   const [citationCount, setCitationCount] = useState(initialCitations?.length || 0);
   const [lastEdited, setLastEdited] = useState<Date>(new Date());
-  const [collaborators] = useState<Collaborator[]>([]);
+  const [collaborators] = useState<HeaderCollaborator[]>([]);
   const [aiAssistant] = useState(false);
   const [currentVersion, setCurrentVersion] = useState<string>("1.0.0");
 
@@ -75,7 +68,7 @@ export function Header() {
     if (initialCitations) setCitationCount(initialCitations.length);
   }, [initialModel, initialVisibility, initialProgress, initialWordCount, initialCitations, setDocumentType, setVisibility, setProgress, setWordCount, setCitationCount]);
 
-  const handleModelChange = async (value: 'article' | 'thesis' | 'book' | 'research') => {
+  const handleModelChange = async (value: ProjectModel) => {
     setDocumentType(value);
     try {
       await updateModel(value);
@@ -97,7 +90,7 @@ export function Header() {
   };
 
   const handleButtonSelectChange = (value: string) => {
-    handleModelChange(value as 'article' | 'thesis' | 'book' | 'research');
+    handleModelChange(value as ProjectModel);
   };
 
   useEffect(() => {
@@ -113,7 +106,7 @@ export function Header() {
     }
   }, [versions]);
 
-  const handleVisibilityChange = async (value: 'private' | 'public' | 'institutional') => {
+  const handleVisibilityChange = async (value: ProjectVisibility) => {
     setVisibility(value);
     try {
       await updateVisibility(value);

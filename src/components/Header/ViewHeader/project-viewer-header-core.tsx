@@ -8,33 +8,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-interface ProjectViewerHeaderCoreProps {
-  project: {
-    title: string
-    description: string
-    type: 'article' | 'thesis' | 'book' | 'research'
-    author: {
-      name: string
-      avatar: string
-      institution?: string
-    },
-    currentVersion: string,
-    stats?: {
-      views?: number
-      stars: number
-      forks: number
-      citations: number
-      reviews: number
-      comments?: number
-    }
-  }
-}
+import type { ProjectViewerHeaderCoreProps, ProjectModel } from '@/types/types'
 
 export function ProjectViewerHeaderCore({
   project,
 }: ProjectViewerHeaderCoreProps) {
-  const getTypeLabel = (type: 'article' | 'thesis' | 'book' | 'research') => {
+  const getTypeLabel = (type: ProjectModel) => {
     const types = {
       article: 'Artigo',
       thesis: 'TCC/Tese',

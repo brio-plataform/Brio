@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
-  ThumbsUp,
   MessageSquare,
   GitBranch,
   BookOpen,
@@ -18,10 +17,11 @@ import {
   Send,
   MoreHorizontal,
   UserPlus,
+  ArrowBigUp,
+  ArrowBigDown,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Modal } from "@/components/Modal/modal"
 import { Comment } from "@/components/Comment/comment"
 import { LinkPreview } from "@/components/LinkPreview/linkPreview"
 import { cn } from "@/lib/utils"
@@ -31,62 +31,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-
-interface Citation {
-  type: "person" | "article" | "post" | "media"
-  content: string
-  link: string
-}
-
-interface CommentType {
-  id: string
-  author: {
-    name: string
-    avatar: string
-    institution?: string
-  }
-  content: string
-  timestamp: Date
-  likes: number
-  replies: CommentType[]
-}
-
-export interface FeedItemProps {
-  author: {
-    id: string
-    name: string
-    avatar: string
-    username?: string
-    bio?: string
-    mutualFriends?: Array<{
-      id: string
-      name: string
-      avatar: string
-    }>
-    institution?: {
-      name: string
-      link: string
-    }
-  }
-  title: string
-  content: {
-    summary: string
-    full: string
-  }
-  tags: string[]
-  likes: number
-  comments: CommentType[]
-  forks: number
-  citations: number
-  references: Citation[]
-  links?: Array<{
-    url: string
-    title: string
-    description: string
-    image?: string
-  }>
-  timestamp: Date
-}
+import type { FeedItemProps, CommentType, Citation } from "@/types/types"
 
 export function FeedItem({
   author,
@@ -103,7 +48,7 @@ export function FeedItem({
 }: FeedItemProps) {
   const [likeCount, setLikeCount] = useState(likes)
   const [isLiked, setIsLiked] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDesLiked, setIsDesLiked] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [newComment, setNewComment] = useState("")
   const [allComments, setAllComments] = useState(comments)
@@ -111,10 +56,25 @@ export function FeedItem({
   const handleLike = () => {
     if (isLiked) {
       setLikeCount(likeCount - 1)
+    } else if (isDesLiked) {
+      setLikeCount(likeCount + 1)
+      setIsDesLiked(false)
     } else {
       setLikeCount(likeCount + 1)
     }
     setIsLiked(!isLiked)
+  }
+
+  const handleDesLike = () => {
+    if (isDesLiked) {
+      setLikeCount(likeCount + 1)
+    } else if (isLiked) {
+      setLikeCount(likeCount - 1)
+      setIsLiked(false)
+    } else {
+      setLikeCount(likeCount - 1)
+    }
+    setIsDesLiked(!isDesLiked)
   }
 
   const handleSubmitComment = (e: React.FormEvent) => {
@@ -208,8 +168,9 @@ export function FeedItem({
 
   return (
     <>
-      <Card className="w-full max-w-7xl mb-4 bg-muted/30">
+      <Card className="w-full max-w-7xl bg-muted/30 ">
         <CardHeader className="flex flex-row items-center gap-4">
+
           <Avatar>
             <AvatarImage src={author.avatar} alt={author.name} />
             <AvatarFallback className="bg-gray-500 text-muted-foreground">
@@ -346,7 +307,8 @@ export function FeedItem({
             </DropdownMenuContent>
           </DropdownMenu>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex items-start justify-start gap-4">
+          <div className="flex flex-col items-startspace-y-2">
           <h2 className="text-xl font-bold mb-2">{title}</h2>
           <div className="flex flex-wrap gap-2 mb-4">
             {tags.map((tag) => (
@@ -395,19 +357,20 @@ export function FeedItem({
               </div>
             </div>
           )}
+          </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <div className="flex justify-between items-center w-full">
             <div className="flex gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleLike}
-                className={cn("transition-colors", isLiked && "text-blue-500 [&>svg]:fill-blue-500")}
-              >
-                <ThumbsUp className="w-4 h-4 mr-2" />
-                {likeCount}
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button variant="ghost" size="sm" onClick={handleLike}>
+                  <ArrowBigUp className={cn("w-5 h-5 transition-colors", isLiked && "text-blue-500 [&>svg]:fill-blue-500")} />
+                </Button>
+                <span className="font-bold">{likeCount}</span>
+                <Button variant="ghost" size="sm" onClick={handleDesLike}>
+                  <ArrowBigDown className={cn("w-5 h-5 transition-colors", isDesLiked && "text-red-500 [&>svg]:fill-red-500")} />
+                </Button>
+              </div>
               <Button variant="ghost" size="sm" onClick={() => setShowComments(!showComments)}>
                 <MessageSquare className="w-4 h-4 mr-2" />
                 {allComments.length}
@@ -422,9 +385,6 @@ export function FeedItem({
               </Button>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => setIsModalOpen(true)}>
-                Read More
-              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
@@ -464,38 +424,6 @@ export function FeedItem({
           )}
         </CardFooter>
       </Card>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2 className="text-2xl font-bold mb-4">{title}</h2>
-        <div className="mb-4">
-          <span className="font-semibold">Author:</span> {author.name}
-          {author.institution && <span> ({author.institution.name})</span>}
-        </div>
-        <div className="prose dark:prose-invert max-w-none">
-          {content.full.split("\n").map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </div>
-        {references.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-xl font-semibold mb-2">References & Citations:</h3>
-            <ul className="list-disc pl-5">
-              {references.map((ref, index) => (
-                <li key={index}>
-                  <a
-                    href={ref.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    {ref.content} ({ref.type})
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </Modal>
     </>
   )
 }

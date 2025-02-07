@@ -1,15 +1,5 @@
 import { Eye, Star, GitFork, MessageSquare, Clock } from "lucide-react"
-
-interface ProjectViewerHeaderTopProps {
-  stats: {
-    views: number
-    stars: number
-    forks: number
-    citations: number
-    comments: number
-  }
-  lastUpdate: Date
-}
+import type { ProjectViewerHeaderTopProps } from '@/types/types'
 
 export function ProjectViewerHeaderTop({ stats, lastUpdate }: ProjectViewerHeaderTopProps) {
   return (
