@@ -118,17 +118,41 @@ interface Institution {
 }
 
 // Tipos relacionados aos Comments
-interface CommentType {
+export interface CommentAuthor {
+  name: string
+  avatar: string
+  institution?: string
+}
+
+export interface CommentActions {
+  like: () => void
+  reply: () => void
+  share: () => void
+  report: () => void
+}
+
+export interface CommentMetrics {
+  likes: number
+  replies: number
+  isLiked?: boolean
+}
+
+export interface CommentState {
+  isReplying: boolean
+  showReplies: boolean
+  replyContent: string
+}
+
+export interface CommentType {
   id: string
-  author: {
-    name: string
-    avatar: string
-    institution?: string
-  }
+  author: CommentAuthor
   content: string
   timestamp: Date
-  likes: number
-  replies: CommentType[]
+  metrics: CommentMetrics
+  level?: number
+  replies?: CommentType[]
+  state?: CommentState
+  actions?: CommentActions
 }
 
 // Tipos relacionados ao Feed
@@ -580,7 +604,6 @@ export type {
   Author,
   MutualFriend,
   Institution,
-  CommentType,
   FeedItemProps,
   Citation,
   LinkPreview,
