@@ -593,6 +593,134 @@ interface ProjectInfoHandlers {
   handleDescriptionChange: (value: string) => Promise<void>
 }
 
+// Tipos relacionados ao CreatePost
+export type PostType = 'text' | 'study' | 'question' | 'event'
+export type QuestionType = 'question' | 'poll' | 'debate'
+export type ReferenceType = 'profile' | 'document' | 'comment'
+
+export interface BaseReference {
+  id: string
+  type: ReferenceType
+  content: string
+  metadata?: {
+    title?: string
+    author?: string
+    date?: string
+    url?: string
+    fileSize?: string
+    fileType?: string
+  }
+}
+
+export interface PollOption {
+  id: string
+  text: string
+  votes?: number
+}
+
+export interface DebateSettings {
+  moderationEnabled: boolean
+  argumentTimeLimit?: number // em minutos
+  startDate?: Date
+  endDate?: Date
+  topics: [string, string] // [Posição A, Posição B]
+}
+
+export interface EventSettings {
+  location?: string
+  startDate: Date
+  endDate?: Date
+  maxParticipants?: number
+  requiresRegistration: boolean
+  isPrivate: boolean
+}
+
+export interface CreatePostState {
+  postType: PostType
+  title: string
+  content: string
+  tags: string[]
+  currentTag: string
+  references: BaseReference[]
+  currentReference: string
+  referenceType: ReferenceType
+  
+  // Para questões
+  questionType?: QuestionType
+  allowAnonymousResponses?: boolean
+  notifyNewResponses?: boolean
+  
+  // Para enquetes
+  pollOptions?: PollOption[]
+  
+  // Para debates
+  debateSettings?: DebateSettings
+  
+  // Para eventos
+  eventSettings?: EventSettings
+}
+
+export interface CreatePostActions {
+  setTitle: (title: string) => void
+  setContent: (content: string) => void
+  addTag: (tag: string) => void
+  removeTag: (tag: string) => void
+  addReference: (reference: BaseReference) => void
+  removeReference: (referenceId: string) => void
+  setPollOption: (id: string, text: string) => void
+  removePollOption: (id: string) => void
+  setDebateSettings: (settings: Partial<DebateSettings>) => void
+  setEventSettings: (settings: Partial<EventSettings>) => void
+  handleSubmit: () => Promise<void>
+}
+
+export interface CreatePostDialogState {
+  isOpen: boolean
+  isSubmitting: boolean
+  error?: string
+}
+
+export interface CreatePostProps {
+  onSuccess?: () => void
+  onError?: (error: Error) => void
+  className?: string
+}
+
+// Constantes
+export const MAX_TITLE_LENGTH = 100
+export const MAX_TAGS = 5
+export const MAX_POLL_OPTIONS = 10
+export const MIN_POLL_OPTIONS = 2
+
+// Tipos relacionados às menções e anexos do CreatePost
+export interface Mention {
+  id: string
+  name: string
+  username: string
+  email: string
+  avatar: string
+  bio: string
+  institution: string
+  mutualConnections?: {
+    name: string
+    avatar: string
+  }[]
+}
+
+export interface Attachment {
+  id: string
+  name: string
+  size: string
+  type: string
+  icon: string
+}
+
+export interface Template {
+  id: string
+  name: string
+  description: string
+}
+
 export type {
   User,
   Project,

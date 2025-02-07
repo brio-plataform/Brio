@@ -50,34 +50,24 @@ import { Switch } from "@/components/ui/switch"
 import DatePickerRange from "@/components/ui/datePickerRange"
 import { Label } from "@/components/ui/label"
 import { DateRange } from "react-day-picker"
-
-interface Mention {
-  id: string
-  name: string
-  username: string
-  email: string
-  avatar: string
-  bio: string
-  institution: string
-  mutualConnections?: {
-    name: string
-    avatar: string
-  }[]
-}
-
-interface Attachment {
-  id: string
-  name: string
-  size: string
-  type: string
-  icon: string
-}
-
-interface Template {
-  id: string
-  name: string
-  description: string
-}
+import {
+  CreatePostState,
+  CreatePostProps,
+  CreatePostDialogState,
+  PostType,
+  QuestionType,
+  PollOption,
+  DebateSettings,
+  EventSettings,
+  BaseReference,
+  Mention,
+  Attachment,
+  Template,
+  MAX_TITLE_LENGTH,
+  MAX_TAGS,
+  MAX_POLL_OPTIONS,
+  MIN_POLL_OPTIONS
+} from "@/types/types"
 
 interface UserTooltipProps {
   user: {
@@ -92,42 +82,6 @@ interface UserTooltipProps {
     }[]
   }
 }
-
-interface BaseReference {
-  id: string
-  type: 'profile' | 'document' | 'comment' | 'image'
-  value: string // @ para perfil, url para comentário, id do arquivo para document/image
-}
-
-interface ProfileReference extends BaseReference {
-  type: 'profile'
-  username: string
-  avatar: string
-  institution?: string
-}
-
-interface DocumentReference extends BaseReference {
-  type: 'document'
-  authors: string
-  year: string
-  url?: string
-}
-
-interface CommentReference extends BaseReference {
-  type: 'comment'
-  author: string
-  content: string
-  date: string
-}
-
-interface ImageReference extends BaseReference {
-  type: 'image'
-  url: string
-  author: string
-  description?: string
-}
-
-type Reference = ProfileReference | DocumentReference | CommentReference | ImageReference
 
 function UserTooltip({ user }: UserTooltipProps) {
   return (
@@ -163,28 +117,54 @@ function UserTooltip({ user }: UserTooltipProps) {
   )
 }
 
-const MAX_TITLE_LENGTH = 100
+const initialState: CreatePostState = {
+  postType: 'text',
+  title: '',
+  content: '',
+  tags: [],
+  currentTag: '',
+  references: [],
+  currentReference: '',
+  referenceType: 'profile'
+}
 
-type QuestionType = 'question' | 'poll' | 'debate';
+const initialDialogState: CreatePostDialogState = {
+  isOpen: false,
+  isSubmitting: false
+}
 
-export function CreatePost() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
+export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
+  const [state, setState] = useState<CreatePostState>(initialState)
+  const [dialogState, setDialogState] = useState<CreatePostDialogState>(initialDialogState)
+  
+  const [postType, setPostType] = useState<PostType>('text')
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
   const [showMentions, setShowMentions] = useState(false)
   const [attachments, setAttachments] = useState<Attachment[]>([])
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [tags, setTags] = useState<string[]>([])
-  const [currentTag, setCurrentTag] = useState("")
+  const [currentTag, setCurrentTag] = useState('')
   const [references, setReferences] = useState<BaseReference[]>([])
-  const [referenceType, setReferenceType] = useState<BaseReference['type']>('profile')
   const [currentReference, setCurrentReference] = useState('')
-  const [postType, setPostType] = useState<'text' | 'study' | 'question' | 'event'>('text')
+  const [referenceType, setReferenceType] = useState<BaseReference['type']>('profile')
   const [eventDate, setEventDate] = useState<DateRange | undefined>();
   const [questionType, setQuestionType] = useState<QuestionType>('question');
-  const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
+  const [pollOptions, setPollOptions] = useState<PollOption[]>([
+    { id: '1', text: '' },
+    { id: '2', text: '' }
+  ]);
   const [debateTopics, setDebateTopics] = useState<string[]>(['', '']);
+  const [debateSettings, setDebateSettings] = useState<DebateSettings>({
+    moderationEnabled: true,
+    topics: ['', '']
+  });
+  const [eventSettings, setEventSettings] = useState<EventSettings>({
+    requiresRegistration: false,
+    isPrivate: false,
+    startDate: new Date()
+  });
 
   const mentions: Mention[] = [
     {
@@ -266,13 +246,12 @@ export function CreatePost() {
     }
   }, [])
 
-  const handleAddTag = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && currentTag.trim()) {
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && currentTag.trim()) {
       e.preventDefault()
-      if (!tags.includes(currentTag.trim())) {
-        setTags([...tags, currentTag.trim()])
-      }
-      setCurrentTag("")
+      if (tags.length >= MAX_TAGS) return
+      setTags([...tags, currentTag.trim()])
+      setCurrentTag('')
     }
   }
 
@@ -282,13 +261,11 @@ export function CreatePost() {
 
   const handleAddReference = () => {
     if (!currentReference.trim()) return
-
     const newReference: BaseReference = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       type: referenceType,
-      value: currentReference.trim()
+      content: currentReference
     }
-
     setReferences([...references, newReference])
     setCurrentReference('')
   }
@@ -304,10 +281,10 @@ export function CreatePost() {
           <div className="flex items-center gap-3 p-2 rounded-md bg-muted/50">
             <Avatar className="h-8 w-8">
               <AvatarImage src="/placeholder.svg" />
-              <AvatarFallback>{ref.value[1]}</AvatarFallback>
+              <AvatarFallback>{ref.content[1]}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <p className="font-medium">{ref.value}</p>
+              <p className="font-medium">{ref.content}</p>
             </div>
             <Button
               variant="ghost"
@@ -326,7 +303,7 @@ export function CreatePost() {
             <FileText className="h-5 w-5 text-blue-500" />
             <div className="flex-1">
               <p className="font-medium">Documento anexado</p>
-              <p className="text-sm text-muted-foreground">{ref.value}</p>
+              <p className="text-sm text-muted-foreground">{ref.content}</p>
             </div>
             <Button
               variant="ghost"
@@ -346,32 +323,13 @@ export function CreatePost() {
             <div className="flex-1">
               <p className="text-sm">Comentário vinculado</p>
               <a 
-                href={ref.value}
+                href={ref.content}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-blue-500 hover:underline"
               >
-                {ref.value}
+                {ref.content}
               </a>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => removeReference(ref.id)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        )
-
-      case 'image':
-        return (
-          <div className="flex items-center gap-3 p-2 rounded-md bg-muted/50">
-            <ImageIcon className="h-5 w-5 text-purple-500" />
-            <div className="flex-1">
-              <p className="font-medium">Imagem anexada</p>
-              <p className="text-sm text-muted-foreground">{ref.value}</p>
             </div>
             <Button
               variant="ghost"
@@ -394,7 +352,12 @@ export function CreatePost() {
             <AvatarImage src="/placeholder.svg?height=40&width=40" alt="User" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={dialogState.isOpen} onOpenChange={(isOpen) => {
+            setDialogState({ ...dialogState, isOpen })
+            if (!isOpen) {
+              setPostType('text')
+            }
+          }}>
             <DialogTrigger asChild>
               <Button variant="outline" className="w-full justify-start text-muted-foreground h-12 px-4">
                 Comece uma publicação acadêmica...
@@ -842,10 +805,10 @@ export function CreatePost() {
                               <div key={index} className="flex gap-2">
                                 <Input
                                   placeholder={`Opção ${index + 1}`}
-                                  value={option}
+                                  value={option.text}
                                   onChange={(e) => {
                                     const newOptions = [...pollOptions];
-                                    newOptions[index] = e.target.value;
+                                    newOptions[index] = { ...option, text: e.target.value };
                                     setPollOptions(newOptions);
                                   }}
                                 />
@@ -865,7 +828,7 @@ export function CreatePost() {
                           <Button
                             type="button"
                             variant="outline"
-                            onClick={() => setPollOptions([...pollOptions, ''])}
+                            onClick={() => setPollOptions([...pollOptions, { id: crypto.randomUUID(), text: '' }])}
                           >
                             Adicionar opção
                           </Button>
@@ -1015,45 +978,45 @@ export function CreatePost() {
                 <div className="flex gap-2">
                   <Button variant="ghost" size="icon" onClick={handleAttachment}>
                     <Paperclip className="h-4 w-4" />
-                      </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <FileText className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>Usar template</DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          {templates.map((template) => (
-                            <DropdownMenuItem key={template.id} onClick={() => setSelectedTemplate(template.id)}>
-                              <div className="flex flex-col">
-                                <span>{template.name}</span>
-                                <span className="text-xs text-muted-foreground">{template.description}</span>
-                              </div>
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
-                        <Smile className="h-4 w-4" />
+                        <FileText className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon">
-                        <Calendar className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="gap-2">
-                        Agendar
-                        <Calendar className="h-4 w-4" />
-                      </Button>
-                      <Button type="submit" size="sm" disabled={!title.trim() || !content.trim()}>
-                        Publicar agora
-                    </Button>
-                  </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem>Usar template</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      {templates.map((template) => (
+                        <DropdownMenuItem key={template.id} onClick={() => setSelectedTemplate(template.id)}>
+                          <div className="flex flex-col">
+                            <span>{template.name}</span>
+                            <span className="text-xs text-muted-foreground">{template.description}</span>
+                          </div>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button variant="ghost" size="icon">
+                    <Smile className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Calendar className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    Agendar
+                    <Calendar className="h-4 w-4" />
+                  </Button>
+                  <Button type="submit" size="sm" disabled={!title.trim() || !content.trim()}>
+                    Publicar agora
+                  </Button>
+                </div>
               </div>
             </DialogContent>
           </Dialog>
@@ -1063,7 +1026,7 @@ export function CreatePost() {
             variant="ghost"
             className="flex flex-col items-center py-3 h-auto hover:bg-blue-50/10 dark:hover:bg-blue-900/20 transition-all group"
             onClick={() => {
-              setIsDialogOpen(true)
+              setDialogState({ ...dialogState, isOpen: true })
               setPostType('text')
             }}
           >
@@ -1078,7 +1041,7 @@ export function CreatePost() {
             variant="ghost"
             className="flex flex-col items-center py-3 h-auto hover:bg-purple-50/10 dark:hover:bg-purple-900/20 transition-all group"
             onClick={() => {
-              setIsDialogOpen(true)
+              setDialogState({ ...dialogState, isOpen: true })
               setPostType('study')
             }}
           >
@@ -1093,7 +1056,7 @@ export function CreatePost() {
             variant="ghost"
             className="flex flex-col items-center py-3 h-auto hover:bg-green-50/10 dark:hover:bg-green-900/20 transition-all group"
             onClick={() => {
-              setIsDialogOpen(true)
+              setDialogState({ ...dialogState, isOpen: true })
               setPostType('question')
             }}
           >
@@ -1108,7 +1071,7 @@ export function CreatePost() {
             variant="ghost"
             className="flex flex-col items-center py-3 h-auto hover:bg-amber-50/10 dark:hover:bg-amber-900/20 transition-all group"
             onClick={() => {
-              setIsDialogOpen(true)
+              setDialogState({ ...dialogState, isOpen: true })
               setPostType('event')
             }}
           >
