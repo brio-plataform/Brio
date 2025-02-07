@@ -5,54 +5,83 @@ import { ThumbsUp, MessageSquare, Share2, MoreHorizontal, Send } from "lucide-re
 import { formatDistanceToNow } from "date-fns"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import type { CommentType } from "@/types/types"
+import type { CommentType, CommentAuthor, CommentMetrics, CommentState } from "@/types/types"
 
 interface CommentProps {
-  author: {
-    name: string
-    avatar: string
-    institution?: string
-  }
+  id: string
+  author: CommentAuthor
   content: string
   timestamp: Date
-  likes: number
-  replies: number
+  initialMetrics?: CommentMetrics
   level?: number
   children?: ReactNode
   onReply: (commentId: string, content: string) => void
-  id: string
+  onLike?: () => void
+  onShare?: () => void
+  onReport?: () => void
 }
 
 export function Comment({
+  id,
   author,
   content,
   timestamp,
-  likes: initialLikes,
-  replies,
+  initialMetrics,
   level = 0,
   children,
   onReply,
-  id,
+  onLike,
+  onShare,
+  onReport,
 }: CommentProps) {
-  const [isLiked, setIsLiked] = useState(false)
-  const [likesCount, setLikesCount] = useState(initialLikes)
-  const [showReplies, setShowReplies] = useState(false)
-  const [isReplying, setIsReplying] = useState(false)
-  const [replyContent, setReplyContent] = useState("")
+  // Estado local
+  const [metrics, setMetrics] = useState<CommentMetrics>({
+    likes: initialMetrics?.likes || 0,
+    replies: initialMetrics?.replies || 0,
+    isLiked: initialMetrics?.isLiked || false
+  })
+  
+  const [state, setState] = useState<CommentState>({
+    isReplying: false,
+    showReplies: false,
+    replyContent: ""
+  })
 
+  // Handlers
   const handleLike = () => {
-    setIsLiked(!isLiked)
-    setLikesCount(isLiked ? likesCount - 1 : likesCount + 1)
+    setMetrics((prev: CommentMetrics) => ({
+      ...prev,
+      isLiked: !prev.isLiked,
+      likes: prev.isLiked ? prev.likes - 1 : prev.likes + 1
+    }))
+    onLike?.()
   }
 
   const handleSubmitReply = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!replyContent.trim()) return
+    if (!state.replyContent.trim()) return
     
-    onReply(id, replyContent)
-    setReplyContent("")
-    setIsReplying(false)
-    setShowReplies(true)
+    onReply(id, state.replyContent)
+    setState((prev: CommentState) => ({
+      ...prev,
+      replyContent: "",
+      isReplying: false,
+      showReplies: true
+    }))
+  }
+
+  const toggleReplying = () => {
+    setState((prev: CommentState) => ({
+      ...prev,
+      isReplying: !prev.isReplying
+    }))
+  }
+
+  const toggleShowReplies = () => {
+    setState((prev: CommentState) => ({
+      ...prev,
+      showReplies: !prev.showReplies
+    }))
   }
 
   if (level > 3) return null // Limit nesting depth
@@ -62,13 +91,17 @@ export function Comment({
       <div className="flex gap-3">
         <Avatar className="h-8 w-8">
           <AvatarImage src={author.avatar} alt={author.name} />
-          <AvatarFallback className="bg-gray-500 text-muted-foreground">{author.name[0]}</AvatarFallback>
+          <AvatarFallback className="bg-gray-500 text-muted-foreground">
+            {author.name[0]}
+          </AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0">
-          <div className=" rounded-lg px-3 py-2">
+          <div className="rounded-lg px-3 py-2">
             <div className="flex items-center gap-2 mb-1">
               <span className="font-semibold text-sm">{author.name}</span>
-              {author.institution && <span className="text-xs text-muted-foreground">• {author.institution}</span>}
+              {author.institution && (
+                <span className="text-xs text-muted-foreground">• {author.institution}</span>
+              )}
               <span className="text-xs text-muted-foreground">
                 • {formatDistanceToNow(timestamp, { addSuffix: true })}
               </span>
@@ -76,17 +109,32 @@ export function Comment({
             <p className="text-sm whitespace-pre-wrap">{content}</p>
           </div>
           <div className="flex items-center gap-4 mt-1">
-            <Button variant="ghost" size="sm" className="h-8 px-2" onClick={handleLike}>
-              <ThumbsUp className={`h-4 w-4 mr-1.5 ${isLiked ? "text-blue-500 fill-blue-500" : ""}`} />
-              <span className="text-xs">{likesCount}</span>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 px-2" 
+              onClick={handleLike}
+            >
+              <ThumbsUp className={`h-4 w-4 mr-1.5 ${metrics.isLiked ? "text-blue-500 fill-blue-500" : ""}`} />
+              <span className="text-xs">{metrics.likes}</span>
             </Button>
-            {replies > 0 && (
-              <Button variant="ghost" size="sm" className="h-8 px-2" onClick={() => setShowReplies(!showReplies)}>
+            {metrics.replies > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 px-2" 
+                onClick={toggleShowReplies}
+              >
                 <MessageSquare className="h-4 w-4 mr-1.5" />
-                <span className="text-xs">{replies} replies</span>
+                <span className="text-xs">{metrics.replies} replies</span>
               </Button>
             )}
-            <Button variant="ghost" size="sm" className="h-8 px-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 px-2"
+              onClick={onShare}
+            >
               <Share2 className="h-4 w-4 mr-1.5" />
               <span className="text-xs">Share</span>
             </Button>
@@ -94,7 +142,7 @@ export function Comment({
               variant="ghost" 
               size="sm" 
               className="h-8 px-2"
-              onClick={() => setIsReplying(!isReplying)}
+              onClick={toggleReplying}
             >
               <MessageSquare className="h-4 w-4 mr-1.5" />
               <span className="text-xs">Reply</span>
@@ -106,7 +154,7 @@ export function Comment({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Report</DropdownMenuItem>
+                <DropdownMenuItem onClick={onReport}>Report</DropdownMenuItem>
                 <DropdownMenuItem>Copy Link</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -114,7 +162,7 @@ export function Comment({
         </div>
       </div>
 
-      {isReplying && (
+      {state.isReplying && (
         <form onSubmit={handleSubmitReply} className="flex gap-3 mt-3 ml-11">
           <Avatar className="h-8 w-8">
             <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Your avatar" />
@@ -122,20 +170,29 @@ export function Comment({
           </Avatar>
           <div className="flex-1 flex gap-2">
             <Input
-              value={replyContent}
-              onChange={(e) => setReplyContent(e.target.value)}
+              value={state.replyContent}
+              onChange={(e) => setState(prev => ({
+                ...prev,
+                replyContent: e.target.value
+              }))}
               placeholder="Write a reply..."
               className="min-h-[2.5rem] py-2"
             />
-            <Button type="submit" size="icon" disabled={!replyContent.trim()}>
+            <Button 
+              type="submit" 
+              size="icon" 
+              disabled={!state.replyContent.trim()}
+            >
               <Send className="h-4 w-4" />
             </Button>
           </div>
         </form>
       )}
 
-      {showReplies && children && (
-        <div className={`ml-11 mt-3 space-y-3 ${level > 0 ? "pl-3 border-l" : ""}`}>{children}</div>
+      {state.showReplies && children && (
+        <div className={`ml-11 mt-3 space-y-3 ${level > 0 ? "pl-3 border-l" : ""}`}>
+          {children}
+        </div>
       )}
     </div>
   )
