@@ -27,6 +27,8 @@ import {
   AlignCenter,
   AlignRight,
   List,
+  MessageSquare,
+  Upload,
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -38,6 +40,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import Image from "next/image"
 
 interface Mention {
   id: string
@@ -81,6 +84,42 @@ interface UserTooltipProps {
   }
 }
 
+interface BaseReference {
+  id: string
+  type: 'profile' | 'document' | 'comment' | 'image'
+  value: string // @ para perfil, url para comentário, id do arquivo para document/image
+}
+
+interface ProfileReference extends BaseReference {
+  type: 'profile'
+  username: string
+  avatar: string
+  institution?: string
+}
+
+interface DocumentReference extends BaseReference {
+  type: 'document'
+  authors: string
+  year: string
+  url?: string
+}
+
+interface CommentReference extends BaseReference {
+  type: 'comment'
+  author: string
+  content: string
+  date: string
+}
+
+interface ImageReference extends BaseReference {
+  type: 'image'
+  url: string
+  author: string
+  description?: string
+}
+
+type Reference = ProfileReference | DocumentReference | CommentReference | ImageReference
+
 function UserTooltip({ user }: UserTooltipProps) {
   return (
     <div className="w-full rounded-lg bg-background border shadow-lg p-4 space-y-3">
@@ -119,13 +158,17 @@ const MAX_TITLE_LENGTH = 100
 
 export function CreatePost() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [showMentions, setShowMentions] = useState(false)
   const [attachments, setAttachments] = useState<Attachment[]>([])
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [tags, setTags] = useState<string[]>([])
+  const [currentTag, setCurrentTag] = useState("")
+  const [references, setReferences] = useState<BaseReference[]>([])
+  const [referenceType, setReferenceType] = useState<BaseReference['type']>('profile')
+  const [currentReference, setCurrentReference] = useState('')
 
   const mentions: Mention[] = [
     {
@@ -207,6 +250,126 @@ export function CreatePost() {
     }
   }, [])
 
+  const handleAddTag = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && currentTag.trim()) {
+      e.preventDefault()
+      if (!tags.includes(currentTag.trim())) {
+        setTags([...tags, currentTag.trim()])
+      }
+      setCurrentTag("")
+    }
+  }
+
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove))
+  }
+
+  const handleAddReference = () => {
+    if (!currentReference.trim()) return
+
+    const newReference: BaseReference = {
+      id: Math.random().toString(36).substr(2, 9),
+      type: referenceType,
+      value: currentReference.trim()
+    }
+
+    setReferences([...references, newReference])
+    setCurrentReference('')
+  }
+
+  const removeReference = (id: string) => {
+    setReferences(references.filter((ref) => ref.id !== id))
+  }
+
+  const renderReferenceItem = (ref: BaseReference) => {
+    switch (ref.type) {
+      case 'profile':
+        return (
+          <div className="flex items-center gap-3 p-2 rounded-md bg-muted/50">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="/placeholder.svg" />
+              <AvatarFallback>{ref.value[1]}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <p className="font-medium">{ref.value}</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => removeReference(ref.id)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )
+
+      case 'document':
+        return (
+          <div className="flex items-center gap-3 p-2 rounded-md bg-muted/50">
+            <FileText className="h-5 w-5 text-blue-500" />
+            <div className="flex-1">
+              <p className="font-medium">Documento anexado</p>
+              <p className="text-sm text-muted-foreground">{ref.value}</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => removeReference(ref.id)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )
+
+      case 'comment':
+        return (
+          <div className="flex items-start gap-3 p-2 rounded-md bg-muted/50">
+            <MessageSquare className="h-5 w-5 text-green-500" />
+            <div className="flex-1">
+              <p className="text-sm">Comentário vinculado</p>
+              <a 
+                href={ref.value}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-500 hover:underline"
+              >
+                {ref.value}
+              </a>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => removeReference(ref.id)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )
+
+      case 'image':
+        return (
+          <div className="flex items-center gap-3 p-2 rounded-md bg-muted/50">
+            <ImageIcon className="h-5 w-5 text-purple-500" />
+            <div className="flex-1">
+              <p className="font-medium">Imagem anexada</p>
+              <p className="text-sm text-muted-foreground">{ref.value}</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => removeReference(ref.id)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )
+    }
+  }
+
   return (
     <Card className="w-full max-w-7xl">
       <CardContent className="p-4">
@@ -222,38 +385,10 @@ export function CreatePost() {
               </Button>
             </DialogTrigger>
             <DialogContent
-              className={`sm:max-w-2xl ${isExpanded ? "w-screen h-screen !max-w-full !rounded-none" : ""}`}
+              className={`sm:max-w-2xl`}
             >
               <DialogHeader>
                 <div className="flex flex-col space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium">De:</span>
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
-                          <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
-                        <Select defaultValue="default">
-                          <SelectTrigger className="border-0 p-0 hover:bg-accent hover:text-accent-foreground">
-                            <SelectValue placeholder="Selecione o email" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="default">user@university.edu</SelectItem>
-                            <SelectItem value="alt">alt@university.edu</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => setIsExpanded(!isExpanded)}>
-                        {isExpanded ? <Minus className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => setIsDialogOpen(false)}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
                   <div className="flex items-center gap-2">
                     <Input
                       placeholder="Título da sua publicação"
@@ -264,6 +399,31 @@ export function CreatePost() {
                     <span className="text-sm text-muted-foreground whitespace-nowrap">
                       {title.length}/{MAX_TITLE_LENGTH}
                     </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 items-center">
+                    {tags.map((tag) => (
+                      <div
+                        key={tag}
+                        className="flex items-center gap-1 bg-muted px-2 py-1 rounded-full text-sm"
+                      >
+                        #{tag}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-4 w-4"
+                          onClick={() => removeTag(tag)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                    <Input
+                      placeholder="Adicione tags (pressione Enter)"
+                      value={currentTag}
+                      onChange={(e) => setCurrentTag(e.target.value)}
+                      onKeyDown={handleAddTag}
+                      className="flex-1 min-w-[200px]"
+                    />
                   </div>
                 </div>
               </DialogHeader>
@@ -445,6 +605,75 @@ export function CreatePost() {
                   </div>
                 )}
                 <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} multiple />
+              </div>
+              <div className="border-t pt-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Referências & Citações</h4>
+                  <Select value={referenceType} onValueChange={(value) => setReferenceType(value as BaseReference['type'])}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Tipo de referência" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="profile">
+                        <div className="flex items-center gap-2">
+                          <AtSign className="h-4 w-4" />
+                          <span>Perfil</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="document">
+                        <div className="flex items-center gap-2">
+                          <FileText className="h-4 w-4" />
+                          <span>Documento</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="comment">
+                        <div className="flex items-center gap-2">
+                          <MessageSquare className="h-4 w-4" />
+                          <span>Comentário</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    {referenceType === 'profile' && (
+                      <Input 
+                        placeholder="Digite o @ do perfil"
+                        value={currentReference}
+                        onChange={(e) => setCurrentReference(e.target.value)}
+                      />
+                    )}
+                    {referenceType === 'comment' && (
+                      <Input 
+                        placeholder="Cole o link do comentário"
+                        value={currentReference}
+                        onChange={(e) => setCurrentReference(e.target.value)}
+                      />
+                    )}
+                    {(referenceType === 'document') && (
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={handleAttachment}
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Fazer upload de {referenceType === 'document' ? 'documento' : 'imagem'}
+                      </Button>
+                    )}
+                    {(referenceType === 'profile' || referenceType === 'comment') && (
+                      <Button 
+                        onClick={handleAddReference}
+                        disabled={!currentReference.trim()}
+                      >
+                        Adicionar
+                      </Button>
+                    )}
+                  </div>
+                  {references.map((ref) => (
+                    <div key={ref.id}>{renderReferenceItem(ref)}</div>
+                  ))}
+                </div>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex gap-2">
