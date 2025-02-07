@@ -165,6 +165,8 @@ function UserTooltip({ user }: UserTooltipProps) {
 
 const MAX_TITLE_LENGTH = 100
 
+type QuestionType = 'question' | 'poll' | 'debate';
+
 export function CreatePost() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [title, setTitle] = useState("")
@@ -180,6 +182,9 @@ export function CreatePost() {
   const [currentReference, setCurrentReference] = useState('')
   const [postType, setPostType] = useState<'text' | 'study' | 'question' | 'event'>('text')
   const [eventDate, setEventDate] = useState<DateRange | undefined>();
+  const [questionType, setQuestionType] = useState<QuestionType>('question');
+  const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
+  const [debateTopics, setDebateTopics] = useState<string[]>(['', '']);
 
   const mentions: Mention[] = [
     {
@@ -802,7 +807,11 @@ export function CreatePost() {
                 <div className="space-y-6">
                   <DialogHeader>
                     <div className="flex flex-col space-y-4">
-                      <RadioGroup defaultValue="question" className="grid grid-cols-3 gap-2">
+                      <RadioGroup 
+                        defaultValue="question" 
+                        className="grid grid-cols-3 gap-2"
+                        onValueChange={(value) => setQuestionType(value as QuestionType)}
+                      >
                         <div>
                           <RadioGroupItem value="question" id="question" className="peer sr-only" />
                           <Label
@@ -836,27 +845,144 @@ export function CreatePost() {
                       </RadioGroup>
 
                       <Input
-                        placeholder="Sua pergunta aqui..."
+                        placeholder={
+                          questionType === 'question' 
+                            ? "Sua pergunta aqui..." 
+                            : questionType === 'poll' 
+                            ? "Título da enquete..." 
+                            : "Tema do debate..."
+                        }
                         value={title}
                         onChange={(e) => setTitle(e.target.value.slice(0, MAX_TITLE_LENGTH))}
                         className="text-lg font-semibold"
                       />
                       
-                      <Textarea 
-                        placeholder="Adicione mais contexto à sua pergunta..."
-                        className="min-h-[100px]"
-                      />
+                      {questionType === 'question' && (
+                        <>
+                          <Textarea 
+                            placeholder="Adicione mais contexto à sua pergunta..."
+                            className="min-h-[100px]"
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                          />
+                          
+                          <div className="space-y-4 border-t pt-4">
+                            <div className="flex items-center justify-between">
+                              <Label>Permitir respostas anônimas</Label>
+                              <Switch />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Label>Notificar sobre novas respostas</Label>
+                              <Switch defaultChecked />
+                            </div>
+                          </div>
+                        </>
+                      )}
 
-                      <div className="space-y-4 border-t pt-4">
-                        <div className="flex items-center justify-between">
-                          <Label>Permitir respostas anônimas</Label>
-                          <Switch />
+                      {questionType === 'poll' && (
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            {pollOptions.map((option, index) => (
+                              <div key={index} className="flex gap-2">
+                                <Input
+                                  placeholder={`Opção ${index + 1}`}
+                                  value={option}
+                                  onChange={(e) => {
+                                    const newOptions = [...pollOptions];
+                                    newOptions[index] = e.target.value;
+                                    setPollOptions(newOptions);
+                                  }}
+                                />
+                                {index > 1 && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => setPollOptions(pollOptions.filter((_, i) => i !== index))}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setPollOptions([...pollOptions, ''])}
+                          >
+                            Adicionar opção
+                          </Button>
+
+                          <div className="space-y-4 border-t pt-4">
+                            <div className="flex items-center justify-between">
+                              <Label>Permitir múltipla escolha</Label>
+                              <Switch />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Label>Mostrar resultados em tempo real</Label>
+                              <Switch defaultChecked />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Label>Data limite para votação</Label>
+                              <DatePickerRange />
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <Label>Notificar sobre novas respostas</Label>
-                          <Switch defaultChecked />
+                      )}
+
+                      {questionType === 'debate' && (
+                        <div className="space-y-4">
+                          <Textarea 
+                            placeholder="Descreva o contexto do debate..."
+                            className="min-h-[100px]"
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                          />
+                          
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label>Posição A</Label>
+                              <Input 
+                                placeholder="Ex: A favor"
+                                value={debateTopics[0]}
+                                onChange={(e) => {
+                                  const newTopics = [...debateTopics];
+                                  newTopics[0] = e.target.value;
+                                  setDebateTopics(newTopics);
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Posição B</Label>
+                              <Input 
+                                placeholder="Ex: Contra"
+                                value={debateTopics[1]}
+                                onChange={(e) => {
+                                  const newTopics = [...debateTopics];
+                                  newTopics[1] = e.target.value;
+                                  setDebateTopics(newTopics);
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="space-y-4 border-t pt-4">
+                            <div className="flex items-center justify-between">
+                              <Label>Moderação ativa</Label>
+                              <Switch defaultChecked />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Label>Tempo limite para argumentos</Label>
+                              <Input type="number" className="w-32" placeholder="5 min" />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Label>Duração do debate</Label>
+                              <DatePickerRange />
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </DialogHeader>
                 </div>

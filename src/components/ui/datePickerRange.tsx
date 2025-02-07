@@ -75,17 +75,6 @@ export default function DatePickerRange({ onChange, value, label = "Date range p
           </PopoverContent>
         </Popover>
       </div>
-      <p className="mt-2 text-xs text-muted-foreground" role="region" aria-live="polite">
-        Built with{" "}
-        <a
-          className="underline hover:text-foreground"
-          href="https://daypicker.dev/"
-          target="_blank"
-          rel="noopener nofollow"
-        >
-          React DayPicker
-        </a>
-      </p>
     </div>
   );
 }
