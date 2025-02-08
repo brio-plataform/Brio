@@ -12,6 +12,7 @@ import { Input } from "../ui/input"
 import { Search, Filter, TrendingUp, Clock, Star, BookOpen } from "lucide-react"
 import { UserProfileSmall } from "../SmallProfile/userProfileSmall"
 import { InstitutionalProfileSmall } from "../SmallProfile/institutionalProfileSmall"
+import { ForumProfileSmall } from "../SmallProfile/forumProfileSmall"
 
 const sampleFeedData: FeedItemProps[] = [
   {
@@ -304,6 +305,27 @@ export function FeedExplore() {
               achievements: ["Melhor Universidade Global"]
           }}
           onFollow={() => console.log("Follow clicked")}
+          onJoin={() => console.log("Join clicked")}
+        />
+
+        <ForumProfileSmall
+          forum={{
+            id: "1",
+            name: "Programming Hub",
+            slug: "programming-hub",
+            type: "community",
+            verified: true,
+            category: "technology",
+            description: "A community for programmers to share their knowledge and learn from each other.",
+            stats: {
+              members: 1000,
+              posts: 100,
+              onlineNow: 42,
+              dailyActivity: 75,
+              weeklyGrowth: 12
+            },
+            isJoined: false
+          }}
           onJoin={() => console.log("Join clicked")}
         />
 
