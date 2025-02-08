@@ -117,10 +117,10 @@ export function FeedItem({
         if (comment.id === commentId) {
           return {
             ...comment,
-            replies: [newReply, ...comment.replies]
+            replies: [newReply, ...(comment.replies || [])]
           }
         }
-        if (comment.replies.length > 0) {
+        if (comment.replies && comment.replies.length > 0) {
           return {
             ...comment,
             replies: addReplyToComment(comment.replies)
@@ -156,12 +156,13 @@ export function FeedItem({
         author={comment.author}
         content={comment.content}
         timestamp={comment.timestamp}
-        likes={comment.likes}
-        replies={comment.replies.length}
+        likes={comment.likes || 0}
+        replies={comment.replies?.length || 0}
         level={level}
         onReply={handleReplyToComment}
       >
-        {comment.replies.length > 0 && renderComments(comment.replies, level + 1)}
+        {comment.replies && comment.replies.length > 0 && 
+          renderComments(comment.replies, level + 1)}
       </Comment>
     ))
   }
