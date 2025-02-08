@@ -249,118 +249,62 @@ export function FeedExplore() {
             id: "1",
             name: "John Doe",
             username: "johndoe",
-            avatar: "/avatar.png",
-            role: "Professor de Física Quântica",
-            bio: "Pesquisador em Física Quântica com foco em computação quântica e teoria da informação. Apaixonado por ensino e divulgação científica.",
             verified: true,
+            role: "Professor de Física Quântica",
             institution: {
               name: "Harvard University",
-              type: "university",
-              location: "Cambridge, MA, USA"
+              location: "Cambridge, MA"
             },
+            bio: "Pesquisador em Física Quântica com foco em computação quântica e teoria da informação. Apaixonado por ensino e divulgação científica.",
+            badges: [
+              {
+                type: "top-contributor",
+                label: "Top Contributor",
+                tooltip: "Reconhecido como Top Contributor"
+              },
+              {
+                type: "expert",
+                label: "Expert",
+                tooltip: "Expert verificado na área"
+              },
+              {
+                type: "mentor",
+                label: "Mentor",
+                tooltip: "Mentor ativo na comunidade"
+              }
+            ],
             stats: {
               publications: 42,
               citations: 128,
               followers: 500
             },
-            location: "Cambridge, MA",
-            badges: [
-              {
-                id: "1",
-                name: "Top Contributor",
-                type: "top-contributor"
-              },
-              {
-                id: "2",
-                name: "Expert",
-                type: "expert"
-              },
-              {
-                id: "3",
-                name: "Mentor",
-                type: "mentor"
-              }
-            ],
-            areas: ["Física Quântica", "Computação Quântica", "Teoria da Informação"],
-            mutualConnections: [
-              {
-                id: "2",
-                name: "Jane Smith",
-                avatar: "/avatar2.png"
-              }
-            ],
             isFollowing: false
           }}
-          onFollow={() => {
-            console.log("Seguir usuário")
-          }}
-          onMessage={() => {
-            console.log("Enviar mensagem")
-          }}
+          onFollow={() => console.log("Follow clicked")}
+          onMessage={() => console.log("Message clicked")}
         />
 
         {/* Perfil Institucional */}
         <InstitutionalProfileSmall
-          institution={{
-            id: "1",
-            name: "Harvard University",
-            avatar: "/harvard.png",
-            type: "university",
-            verified: true,
-            description: "Uma das mais prestigiadas universidades do mundo, dedicada à excelência em ensino, pesquisa e inovação desde 1636.",
-            location: "Cambridge, Massachusetts, USA",
-            link: "https://harvard.edu",
-            stats: {
-              researchers: 5000,
-              publications: 10000,
-              citations: 50000,
-              ranking: 1
-            },
-            researchAreas: [
-              "Física",
-              "Medicina",
-              "Direito",
-              "Computação",
-              "Engenharia"
-            ],
-            achievements: [
-              {
-                type: "award",
-                title: "Melhor Universidade Global",
-                year: 2024
+            institution={{
+              id: "1",
+              name: "Harvard University",
+              username: "harvard.university",
+              type: "university",
+              verified: true,
+              description: "Uma das mais prestigiadas universidades do mundo, dedicada à excelência em ensino, pesquisa e inovação desde 1636.",
+              location: "Cambridge, Massachusetts, USA",
+              stats: {
+                professors: 5000,
+                publications: 10000,
+                students: 50000,
+                ranking: "#1"
               },
-              {
-                type: "ranking",
-                title: "Top 1 em Pesquisa",
-                year: 2024
-              }
-            ],
-            collaborations: [
-              {
-                id: "2",
-                name: "MIT",
-                avatar: "/mit.png",
-                type: "university"
-              },
-              {
-                id: "3",
-                name: "Stanford",
-                avatar: "/stanford.png",
-                type: "university"
-              }
-            ],
-            isFollowing: false,
-            isMember: false
+              researchAreas: ["Física", "Medicina"],
+              achievements: ["Melhor Universidade Global"]
           }}
-          onFollow={() => {
-            console.log("Seguir instituição")
-          }}
-          onJoin={() => {
-            console.log("Juntar-se à instituição")
-          }}
-          onVisit={() => {
-            console.log("Visitar site")
-          }}
+          onFollow={() => console.log("Follow clicked")}
+          onJoin={() => console.log("Join clicked")}
         />
 
         {/* Feed de Conteúdo */}
