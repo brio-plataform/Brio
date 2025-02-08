@@ -1,18 +1,21 @@
 "use client"
 
 import { useState } from "react"
-import { CreatePost } from "@/components/CreatePost/createPost"
-import { FeedItem } from "../FeedItem/feedItem"
-import placeholder from "../../../public/images/placeholder.svg"
-import { ColumnFeed } from "../ColumnFeed/columnFeed"
+import { FeedItem } from "../../FeedItem/feedItem"
+
+import placeholder from "../../../../public/images/placeholder.svg"
+
+import { ColumnFeed } from "../../ColumnFeed/columnFeed"
 import type { FeedItemProps } from "@/types/types"
-import { ForumHeader } from "../Header/ForumHeader/forumHeader"
-import { Button } from "../ui/button"
-import { Input } from "../ui/input"
-import { Search, Filter, TrendingUp, Clock, Star, BookOpen } from "lucide-react"
-import { UserProfileSmall } from "../SmallProfile/userProfileSmall"
-import { InstitutionalProfileSmall } from "../SmallProfile/institutionalProfileSmall"
-import { ForumProfileSmall } from "../SmallProfile/forumProfileSmall"
+import { Button } from "../../ui/button"
+import { Input } from "../../ui/input"
+import { Search, Filter } from "lucide-react"
+import { UserProfileSmall } from "../../SmallProfile/UserProfileSmall/userProfileSmall"
+import { InstitutionalProfileSmall } from "../../SmallProfile/InstitutionalProfileSmall/institutionalProfileSmall"
+import { ForumProfileSmall } from "../../SmallProfile/ForumProfileSmall/forumProfileSmall"
+
+
+import { KNOWLEDGE_CATEGORIES, SORT_OPTIONS } from "./mockData"
 
 const sampleFeedData: FeedItemProps[] = [
   {
@@ -158,25 +161,6 @@ const sampleFeedData: FeedItemProps[] = [
     ],
     timestamp: new Date(Date.now() - 172800000), // 2 days ago
   },
-]
-
-// Categorias principais do Brio
-const KNOWLEDGE_CATEGORIES = [
-  { id: 'science', name: 'Ciência', icon: '🔬' },
-  { id: 'philosophy', name: 'Filosofia', icon: '🤔' },
-  { id: 'technology', name: 'Tecnologia', icon: '💻' },
-  { id: 'history', name: 'História', icon: '📚' },
-  { id: 'arts', name: 'Artes', icon: '🎨' },
-  { id: 'mathematics', name: 'Matemática', icon: '🔢' },
-  { id: 'literature', name: 'Literatura', icon: '📖' },
-  { id: 'engineering', name: 'Engenharia', icon: '⚙️' }
-]
-
-const SORT_OPTIONS = [
-  { id: 'trending', name: 'Em Alta', icon: <TrendingUp className="h-4 w-4" /> },
-  { id: 'recent', name: 'Recentes', icon: <Clock className="h-4 w-4" /> },
-  { id: 'top', name: 'Mais Relevantes', icon: <Star className="h-4 w-4" /> },
-  { id: 'comprehensive', name: 'Mais Completos', icon: <BookOpen className="h-4 w-4" /> }
 ]
 
 export function FeedExplore() {

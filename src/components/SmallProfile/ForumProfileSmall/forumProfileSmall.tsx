@@ -25,53 +25,8 @@ import {
   Eye
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-interface ForumProfileProps {
-  forum: {
-    id: string
-    name: string
-    slug: string
-    avatar?: string
-    banner?: string
-    type: 'official' | 'community'
-    verified?: boolean
-    category: string
-    description?: string
-    moderators?: Array<{
-      id: string
-      name: string
-      avatar?: string
-    }>
-    badges?: Array<{
-      type: 'trending' | 'verified' | 'academic'
-      label: string
-      tooltip: string
-    }>
-    stats: {
-      members: number
-      posts: number
-      onlineNow: number
-      dailyActivity: number
-      weeklyGrowth: number
-    }
-    nextEvents?: Array<{
-      title: string
-      date: string
-      participants: number
-    }>
-    topContributors?: Array<{
-      id: string
-      name: string
-      avatar?: string
-      contributions: number
-    }>
-    isJoined: boolean
-    isModerator?: boolean
-  }
-  onJoin: () => void
-  onModerate?: () => void
-  className?: string
-}
+import { ForumProfileProps } from './types'
+import { MOCK_FORUM } from './mockData'
 
 export function ForumProfileSmall({ 
   forum,

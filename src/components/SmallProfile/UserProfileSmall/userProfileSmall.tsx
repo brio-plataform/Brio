@@ -18,36 +18,7 @@ import {
   Check,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-interface UserProfileProps {
-  user: {
-    id: string
-    name: string
-    username: string
-    avatar?: string
-    verified?: boolean
-    role?: string
-    institution?: {
-      name: string
-      location?: string
-    }
-    bio?: string
-    badges?: Array<{
-      type: 'top-contributor' | 'expert' | 'mentor'
-      label: string
-      tooltip: string
-    }>
-    stats: {
-      publications: number
-      citations: number
-      followers: number
-    }
-    isFollowing: boolean
-  }
-  onFollow: () => void
-  onMessage: () => void
-  className?: string
-}
+import { UserProfileProps, BadgeType } from './types'
 
 export function UserProfileSmall({ 
   user,
@@ -55,7 +26,7 @@ export function UserProfileSmall({
   onMessage,
   className 
 }: UserProfileProps) {
-  const getBadgeIcon = (type: string) => {
+  const getBadgeIcon = (type: BadgeType) => {
     switch (type) {
       case 'top-contributor':
         return <Trophy className="h-3 w-3" />

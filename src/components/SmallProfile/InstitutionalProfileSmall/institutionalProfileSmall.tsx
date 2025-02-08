@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Card, CardHeader } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { 
   CheckCircle, 
@@ -15,34 +15,9 @@ import {
   Flag,
   ExternalLink,
   Book,
-  Check,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-// Tipos
-interface InstitutionProfileProps {
-  institution: {
-    id: string
-    name: string
-    username: string
-    avatar?: string
-    type: 'university' | 'research' | 'company' | 'ngo'
-    verified?: boolean
-    description?: string
-    location?: string
-    stats: {
-      professors: number
-      publications: number
-      students: number
-      ranking?: string
-    }
-    researchAreas?: string[]
-    achievements?: string[]
-  }
-  onFollow: () => void
-  onJoin: () => void
-  className?: string
-}
+import { InstitutionProfileProps } from './types'
 
 // Componente principal
 export function InstitutionalProfileSmall({ 

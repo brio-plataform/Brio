@@ -1,4 +1,4 @@
-import { FeedExplore } from "@/components/Feed/feedExplore";
+import { FeedExplore } from "@/components/Feed/FeedExplore/feedExplore";
 import { LeftSidebar } from "@/components/Left-SideBar/left-sidebar";
 import { Main } from "@/components/Main";
 import { Metadata } from "next";
