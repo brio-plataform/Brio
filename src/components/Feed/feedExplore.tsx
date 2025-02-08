@@ -10,6 +10,8 @@ import { ForumHeader } from "../Header/ForumHeader/forumHeader"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { Search, Filter, TrendingUp, Clock, Star, BookOpen } from "lucide-react"
+import { UserProfileSmall } from "../SmallProfile/userProfileSmall"
+import { InstitutionalProfileSmall } from "../SmallProfile/institutionalProfileSmall"
 
 const sampleFeedData: FeedItemProps[] = [
   {
@@ -241,12 +243,130 @@ export function FeedExplore() {
           </div>
         </div>
 
+        {/* Perfil de Usuário */}
+        <UserProfileSmall
+          user={{
+            id: "1",
+            name: "John Doe",
+            username: "johndoe",
+            avatar: "/avatar.png",
+            role: "Professor de Física Quântica",
+            bio: "Pesquisador em Física Quântica com foco em computação quântica e teoria da informação. Apaixonado por ensino e divulgação científica.",
+            verified: true,
+            institution: {
+              name: "Harvard University",
+              type: "university",
+              location: "Cambridge, MA, USA"
+            },
+            stats: {
+              publications: 42,
+              citations: 128,
+              followers: 500
+            },
+            location: "Cambridge, MA",
+            badges: [
+              {
+                id: "1",
+                name: "Top Contributor",
+                type: "top-contributor"
+              },
+              {
+                id: "2",
+                name: "Expert",
+                type: "expert"
+              },
+              {
+                id: "3",
+                name: "Mentor",
+                type: "mentor"
+              }
+            ],
+            areas: ["Física Quântica", "Computação Quântica", "Teoria da Informação"],
+            mutualConnections: [
+              {
+                id: "2",
+                name: "Jane Smith",
+                avatar: "/avatar2.png"
+              }
+            ],
+            isFollowing: false
+          }}
+          onFollow={() => {
+            console.log("Seguir usuário")
+          }}
+          onMessage={() => {
+            console.log("Enviar mensagem")
+          }}
+        />
+
+        {/* Perfil Institucional */}
+        <InstitutionalProfileSmall
+          institution={{
+            id: "1",
+            name: "Harvard University",
+            avatar: "/harvard.png",
+            type: "university",
+            verified: true,
+            description: "Uma das mais prestigiadas universidades do mundo, dedicada à excelência em ensino, pesquisa e inovação desde 1636.",
+            location: "Cambridge, Massachusetts, USA",
+            link: "https://harvard.edu",
+            stats: {
+              researchers: 5000,
+              publications: 10000,
+              citations: 50000,
+              ranking: 1
+            },
+            researchAreas: [
+              "Física",
+              "Medicina",
+              "Direito",
+              "Computação",
+              "Engenharia"
+            ],
+            achievements: [
+              {
+                type: "award",
+                title: "Melhor Universidade Global",
+                year: 2024
+              },
+              {
+                type: "ranking",
+                title: "Top 1 em Pesquisa",
+                year: 2024
+              }
+            ],
+            collaborations: [
+              {
+                id: "2",
+                name: "MIT",
+                avatar: "/mit.png",
+                type: "university"
+              },
+              {
+                id: "3",
+                name: "Stanford",
+                avatar: "/stanford.png",
+                type: "university"
+              }
+            ],
+            isFollowing: false,
+            isMember: false
+          }}
+          onFollow={() => {
+            console.log("Seguir instituição")
+          }}
+          onJoin={() => {
+            console.log("Juntar-se à instituição")
+          }}
+          onVisit={() => {
+            console.log("Visitar site")
+          }}
+        />
+
         {/* Feed de Conteúdo */}
-        <div className="w-full space-y-6">
-          {sampleFeedData.map((item, index) => (
-            <FeedItem key={index} {...item} />
-          ))}
-        </div>
+        {sampleFeedData.map((item, index) => (
+          <FeedItem key={index} {...item} />
+        ))}
       </div>
 
       {/* Coluna Lateral */}
