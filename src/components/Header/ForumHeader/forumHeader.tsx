@@ -4,30 +4,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { BannerCarousel } from "@/components/Banner/banner"
 import { Tabs, TabsTrigger, TabsList } from "@/components/ui/tabs"
 import { BadgeCheck } from "lucide-react"
+import { ForumHeaderProps } from './types'
 
-interface ForumHeaderProps {
-  name: string
-  description: string
-  image: string
-  banner?: string
-  memberCount: number
-  postCount: number
-}
-
-export function ForumHeader({ name, description, image, banner, memberCount, postCount }: ForumHeaderProps) {
+export function ForumHeader({ 
+  name, 
+  description, 
+  image,
+  memberCount, 
+  postCount,
+}: ForumHeaderProps) {
   return (
     <Card className="w-full p-5">
       <BannerCarousel />
       <CardContent className="p-0">
-        {banner && (
-          <div className="relative h-48 mb-4">
-            {banner ? (
-              <img src={banner || "/placeholder.svg"} alt={`${name} banner`} className="w-full h-full object-cover" />
-            ) : (
-              <img src="/default-banner.jpg" alt="Default forum banner" className="w-full h-full object-cover" />
-            )}
-          </div>
-        )}
         <div className="p-6">
           <div className="flex items-start space-x-4">
             <Avatar className="w-24 h-24">

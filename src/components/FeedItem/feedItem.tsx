@@ -31,7 +31,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import type { FeedItemProps, CommentType, Citation } from "@/types/types"
+import { FeedItemProps, CommentType, Citation } from './types'
 
 export function FeedItem({
   author,

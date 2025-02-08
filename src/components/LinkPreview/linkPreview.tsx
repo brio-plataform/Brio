@@ -1,15 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
-import type { LinkPreview } from "@/types/types"
+import { LinkPreviewProps } from './types'
 
-interface LinkPreviewProps {
-  url: string
-  title: string
-  description: string
-  image?: string
-}
-
-export function LinkPreview({ url, title, description, image }: LinkPreviewProps) {
+export function LinkPreview({ 
+  url, 
+  title, 
+  description = "", 
+  image 
+}: LinkPreviewProps) {
   return (
     <a href={url} target="_blank" rel="noopener noreferrer" className="block no-underline">
       <Card className="overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
