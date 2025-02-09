@@ -51,15 +51,10 @@ import DatePickerRange from "@/components/ui/datePickerRange"
 import { Label } from "@/components/ui/label"
 import { DateRange } from "react-day-picker"
 import {
-  CreatePostState,
-  CreatePostProps,
-  CreatePostDialogState,
-  PostType,
   QuestionType,
   PollOption,
   DebateSettings,
   EventSettings,
-  BaseReference,
   Mention,
   Attachment,
   Template,
@@ -68,6 +63,16 @@ import {
   MAX_POLL_OPTIONS,
   MIN_POLL_OPTIONS
 } from "@/types/types"
+import { 
+  DialogState, 
+  Reference, 
+  ReferenceType, 
+  CreatePostProps,
+  CreatePostState,
+  CreatePostDialogState,
+  PostType
+} from './types'
+import { MOCK_REFERENCES, MOCK_STUDY_TABS, MOCK_DEBATE_CONFIG } from './mockData'
 
 interface UserTooltipProps {
   user: {
@@ -135,7 +140,10 @@ const initialDialogState: CreatePostDialogState = {
 
 export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
   const [state, setState] = useState<CreatePostState>(initialState)
-  const [dialogState, setDialogState] = useState<CreatePostDialogState>(initialDialogState)
+  const [dialogState, setDialogState] = useState<DialogState>({
+    isOpen: false,
+    loading: false
+  })
   
   const [postType, setPostType] = useState<PostType>('text')
   const [title, setTitle] = useState('')
@@ -146,9 +154,9 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [tags, setTags] = useState<string[]>([])
   const [currentTag, setCurrentTag] = useState('')
-  const [references, setReferences] = useState<BaseReference[]>([])
+  const [references, setReferences] = useState<Reference[]>([])
   const [currentReference, setCurrentReference] = useState('')
-  const [referenceType, setReferenceType] = useState<BaseReference['type']>('profile')
+  const [referenceType, setReferenceType] = useState<ReferenceType>('profile')
   const [eventDate, setEventDate] = useState<DateRange | undefined>();
   const [questionType, setQuestionType] = useState<QuestionType>('question');
   const [pollOptions, setPollOptions] = useState<PollOption[]>([
@@ -261,11 +269,43 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
 
   const handleAddReference = () => {
     if (!currentReference.trim()) return
-    const newReference: BaseReference = {
-      id: crypto.randomUUID(),
-      type: referenceType,
-      content: currentReference
+    
+    let newReference: Reference;
+    
+    switch (referenceType) {
+      case 'profile':
+        newReference = {
+          id: crypto.randomUUID(),
+          type: 'profile',
+          content: currentReference,
+          username: currentReference.replace('@', '')
+        }
+        break;
+        
+      case 'document':
+        newReference = {
+          id: crypto.randomUUID(),
+          type: 'document',
+          content: currentReference,
+          fileName: currentReference,
+          fileSize: '0 KB'
+        }
+        break;
+        
+      case 'comment':
+        newReference = {
+          id: crypto.randomUUID(),
+          type: 'comment',
+          content: currentReference,
+          author: 'Unknown',
+          preview: currentReference
+        }
+        break;
+        
+      default:
+        return;
     }
+    
     setReferences([...references, newReference])
     setCurrentReference('')
   }
@@ -274,7 +314,7 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
     setReferences(references.filter((ref) => ref.id !== id))
   }
 
-  const renderReferenceItem = (ref: BaseReference) => {
+  const renderReferenceItem = (ref: Reference) => {
     switch (ref.type) {
       case 'profile':
         return (
@@ -588,7 +628,7 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
                   <div className="border-t pt-4 space-y-4">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium">Referências & Citações</h4>
-                      <Select value={referenceType} onValueChange={(value) => setReferenceType(value as BaseReference['type'])}>
+                      <Select value={referenceType} onValueChange={(value) => setReferenceType(value as ReferenceType)}>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Tipo de referência" />
                         </SelectTrigger>
