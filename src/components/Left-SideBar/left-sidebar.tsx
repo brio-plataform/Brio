@@ -6,31 +6,9 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Progress } from "@/components/ui/progress"
 import Link from "next/link"
 import {
-  Book,
-  Calendar,
   ChevronLeft,
   ChevronRight,
-  FileText,
-  HelpCircle,
-  Home,
-  List,
-  Search,
-  Settings,
-  Users,
-  Folder,
-  Star,
-  MessageSquare,
-  Bookmark,
-  Globe,
-  Clipboard,
-  Building2,
-  GraduationCap,
-  BookOpen,
-  Trophy,
-  Target,
-  Lightbulb,
   ChevronDown,
-  User,
   Clock
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -45,7 +23,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import type { SidebarMenuItem, SidebarProps, SidebarState } from '@/types/types'
+import { MenuItem, SidebarProps, SidebarState } from './types'
+import { MOCK_MENU_ITEMS, MOCK_BOTTOM_ITEMS } from './mockData'
 
 export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProps) {
   const [state, setState] = useState<SidebarState>({
@@ -76,106 +55,7 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
     }
   }
 
-  const menuItems: SidebarMenuItem[] = [
-    {
-      icon: Home,
-      label: "Início",
-      href: "/feed"
-    },
-    {
-      icon: Search,
-      label: "Explorar",
-      href: "/explore"
-    },
-    {
-      icon: Folder,
-      label: "Meu Espaço",
-      items: [
-        { icon: User, label: "Meu Perfil", href: "/user" },
-        { icon: Folder, label: "Meus Projetos", href: "/user/projects/new-project" },
-        { icon: BookOpen, label: "Meus Estudos", href: "/user/studies" },
-        { icon: Trophy, label: "Conquistas", href: "/user/achievements" },
-        { icon: Target, label: "Metas", href: "/user/goals" },
-      ]
-    },
-    {
-      icon: Building2,
-      label: "Acadêmico",
-      items: [
-        { icon: Building2, label: "Instituições", href: "/institutions" },
-        { icon: MessageSquare, label: "Forums", href: "/forum" },
-        { icon: GraduationCap, label: "Cursos", href: "/courses" },
-        { icon: Book, label: "Biblioteca", href: "/library" },
-      ]
-    },
-    {
-      icon: Users,
-      label: "Colaboração",
-      items: [
-        { icon: MessageSquare, label: "Discussões", href: "/discussions" },
-        { icon: Users, label: "Colaboradores", href: "/collaborators" },
-        { icon: Globe, label: "Eventos", href: "/events" },
-      ]
-    },
-    {
-      icon: Star,
-      label: "Organização",
-      items: [
-        { icon: Calendar, label: "Calendário", href: "/calendar" },
-        { icon: List, label: "Tarefas", href: "/tasks" },
-        { icon: Star, label: "Favoritos", href: "/favorites" },
-        { icon: Bookmark, label: "Salvos", href: "/saved" },
-        { icon: Lightbulb, label: "Ideias", href: "/ideas" },
-        { icon: Clipboard, label: "Relatórios", href: "/reports" },
-      ]
-    },
-    {
-      icon: Clock,
-      label: "Revisões",
-      items: [
-        {
-          icon: FileText,
-          label: "Análise de Dados (65%)",
-          href: "/reviews/1",
-          metadata: {
-            progress: 65,
-            timeLeft: "2 dias",
-            reviewer: "Maria Silva",
-            status: "em andamento"
-          }
-        },
-        {
-          icon: FileText,
-          label: "Metodologia (90%)",
-          href: "/reviews/2",
-          metadata: {
-            progress: 90,
-            timeLeft: "1 dia",
-            reviewer: "João Santos",
-            status: "revisão final"
-          }
-        },
-        {
-          icon: FileText,
-          label: "Resultados (30%)",
-          href: "/reviews/3",
-          metadata: {
-            progress: 30,
-            timeLeft: "5 dias",
-            reviewer: "Ana Costa",
-            status: "iniciado"
-          }
-        }
-      ]
-    }
-  ]
-
-  const bottomItems: SidebarMenuItem[] = [
-    { icon: Settings, label: "Configurações", href: "/settings" },
-    { icon: HelpCircle, label: "Ajuda", href: "/help" },
-  ]
-
-  const renderMenuItem = (item: SidebarMenuItem) => {
+  const renderMenuItem = (item: MenuItem) => {
     if (item.items) {
       return (
         <TooltipProvider key={item.label} delayDuration={300}>
@@ -328,7 +208,7 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
           "space-y-2 py-4",
           state.isCollapsed ? "px-3" : "px-3"
         )}>
-          {menuItems.map(renderMenuItem)}
+          {MOCK_MENU_ITEMS.map(renderMenuItem)}
         </div>
       </ScrollArea>
 
@@ -336,7 +216,7 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
         "mt-auto py-4 border-t",
         state.isCollapsed ? "px-3" : "px-3"
       )}>
-        {bottomItems.map(renderMenuItem)}
+        {MOCK_BOTTOM_ITEMS.map(renderMenuItem)}
       </div>
     </div>
   )
