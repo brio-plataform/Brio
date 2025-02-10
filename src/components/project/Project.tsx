@@ -10,7 +10,7 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { useGetProject } from '@/hooks/useGetProject';
 
-import UnauthorizedPage from "../Error/unauthorized";
+import UnauthorizedPage from "../Error/Unauthorized/unauthorized";
 import LoadingEditor from "../Loading/loading-editor";
 
 interface ProjectProps {

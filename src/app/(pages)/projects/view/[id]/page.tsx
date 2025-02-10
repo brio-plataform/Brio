@@ -7,8 +7,8 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { useGetProject } from '@/hooks/useGetProject';
 
-import UnauthorizedPage from "@/components/Error/unauthorized";
-import ErrorPage from "@/components/Error/error-page";
+import UnauthorizedPage from "@/components/Error/Unauthorized/unauthorized";
+import ErrorPage from "@/components/Error/NotFound/notFound";
 import LoadingProject from "@/components/Loading/loading-project";
 import { Project } from "@/components/Project/Project";
 import { ProjectViewerHeader } from "@/components/Header/ViewHeader/ViewHeader";

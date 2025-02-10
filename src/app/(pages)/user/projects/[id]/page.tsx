@@ -9,18 +9,19 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { useGetProject } from '@/hooks/useGetProject';
 
-import UnauthorizedPage from "@/components/Error/unauthorized";
-import ErrorPage from "@/components/Error/error-page";
+import UnauthorizedPage from "@/components/Error/Unauthorized/unauthorized";
 import LoadingProject from "@/components/Loading/loading-project";
 import { Project } from "@/components/Project/Project";
 
+
 import { MOCK_REVIEWS, MOCK_SECTIONS } from "@/components/Right-SideBar/mockData";
+import NotFound from "@/components/Error/NotFound/notFound";
 
 export default function ProjectPage() {
 
   const params = useParams();
   const projectId = params.id as string;
-  const [userId] = useState("1");
+  const [userId] = useState("2");
   
   const { 
     isLoading, 
@@ -40,8 +41,9 @@ export default function ProjectPage() {
   }
 
   if (error) {
-    return <ErrorPage error={error} />;
+    return <NotFound error={error} />;
   }
+
 
 
   return (

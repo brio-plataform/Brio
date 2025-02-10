@@ -1,21 +1,32 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { AlertCircle, HomeIcon, RotateCcw } from "lucide-react"
-import type { ErrorPageProps } from "@/types/types"
+import { cn } from "@/lib/utils"
+import { ErrorPageProps } from "./types"
 
-export default function ErrorPage({ 
+export default function NotFound({ 
   title = "Ops, algo deu errado",
   message = "Não foi possível carregar o projeto",
   error,
   showReload = true,
   showHome = true,
-  customActions
+  customActions,
+  homeLink = "/projects",
+  reloadButtonText = "Tentar novamente",
+  homeButtonText = "Voltar para projetos",
+  footerText = "Se o problema persistir, por favor entre em contato com o suporte.",
+  className,
+  showIcon = true,
+  iconColor = "text-red-400",
+  iconSize = "w-16 h-16"
 }: ErrorPageProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
-      <div className="text-center max-w-md w-full">
+      <div className="text-center max-w-md w-full justify-center items-center flex flex-col">
         <div className="mb-8">
-          <AlertCircle className="w-16 h-16 mx-auto text-red-400" />
+          {showIcon && (
+            <AlertCircle className={cn(iconColor, iconSize)} />
+          )}
         </div>
         <h1 className="text-3xl font-bold text-gray-100 mb-2">{title}</h1>
         <p className="text-xl text-gray-400 mb-4">{message}</p>
@@ -34,14 +45,14 @@ export default function ErrorPage({
               className="w-full"
             >
               <RotateCcw className="mr-2 h-4 w-4" />
-              Tentar novamente
+              {reloadButtonText}
             </Button>
           )}
           {showHome && (
             <Button asChild variant="ghost" className="w-full">
-              <Link href="/projects" className="flex items-center justify-center">
+              <Link href={homeLink} className="flex items-center justify-center">
                 <HomeIcon className="mr-2 h-4 w-4" />
-                Voltar para projetos
+                {homeButtonText}
               </Link>
             </Button>
           )}
@@ -49,7 +60,7 @@ export default function ErrorPage({
         </div>
       </div>
       <footer className="mt-16 text-center text-gray-400 text-sm">
-        <p>Se o problema persistir, por favor entre em contato com o suporte.</p>
+        <p>{footerText}</p>
       </footer>
     </div>
   )
