@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ImagePlus, Move, Link } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useGetProject } from '@/hooks/useGetProject';
 import { useUpdateProject } from '@/hooks/useUpdateProject';
 import { useParams } from 'next/navigation';
@@ -11,14 +11,10 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { ProjectBannerState } from '@/types/types';
-
-interface ProjectBannerProps {
-  editable?: boolean;
-}
+} from "../../ui/dialog";
+import { Input } from "../../ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
+import { ProjectBannerProps, ProjectBannerState } from './types';
 
 export function ProjectBanner({ editable = true }: ProjectBannerProps) {
   const params = useParams();

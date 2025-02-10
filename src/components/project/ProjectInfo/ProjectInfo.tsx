@@ -10,16 +10,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+} from "../../ui/dialog";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import { useProjectStore } from '@/store/useProjectStore';
-import { ProjectInfoState, ProjectInfoHandlers } from '@/types/types';
-
-interface ProjectInfoProps {
-  editable?: boolean;
-}
+import { ProjectInfoProps, ProjectInfoState, ProjectInfoHandlers } from './types';
 
 export function ProjectInfo({ editable = true }: ProjectInfoProps) {
   const params = useParams();

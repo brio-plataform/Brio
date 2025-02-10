@@ -3,8 +3,8 @@
 import { Card, CardContent } from "../ui/card";
 
 import Editor from "../Editor/editor";
-import { ProjectBanner } from "./ProjectBanner";
-import { ProjectInfo } from "./ProjectInfo";
+import { ProjectBanner } from "./ProjectBanner/ProjectBanner";
+import { ProjectInfo } from "./ProjectInfo/ProjectInfo";
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
