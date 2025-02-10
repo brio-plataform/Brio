@@ -1,4 +1,5 @@
-import { ReactNode } from 'react'
+import { StaticImageData } from "next/image"
+import { ReactNode } from "react"
 
 export type PostType = 'text' | 'study' | 'question' | 'event'
 export type ReferenceType = 'profile' | 'document' | 'comment'
@@ -51,10 +52,40 @@ export interface DebateConfig {
   }
 }
 
+export interface CreatePostUser {
+  id: string
+  name: string
+  avatar: string | StaticImageData
+  role?: string
+  institution?: {
+    name: string
+    link: string
+  }
+}
+
 export interface CreatePostProps {
-  onSuccess?: () => void
-  onError?: (error: string) => void
+  /** Usuário que está criando o post */
+  user?: CreatePostUser
+  /** Placeholder do editor */
+  placeholder?: string
+  /** Se deve mostrar o botão de mídia */
+  showMediaButton?: boolean
+  /** Se deve mostrar o botão de arquivo */
+  showFileButton?: boolean
+  /** Se deve mostrar o botão de link */
+  showLinkButton?: boolean
+  /** Ações customizadas */
+  customActions?: ReactNode
+  /** Classes CSS adicionais */
   className?: string
+  /** Função chamada ao enviar o post */
+  onSubmit?: (content: string) => Promise<void>
+  /** Função chamada ao adicionar mídia */
+  onMediaAdd?: (file: File) => Promise<void>
+  /** Função chamada ao adicionar arquivo */
+  onFileAdd?: (file: File) => Promise<void>
+  /** Função chamada ao adicionar link */
+  onLinkAdd?: (url: string) => Promise<void>
 }
 
 export interface DialogState {
@@ -64,14 +95,32 @@ export interface DialogState {
 }
 
 export interface CreatePostState {
+  /** Tipo do post */
   postType: PostType
+  /** Título do post */
   title: string
+  /** Conteúdo atual do editor */
   content: string
+  /** Tags do post */
   tags: string[]
+  /** Tag atual sendo digitada */
   currentTag: string
+  /** Referências do post */
   references: Reference[]
+  /** Referência atual sendo digitada */
   currentReference: string
+  /** Tipo da referência atual */
   referenceType: ReferenceType
+  /** Se está enviando o post */
+  isSubmitting: boolean
+  /** Se está fazendo upload de mídia */
+  isUploadingMedia: boolean
+  /** Se está fazendo upload de arquivo */
+  isUploadingFile: boolean
+  /** Se o modal de link está aberto */
+  showLinkModal: boolean
+  /** URL do link sendo adicionado */
+  linkUrl: string
 }
 
 export interface CreatePostDialogState {

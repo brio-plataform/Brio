@@ -17,9 +17,7 @@ import {
   AtSign,
   Smile,
   Calendar,
-  Paperclip,
   X,
-  Trash2,
   ChevronDown,
   AlignLeft,
   AlignCenter,
@@ -33,6 +31,8 @@ import {
   Users,
   Globe,
   MapPin,
+  FileIcon,
+  Link2Icon,
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -41,7 +41,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -60,8 +59,6 @@ import {
   Template,
   MAX_TITLE_LENGTH,
   MAX_TAGS,
-  MAX_POLL_OPTIONS,
-  MIN_POLL_OPTIONS
 } from "@/types/types"
 import { 
   DialogState, 
@@ -72,7 +69,7 @@ import {
   CreatePostDialogState,
   PostType
 } from './types'
-import { MOCK_REFERENCES, MOCK_STUDY_TABS, MOCK_DEBATE_CONFIG } from './mockData'
+import { cn } from "@/lib/utils"
 
 interface UserTooltipProps {
   user: {
@@ -130,7 +127,12 @@ const initialState: CreatePostState = {
   currentTag: '',
   references: [],
   currentReference: '',
-  referenceType: 'profile'
+  referenceType: 'profile',
+  isSubmitting: false,
+  isUploadingMedia: false,
+  isUploadingFile: false,
+  showLinkModal: false,
+  linkUrl: '',
 }
 
 const initialDialogState: CreatePostDialogState = {
@@ -138,7 +140,19 @@ const initialDialogState: CreatePostDialogState = {
   isSubmitting: false
 }
 
-export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
+export function CreatePost({
+  user,
+  placeholder = "O que você está pensando?",
+  showMediaButton = true,
+  showFileButton = true,
+  showLinkButton = true,
+  customActions,
+  className,
+  onSubmit,
+  onMediaAdd,
+  onFileAdd,
+  onLinkAdd
+}: CreatePostProps) {
   const [state, setState] = useState<CreatePostState>(initialState)
   const [dialogState, setDialogState] = useState<DialogState>({
     isOpen: false,
@@ -147,7 +161,6 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
   
   const [postType, setPostType] = useState<PostType>('text')
   const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
   const [showMentions, setShowMentions] = useState(false)
   const [attachments, setAttachments] = useState<Attachment[]>([])
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
@@ -241,10 +254,7 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
 
   const insertMention = useCallback((mention: Mention) => {
     const mentionText = `@${mention.name} `
-    setContent((prev) => {
-      const beforeCursor = prev.slice(0, prev.length)
-      return beforeCursor + mentionText
-    })
+    setState(prev => ({ ...prev, content: prev.content + mentionText }))
     setShowMentions(false)
   }, [])
 
@@ -384,13 +394,27 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
     }
   }
 
+  const handleSubmit = async () => {
+    if (!state.content.trim() || state.isSubmitting) return
+
+    setState(prev => ({ ...prev, isSubmitting: true }))
+    try {
+      await onSubmit?.(state.content)
+      setState(prev => ({ ...prev, content: "" }))
+    } catch (error) {
+      console.error("Erro ao enviar post:", error)
+    } finally {
+      setState(prev => ({ ...prev, isSubmitting: false }))
+    }
+  }
+
   return (
-    <Card className="w-full max-w-7xl">
+    <Card className={cn("w-full max-w-7xl", className)}>
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
           <Avatar>
-            <AvatarImage src="/placeholder.svg?height=40&width=40" alt="User" />
-            <AvatarFallback>U</AvatarFallback>
+            <AvatarImage src={user?.avatar?.toString()} alt={user?.name} />
+            <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
           </Avatar>
           <Dialog open={dialogState.isOpen} onOpenChange={(isOpen) => {
             setDialogState({ ...dialogState, isOpen })
@@ -400,7 +424,7 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
           }}>
             <DialogTrigger asChild>
               <Button variant="outline" className="w-full justify-start text-muted-foreground h-12 px-4">
-                Comece uma publicação acadêmica...
+                {placeholder}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl">
@@ -450,8 +474,8 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
                     <div className="relative">
                       <Textarea
                         placeholder="Compartilhe seu conhecimento..."
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
+                        value={state.content}
+                        onChange={(e) => setState(prev => ({ ...prev, content: e.target.value }))}
                         onKeyDown={handleKeyDown}
                         className="min-h-[200px] resize-none"
                       />
@@ -821,8 +845,8 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
                           <Textarea 
                             placeholder="Adicione mais contexto à sua pergunta..."
                             className="min-h-[100px]"
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
+                            value={state.content}
+                            onChange={(e) => setState(prev => ({ ...prev, content: e.target.value }))}
                           />
                           
                           <div className="space-y-4 border-t pt-4">
@@ -895,8 +919,8 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
                           <Textarea 
                             placeholder="Descreva o contexto do debate..."
                             className="min-h-[100px]"
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
+                            value={state.content}
+                            onChange={(e) => setState(prev => ({ ...prev, content: e.target.value }))}
                           />
                           
                           <div className="grid grid-cols-2 gap-4">
@@ -1016,47 +1040,43 @@ export function CreatePost({ onSuccess, onError, className }: CreatePostProps) {
 
               <div className="flex justify-between items-center">
                 <div className="flex gap-2">
-                  <Button variant="ghost" size="icon" onClick={handleAttachment}>
-                    <Paperclip className="h-4 w-4" />
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <FileText className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem>Usar template</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      {templates.map((template) => (
-                        <DropdownMenuItem key={template.id} onClick={() => setSelectedTemplate(template.id)}>
-                          <div className="flex flex-col">
-                            <span>{template.name}</span>
-                            <span className="text-xs text-muted-foreground">{template.description}</span>
-                          </div>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <Button variant="ghost" size="icon">
-                    <Smile className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Calendar className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  {showMediaButton && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      disabled={state.isUploadingMedia}
+                      onClick={() => {/* Implementar upload de mídia */}}
+                    >
+                      <ImageIcon className="h-4 w-4" />
+                    </Button>
+                  )}
+                  {showFileButton && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      disabled={state.isUploadingFile}
+                      onClick={() => {/* Implementar upload de arquivo */}}
+                    >
+                      <FileIcon className="h-4 w-4" />
+                    </Button>
+                  )}
+                  {showLinkButton && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      onClick={() => setState(prev => ({ ...prev, showLinkModal: true }))}
+                    >
+                      <Link2Icon className="h-4 w-4" />
+                    </Button>
+                  )}
+                  {customActions}
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="gap-2">
-                    Agendar
-                    <Calendar className="h-4 w-4" />
-                  </Button>
-                  <Button type="submit" size="sm" disabled={!title.trim() || !content.trim()}>
-                    Publicar agora
-                  </Button>
-                </div>
+                <Button 
+                  onClick={handleSubmit}
+                  disabled={!state.content.trim() || state.isSubmitting}
+                >
+                  Publicar
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
