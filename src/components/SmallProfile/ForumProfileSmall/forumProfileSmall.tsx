@@ -27,6 +27,8 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ForumProfileProps } from './types'
 import { MOCK_FORUM } from './mockData'
+import { Separator } from "@radix-ui/react-select"
+import { useState } from "react"
 
 export function ForumProfileSmall({ 
   forum,
@@ -34,6 +36,17 @@ export function ForumProfileSmall({
   onModerate,
   className 
 }: ForumProfileProps) {
+  const [avatarError, setAvatarError] = useState(false)
+  
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+  }
+
   return (
     <Card className={`w-full max-w-7xl bg-card ${className}`}>
       {/* Banner do Fórum (se existir) */}
@@ -53,24 +66,42 @@ export function ForumProfileSmall({
         <div className="flex items-start justify-between">
           {/* Informações Básicas */}
           <div className="flex gap-4">
-            <div className="h-16 w-16 rounded-lg bg-primary/10 flex items-center justify-center relative">
-              {forum.avatar ? (
-                <img 
-                  src={forum.avatar} 
-                  alt={forum.name} 
-                  className="h-full w-full rounded-lg object-cover"
-                />
-              ) : (
-                <span className="text-2xl font-bold">{forum.name[0]}</span>
-              )}
+            <div className="relative">
+              <div className="h-16 w-16 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden">
+                {forum.avatar && !avatarError ? (
+                  <img 
+                    src={forum.avatar} 
+                    alt={forum.name}
+                    className="h-full w-full object-cover"
+                    onError={() => setAvatarError(true)}
+                  />
+                ) : (
+                  <span className="text-2xl font-bold text-primary">
+                    {getInitials(forum.name)}
+                  </span>
+                )}
+              </div>
               {forum.verified && (
-                <CheckCircle className="absolute -bottom-1 -right-1 h-5 w-5 text-blue-500 bg-background rounded-full" />
+                <div className="absolute -bottom-1 -right-1 rounded-full bg-background p-0.5">
+                  <CheckCircle className="h-5 w-5 text-blue-500" />
+                </div>
               )}
             </div>
 
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-bold">{forum.name}</h2>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <h2 className="text-2xl font-bold hover:cursor-pointer">
+                        {forum.name}
+                      </h2>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>@{forum.slug}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <Badge variant={forum.type === 'official' ? "default" : "secondary"}>
                   {forum.type}
                 </Badge>
@@ -142,7 +173,17 @@ export function ForumProfileSmall({
 
         {/* Descrição */}
         {forum.description && (
-          <p className="text-sm text-muted-foreground">{forum.description}</p>
+          <div className="flex gap-2">
+            <p className="text-sm text-muted-foreground w-1/2">{forum.description}</p>
+
+            <div className="flex flex-col gap-2 w-1/2">
+              <div className="flex gap-2">
+                <span className="text-sm font-medium">Atividade Diária</span>
+                <span className="text-sm text-muted-foreground">{forum.stats.dailyActivity}%</span>
+              </div>
+              <Progress value={forum.stats.dailyActivity} className="h-2" />
+            </div>
+          </div>
         )}
 
         {/* Estatísticas e Atividade */}
@@ -150,13 +191,8 @@ export function ForumProfileSmall({
           {/* Coluna Esquerda - Estatísticas */}
           <div className="flex justify-between items-center gap-4 w-full">
               <div className="flex flex-col gap-4 w-full">
-                <div className="flex gap-2">
-                  <span className="text-sm font-medium">Atividade Diária</span>
-                  <span className="text-sm text-muted-foreground">{forum.stats.dailyActivity}%</span>
-                </div>
-                <Progress value={forum.stats.dailyActivity} className="h-2" />
                                       {/* Coluna Direita - Próximos Eventos */}
-                <div className="flex gap-2 mr-4">
+                <div className="flex flex-col gap-2 mr-4">
                     <h3 className="text-sm font-medium flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
                         Próximos Eventos
@@ -181,18 +217,18 @@ export function ForumProfileSmall({
                 </div>
               </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 mt-4">
-              <div className="flex flex-col items-center p-3 bg-muted rounded-lg">
+          <div className="flex gap-4 w-full mt-7">
+              <div className="flex flex-col items-center bg-muted rounded-lg w-1/3 justify-center h-fit p-6">
                 <Eye className="h-4 w-4 mb-1 text-muted-foreground" />
                 <span className="text-lg font-bold">{forum.stats.onlineNow}</span>
                 <span className="text-xs text-muted-foreground">Online</span>
               </div>
-              <div className="flex flex-col items-center p-3 bg-muted rounded-lg">
+              <div className="flex flex-col items-center bg-muted rounded-lg w-1/3 justify-center h-fit p-6">
                 <MessageSquare className="h-4 w-4 mb-1 text-muted-foreground" />
                 <span className="text-lg font-bold">{forum.stats.posts}</span>
                 <span className="text-xs text-muted-foreground">Posts</span>
               </div>
-              <div className="flex flex-col items-center p-3 bg-muted rounded-lg">
+              <div className="flex flex-col items-center bg-muted rounded-lg w-1/3 justify-center h-fit p-6">
                 <Sparkles className="h-4 w-4 mb-1 text-muted-foreground" />
                 <span className="text-lg font-bold">{forum.moderators?.length || 0}</span>
                 <span className="text-xs text-muted-foreground">Mods</span>

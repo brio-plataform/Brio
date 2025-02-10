@@ -22,6 +22,7 @@ export interface User {
   name: string
   username: string
   avatar?: string
+  banner?: string
   verified?: boolean
   role?: string
   institution?: UserInstitution

@@ -1,11 +1,12 @@
 import { useState, type ReactNode } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { ThumbsUp, MessageSquare, Share2, MoreHorizontal, Send } from "lucide-react"
+import { ThumbsUp, MessageSquare, Share2, MoreHorizontal, Send, ArrowBigDown, ArrowBigUp } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { CommentProps, CommentMetrics, CommentState } from './types'
+import { cn } from "@/lib/utils"
 
 export function Comment({
   id,
@@ -20,11 +21,15 @@ export function Comment({
   onReport,
   children
 }: CommentProps) {
+  const [likeCount, setLikeCount] = useState(likes)
+  const [isLiked, setIsLiked] = useState(false)
+  const [isDesLiked, setIsDesLiked] = useState(false)
   // Estado local
   const [metrics, setMetrics] = useState<CommentMetrics>({
     likes: likes,
     replies: replies,
-    isLiked: false
+    isLiked: false,
+    isDesLiked: false
   })
   
   const [state, setState] = useState<CommentState>({
@@ -32,15 +37,6 @@ export function Comment({
     showReplies: false,
     replyContent: ""
   })
-
-  // Handlers
-  const handleLike = () => {
-    setMetrics((prev: CommentMetrics) => ({
-      ...prev,
-      isLiked: !prev.isLiked,
-      likes: prev.isLiked ? prev.likes - 1 : prev.likes + 1
-    }))
-  }
 
   const handleSubmitReply = (e: React.FormEvent) => {
     e.preventDefault()
@@ -69,6 +65,30 @@ export function Comment({
     }))
   }
 
+  const handleLike = () => {
+    if (isLiked) {
+      setLikeCount(likeCount - 1)
+    } else if (isDesLiked) {
+      setLikeCount(likeCount + 1)
+      setIsDesLiked(false)
+    } else {
+      setLikeCount(likeCount + 1)
+    }
+    setIsLiked(!isLiked)
+  }
+
+  const handleDesLike = () => {
+    if (isDesLiked) {
+      setLikeCount(likeCount + 1)
+    } else if (isLiked) {
+      setLikeCount(likeCount - 1)
+      setIsLiked(false)
+    } else {
+      setLikeCount(likeCount - 1)
+    }
+    setIsDesLiked(!isDesLiked)
+  }
+
   if (level > 7) return null // Limit nesting depth
 
   return (
@@ -94,15 +114,15 @@ export function Comment({
             <p className="text-sm whitespace-pre-wrap">{content}</p>
           </div>
           <div className="flex items-center gap-4 mt-1">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 px-2" 
-              onClick={handleLike}
-            >
-              <ThumbsUp className={`h-4 w-4 mr-1.5 ${metrics.isLiked ? "text-blue-500 fill-blue-500" : ""}`} />
-              <span className="text-xs">{metrics.likes}</span>
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" size="sm" onClick={handleLike}>
+                <ArrowBigUp className={cn("w-5 h-5 transition-colors", isLiked && "text-blue-500 fill-blue-500")} />
+              </Button>
+                <span className="font-bold">{likeCount}</span>
+              <Button variant="ghost" size="sm" onClick={handleDesLike}>
+                <ArrowBigDown className={cn("w-5 h-5 transition-colors", isDesLiked && "text-red-500 fill-red-500")} />
+              </Button>
+            </div>
             {metrics.replies > 0 && (
               <Button 
                 variant="ghost" 

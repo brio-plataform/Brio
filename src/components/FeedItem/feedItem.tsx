@@ -309,7 +309,7 @@ export function FeedItem({
           </DropdownMenu>
         </CardHeader>
         <CardContent className="flex items-start justify-start gap-4">
-          <div className="flex flex-col items-startspace-y-2">
+          <div className="flex flex-col w-full">
           <h2 className="text-xl font-bold mb-2">{title}</h2>
           <div className="flex flex-wrap gap-2 mb-4">
             {tags.map((tag) => (

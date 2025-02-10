@@ -10,6 +10,7 @@ export interface CommentMetrics {
   likes: number
   replies: number
   isLiked: boolean
+  isDesLiked: boolean
 }
 
 export interface CommentState {

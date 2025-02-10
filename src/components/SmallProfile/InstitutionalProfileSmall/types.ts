@@ -12,6 +12,7 @@ export interface Institution {
   name: string
   username: string
   avatar?: string
+  banner?: string
   type: InstitutionType
   verified?: boolean
   description?: string
