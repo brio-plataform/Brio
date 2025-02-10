@@ -1,4 +1,4 @@
-import { Feed } from "@/components/Feed/feed";
+import { Feed } from "@/components/Feed/FeedHome/feed";
 import { LeftSidebar } from "@/components/Left-SideBar/left-sidebar";
 import { Main } from "@/components/Main";
 

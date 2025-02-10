@@ -1,10 +1,10 @@
 import { CreatePost } from "@/components/CreatePost/createPost"
-import { FeedItem } from "../FeedItem/feedItem"
-import { ColumnFeed } from "../ColumnFeed/columnFeed"
-import { ForumHeader } from "../Header/ForumHeader/forumHeader"
-import { MOCK_FEED_ITEMS } from "../FeedItem/mockData"
-import { MOCK_FORUM_HEADER } from "../Header/ForumHeader/mockData"
-import type { FeedItemProps } from "../FeedItem/types"
+import { FeedItem } from "../../FeedItem/feedItem"
+import { ColumnFeed } from "../../ColumnFeed/columnFeed"
+import { ForumHeader } from "../../Header/ForumHeader/forumHeader"
+import { MOCK_FEED_ITEMS } from "../../FeedItem/mockData"
+import { MOCK_FORUM_HEADER } from "../../Header/ForumHeader/mockData"
+import type { FeedItemProps } from "../../FeedItem/types"
 
 export function FeedForum() {
   return (

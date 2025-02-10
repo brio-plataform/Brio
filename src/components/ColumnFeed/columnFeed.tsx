@@ -1,6 +1,5 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { ColumnFeedSection } from "@/types/types"
 
 export function ColumnFeed() {
   return (

@@ -14,7 +14,7 @@ import ErrorPage from "@/components/Error/error-page";
 import LoadingProject from "@/components/Loading/loading-project";
 import { Project } from "@/components/Project/Project";
 
-import { MOCK_METRICS, MOCK_REVIEWS, MOCK_SECTIONS } from "@/components/Right-SideBar/mockData";
+import { MOCK_REVIEWS, MOCK_SECTIONS } from "@/components/Right-SideBar/mockData";
 
 export default function ProjectPage() {
 
