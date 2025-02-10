@@ -14,6 +14,8 @@ import ErrorPage from "@/components/Error/error-page";
 import LoadingProject from "@/components/Loading/loading-project";
 import { Project } from "@/components/Project/Project";
 
+import { MOCK_METRICS, MOCK_REVIEWS, MOCK_SECTIONS } from "@/components/Right-SideBar/mockData";
+
 export default function ProjectPage() {
 
   const params = useParams();
@@ -56,8 +58,9 @@ export default function ProjectPage() {
       </div>
 
       <div className="sticky top-0 h-screen">
-        <RightSidebar reviews={[]} sections={[]} />
+        <RightSidebar reviews={MOCK_REVIEWS} sections={MOCK_SECTIONS} />
       </div>
     </div>
+
   );
 }
