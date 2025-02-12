@@ -52,6 +52,20 @@ export function UserProfileSmall({
     }
   }
 
+    // Função para formatar números com K, M, B
+    const formatNumber = (num: number): string => {
+      if (num >= 1000000000) {
+        return (num / 1000000000).toFixed(1) + 'B'
+      }
+      if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + 'M'
+      }
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K'
+      }
+      return num.toString()
+    }
+
   return (
     <Card className={`w-full max-w-7xl bg-card ${className}`}>
       {/* Banner do Usuário (se existir) */}
@@ -199,17 +213,17 @@ export function UserProfileSmall({
           <div className="flex w-full gap-4 text-center">
             <div className="flex flex-col items-center bg-muted rounded-lg w-1/3 justify-center h-fit p-6">
               <Book className="h-4 w-4 mb-1 text-muted-foreground" />
-              <p className="text-2xl font-bold">{user.stats.publications}</p>
+              <p className="text-2xl font-bold">{formatNumber(user.stats.publications)}</p>
               <p className="text-xs text-muted-foreground">Publicações</p>
             </div>
             <div className="flex flex-col items-center bg-muted rounded-lg w-1/3 justify-center h-fit p-6">
               <MessageSquare className="h-4 w-4 mb-1 text-muted-foreground" />
-              <p className="text-2xl font-bold">{user.stats.citations}</p>
+              <p className="text-2xl font-bold">{formatNumber(user.stats.citations)}</p>
               <p className="text-xs text-muted-foreground">Citações</p>
             </div>
             <div className="flex flex-col items-center bg-muted rounded-lg w-1/3 justify-center h-fit p-6">
               <Users className="h-4 w-4 mb-1 text-muted-foreground" />
-              <p className="text-2xl font-bold">{user.stats.followers}</p>
+              <p className="text-2xl font-bold">{formatNumber(user.stats.followers)}</p>
               <p className="text-xs text-muted-foreground">Seguidores</p>
             </div>
           </div>

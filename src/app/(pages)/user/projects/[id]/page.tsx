@@ -21,7 +21,7 @@ export default function ProjectPage() {
 
   const params = useParams();
   const projectId = params.id as string;
-  const [userId] = useState("2");
+  const [userId] = useState("1");
   
   const { 
     isLoading, 

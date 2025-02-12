@@ -52,7 +52,7 @@
           "content": [
             {
               "type": "text",
-              "text": "v 1.10 Período de Criação da UI e UX",
+              "text": "v 1.1.0 Período de Criação da UI e UX",
               "styles": {}
             }
           ],
@@ -241,7 +241,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-06T19:17:20.515Z"
+      "updatedAt": "2025-02-12T23:04:03.394Z"
     }
   ]
 }
