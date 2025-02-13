@@ -8,7 +8,7 @@ import { ProjectInfo } from "./ProjectInfo/ProjectInfo";
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import { useGetProject } from '@/hooks/useGetProject';
+import { useGetProject } from '@/hooks/useGetProjectByID';
 
 import UnauthorizedPage from "../Error/Unauthorized/unauthorized";
 import LoadingEditor from "../Loading/loading-editor";

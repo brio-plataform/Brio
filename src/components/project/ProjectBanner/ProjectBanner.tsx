@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ImagePlus, Move, Link } from "lucide-react";
 import { Button } from "../../ui/button";
-import { useGetProject } from '@/hooks/useGetProject';
+import { useGetProject } from '@/hooks/useGetProjectByID';
 import { useUpdateProject } from '@/hooks/useUpdateProject';
 import { useParams } from 'next/navigation';
 import {

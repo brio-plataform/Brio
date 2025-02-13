@@ -5,7 +5,7 @@ import { AISideBar } from "@/components/AI-SideBar/ai-sidebar";
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import { useGetProject } from '@/hooks/useGetProject';
+import { useGetProject } from '@/hooks/useGetProjectByID';
 
 import UnauthorizedPage from "@/components/Error/Unauthorized/unauthorized";
 import ErrorPage from "@/components/Error/NotFound/notFound";

@@ -6,7 +6,7 @@ import { Header } from "@/components/Header/CreateHeader/header";
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import { useGetProject } from '@/hooks/useGetProject';
+import { useGetProject } from '@/hooks/useGetProjectByID';
 
 import UnauthorizedPage from "@/components/Error/Unauthorized/unauthorized";
 import LoadingProject from "@/components/Loading/loading-project";

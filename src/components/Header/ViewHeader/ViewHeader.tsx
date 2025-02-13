@@ -3,7 +3,7 @@
 import { ProjectViewerHeaderTop } from './project-viewer-header-top'
 import { ProjectViewerHeaderCore } from './project-viewer-header-core'
 import { ProjectViewerHeaderBottom } from './project-viewer-header-bottom'
-import { useGetProject } from '@/hooks/useGetProject'
+import { useGetProject } from '@/hooks/useGetProjectByID'
 import { useProjectStore } from '@/store/useProjectStore'
 import { useEffect } from 'react'
 import type { ProjectViewerHeaderProps, ProjectViewerData, ProjectStats } from '@/types/types'

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { useGetProject } from '@/hooks/useGetProject'
+import { useGetProject } from '@/hooks/useGetProjectByID'
 import { useUpdateProject } from '@/hooks/useUpdateProject'
 import { useParams } from 'next/navigation'
 import { HeaderTop } from './header-top'
