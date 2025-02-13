@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { 
   Edit3, Share2, Trash2, Users, GitFork, Star, 
   MessageSquare, Grid, List, Plus, MoreVertical,
-  Book, FileText, ExternalLink, Flag
+  Book, FileText, ExternalLink, Flag, X
 } from 'lucide-react'
 import {
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
@@ -23,6 +23,8 @@ import {
   Select, SelectContent, SelectItem, 
   SelectTrigger, SelectValue 
 } from "@/components/ui/select"
+import { Modal } from "@/components/Modal/modal"
+import { Project } from "@/components/Project/Project"
 
 interface Collaborator {
   name: string;
@@ -316,48 +318,71 @@ function ProjectCard({
 // Adicionar os componentes auxiliares que faltam
 function ProjectMenu({ project }: { project: Project }) {
   const router = useRouter()
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" 
-                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
-          <MoreVertical className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem onClick={() => router.push(`/user/projects/${project.id}`)}>
-          <FileText className="w-4 h-4 mr-2" />
-          Abrir Estudo
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Edit3 className="w-4 h-4 mr-2" />
-          Editar
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Book className="w-4 h-4 mr-2" />
-          Pré-visualizar
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <GitFork className="w-4 h-4 mr-2" />
-          Fazer Fork
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Share2 className="w-4 h-4 mr-2" />
-          Compartilhar
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <ExternalLink className="w-4 h-4 mr-2" />
-          Abrir em Nova Aba
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-destructive">
-          <Trash2 className="w-4 h-4 mr-2" />
-          Excluir
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" 
+                  className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+            <MoreVertical className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuItem onClick={() => router.push(`/user/projects/${project.id}`)}>
+            <FileText className="w-4 h-4 mr-2" />
+            Abrir Estudo
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Edit3 className="w-4 h-4 mr-2" />
+            Editar
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsPreviewOpen(true)}>
+            <Book className="w-4 h-4 mr-2" />
+            Pré-visualizar
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <GitFork className="w-4 h-4 mr-2" />
+            Fazer Fork
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Share2 className="w-4 h-4 mr-2" />
+            Compartilhar
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <ExternalLink className="w-4 h-4 mr-2" />
+            Abrir em Nova Aba
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="text-destructive">
+            <Trash2 className="w-4 h-4 mr-2" />
+            Excluir
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Modal de Pré-visualização */}
+      <Modal 
+        isOpen={isPreviewOpen} 
+        onClose={() => setIsPreviewOpen(false)}
+      >
+        <div className="relative">
+          {/* Botão de Fechar */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-2 z-50"
+            onClick={() => setIsPreviewOpen(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+          
+          {/* Componente Project em modo somente leitura */}
+          <Project editable={false}  projectId="1"/>
+        </div>
+      </Modal>
+    </>
   )
 }
 

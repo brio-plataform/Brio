@@ -15,13 +15,20 @@ import LoadingEditor from "../Loading/loading-editor";
 
 interface ProjectProps {
   editable?: boolean
+  projectId?: string
 }
 
-export function Project({ editable = true }: ProjectProps) {
+export function Project({ editable = true, projectId: propProjectId }: ProjectProps) {
   const params = useParams();
-  const projectId = params.id as string;
+  // Usar o projectId da prop se fornecido, senão usar o da URL
+  const projectId = propProjectId || (params?.id as string);
   const [userId] = useState("1");
   
+  // Se não houver projectId, mostrar erro
+  if (!projectId) {
+    return <div>Erro: ID do projeto não fornecido</div>;
+  }
+
   const { 
     isLoading, 
     error,
@@ -31,9 +38,7 @@ export function Project({ editable = true }: ProjectProps) {
 
   // Verificação de autorização
   if (project && project.userId !== userId) {
-    return (
-      <UnauthorizedPage />
-    );
+    return <UnauthorizedPage />;
   }
 
   if (isLoading) {
@@ -55,7 +60,10 @@ export function Project({ editable = true }: ProjectProps) {
       <div className="flex justify-center items-center pb-5 w-full">
         <Card className="w-full">
           <CardContent className="p-4 min-h-[300px] w-full">
-            <Editor initialContent={content ? JSON.stringify(content) : undefined} editable={editable} />
+            <Editor 
+              initialContent={content ? JSON.stringify(content) : undefined} 
+              editable={editable} 
+            />
           </CardContent>
         </Card>
       </div>
