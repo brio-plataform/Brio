@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -213,6 +214,12 @@ function ProjectCard({
   colorClass: string
   viewMode: "grid" | "list"
 }) {
+  const router = useRouter()
+
+  const handleOpenProject = () => {
+    router.push(`/user/projects/${project.id}`)
+  }
+
   return (
     <div className="animate-in fade-in-0 duration-500">
       <Card className={`group overflow-hidden transition-all duration-300 hover:shadow-lg`}>
@@ -234,8 +241,11 @@ function ProjectCard({
                   </Badge>
                 </div>
                 
-                <h3 className="text-lg font-semibold tracking-tight hover:text-primary 
-                             transition-colors cursor-pointer truncate">
+                <h3 
+                  onClick={handleOpenProject}
+                  className="text-lg font-semibold tracking-tight hover:text-primary 
+                           transition-colors cursor-pointer truncate"
+                >
                   {project.title}
                 </h3>
                 <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
@@ -259,7 +269,7 @@ function ProjectCard({
               <div className="flex items-center gap-6">
                 <ProjectStats stats={project.stats} />
                 <div className="h-8 w-[1px] bg-border" /> {/* Separador vertical */}
-                <ProjectMenu />
+                <ProjectMenu project={project} />
               </div>
             </div>
           </div>
@@ -271,12 +281,15 @@ function ProjectCard({
                 <Badge variant="secondary" className="bg-secondary/10">
                   {project.type}
                 </Badge>
-                <ProjectMenu />
+                <ProjectMenu project={project} />
               </div>
 
               <div className="space-y-1">
-                <h3 className="font-semibold tracking-tight hover:text-primary 
-                             transition-colors cursor-pointer">
+                <h3 
+                  onClick={handleOpenProject}
+                  className="font-semibold tracking-tight hover:text-primary 
+                           transition-colors cursor-pointer"
+                >
                   {project.title}
                 </h3>
                 <p className="text-sm text-muted-foreground line-clamp-2">
@@ -301,7 +314,9 @@ function ProjectCard({
 }
 
 // Adicionar os componentes auxiliares que faltam
-function ProjectMenu() {
+function ProjectMenu({ project }: { project: Project }) {
+  const router = useRouter()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -311,7 +326,7 @@ function ProjectMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(`/user/projects/${project.id}`)}>
           <FileText className="w-4 h-4 mr-2" />
           Abrir Estudo
         </DropdownMenuItem>

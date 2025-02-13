@@ -41,7 +41,7 @@ export const MOCK_MENU_ITEMS: MenuItem[] = [
     label: "Meu Espaço",
     items: [
       { icon: User, label: "Meu Perfil", href: "/user" },
-      { icon: Folder, label: "Meus Projetos", href: "/user/projects/new-project" },
+      { icon: Folder, label: "Meus Projetos", href: "/user/projects" },
       { icon: BookOpen, label: "Meus Estudos", href: "/user/studies" },
       { icon: Trophy, label: "Conquistas", href: "/user/achievements" },
       { icon: Target, label: "Metas", href: "/user/goals" },
