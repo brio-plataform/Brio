@@ -215,36 +215,86 @@ function ProjectCard({
 }) {
   return (
     <div className="animate-in fade-in-0 duration-500">
-      <Card className={`group overflow-hidden transition-all duration-300 
-                       hover:shadow-lg ${viewMode === "list" ? "flex" : ""}`}>
-        <div className={`h-2 bg-gradient-to-r ${colorClass}`} />
-        <CardHeader className={`space-y-2 ${viewMode === "list" ? "flex-1" : ""}`}>
-          <div className="flex items-center justify-between">
-            <Badge variant="secondary" className="bg-secondary/10">
-              {project.type}
-            </Badge>
-            <ProjectMenu />
-          </div>
+      <Card className={`group overflow-hidden transition-all duration-300 hover:shadow-lg`}>
+        {viewMode === "list" ? (
+          <div className="flex">
+            {/* Barra Lateral Colorida */}
+            <div className={`w-1 bg-gradient-to-b ${colorClass}`} />
 
-          <div className="space-y-1">
-            <h3 className="font-semibold tracking-tight hover:text-primary 
-                         transition-colors cursor-pointer">
-              {project.title}
-            </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {project.description}
-            </p>
-          </div>
-        </CardHeader>
+            <div className="flex flex-1 items-center gap-6 p-4">
+              {/* Seção de Informações Principais */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <Badge variant="secondary" className="bg-secondary/10">
+                    {project.type}
+                  </Badge>
+                  <Badge variant={project.status === "In Progress" ? "default" : "secondary"}
+                         className="text-xs">
+                    {project.status}
+                  </Badge>
+                </div>
+                
+                <h3 className="text-lg font-semibold tracking-tight hover:text-primary 
+                             transition-colors cursor-pointer truncate">
+                  {project.title}
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
+                  {project.description}
+                </p>
+                
+                {/* Tags em linha */}
+                <div className="flex items-center gap-4 mt-2">
+                  <ProjectTags tags={project.tags} />
+                </div>
+              </div>
 
-        <CardContent className={`space-y-4 ${viewMode === "list" ? "flex-1" : ""}`}>
-          <ProjectProgress progress={project.progress} status={project.status} />
-          <ProjectTags tags={project.tags} />
-          <div className="flex items-center justify-between pt-4 border-t">
-            <ProjectCollaborators collaborators={project.collaborators} />
-            <ProjectStats stats={project.stats} />
+              {/* Seção Central - Progress e Collaborators */}
+              <div className="flex items-center gap-6">
+                <ProjectProgress progress={project.progress} status={project.status} />
+                <div className="h-8 w-[1px] bg-border" /> {/* Separador vertical */}
+                <ProjectCollaborators collaborators={project.collaborators} />
+              </div>
+
+              {/* Seção de Estatísticas e Ações */}
+              <div className="flex items-center gap-6">
+                <ProjectStats stats={project.stats} />
+                <div className="h-8 w-[1px] bg-border" /> {/* Separador vertical */}
+                <ProjectMenu />
+              </div>
+            </div>
           </div>
-        </CardContent>
+        ) : (
+          <>
+            <div className={`h-2 bg-gradient-to-r ${colorClass}`} />
+            <CardHeader className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Badge variant="secondary" className="bg-secondary/10">
+                  {project.type}
+                </Badge>
+                <ProjectMenu />
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="font-semibold tracking-tight hover:text-primary 
+                             transition-colors cursor-pointer">
+                  {project.title}
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {project.description}
+                </p>
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              <ProjectProgress progress={project.progress} status={project.status} />
+              <ProjectTags tags={project.tags} />
+              <div className="flex items-center justify-between pt-4 border-t">
+                <ProjectCollaborators collaborators={project.collaborators} />
+                <ProjectStats stats={project.stats} />
+              </div>
+            </CardContent>
+          </>
+        )}
       </Card>
     </div>
   )
@@ -298,32 +348,26 @@ function ProjectMenu() {
 
 function ProjectProgress({ progress = 0, status = 'N/A' }: { progress?: number; status?: string }) {
   return (
-    <div className="flex items-center gap-4">
-      <div className="relative w-12 h-12">
-        <svg className="w-12 h-12 transform -rotate-90">
-          <circle cx="24" cy="24" r="22" strokeWidth="4" fill="none" className="stroke-muted" />
+    <div className="flex items-center gap-2">
+      <div className="relative w-10 h-10">
+        <svg className="w-10 h-10 transform -rotate-90">
+          <circle cx="20" cy="20" r="18" strokeWidth="4" fill="none" className="stroke-muted" />
           <circle
-            cx="24"
-            cy="24"
-            r="22"
+            cx="20"
+            cy="20"
+            r="18"
             strokeWidth="4"
             fill="none"
             stroke="currentColor"
             className="stroke-primary transition-all duration-500"
-            strokeDasharray={22 * 2 * Math.PI}
-            strokeDashoffset={22 * 2 * Math.PI * (1 - progress / 100)}
+            strokeDasharray={18 * 2 * Math.PI}
+            strokeDashoffset={18 * 2 * Math.PI * (1 - progress / 100)}
           />
         </svg>
         <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                        text-sm font-medium">
+                        text-xs font-medium">
           {progress}%
         </span>
-      </div>
-      <div>
-        <p className="text-sm font-medium">Progresso</p>
-        <Badge variant="outline" className="mt-1">
-          {status}
-        </Badge>
       </div>
     </div>
   )
@@ -334,7 +378,8 @@ function ProjectTags({ tags }: { tags?: string[] }) {
   return (
     <div className="flex flex-wrap gap-1">
       {tags.map((tag) => (
-        <Badge key={tag} variant="secondary" className="bg-secondary/10">
+        <Badge key={tag} variant="secondary" 
+               className="bg-secondary/10 px-2 py-0 text-xs">
           {tag}
         </Badge>
       ))}
