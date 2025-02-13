@@ -55,10 +55,12 @@ export function useGetProjectsAll(): ProjectsHookReturn {
       setIsLoading(true);
       const response = await axios.get<APIProject[]>('http://localhost:3001/projects');
       
-      // Converter os projetos da API para o formato esperado
       const convertedProjects = response.data.map(apiProject => ({
         ...apiProject,
+        title: apiProject.name,
         type: apiProject.type as ProjectType,
+        collaborators: [],
+        tags: [],
         content: apiProject.content.map(item => ({
           ...item,
           type: item.type as "heading" | "paragraph" | "image" | "bulletListItem"

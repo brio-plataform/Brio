@@ -115,10 +115,12 @@ export function useGetProject(projectId: string): ProjectHookReturn {
         const response = await axios.get<APIProject>(`http://localhost:3001/projects/${projectId}`);
         const apiProject = response.data;
         
-        // Converter o projeto da API para o formato esperado
         const convertedProject: ImportedProject = {
           ...apiProject,
+          title: apiProject.name, // Usar name como title se não existir
           type: apiProject.type as ProjectType,
+          collaborators: [], // Valor padrão para collaborators
+          tags: [], // Valor padrão para tags
           content: apiProject.content.map(item => ({
             ...item,
             type: item.type as "heading" | "paragraph" | "image" | "bulletListItem"

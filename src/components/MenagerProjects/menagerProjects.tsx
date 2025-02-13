@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/select"
 import { Modal } from "@/components/Modal/modal"
 import { Project } from "@/components/Project/Project"
+import { useGetProjectsAll } from '@/hooks/useGetProjectsAll'
+import type { Project as ProjectType } from '@/types/types'
 
 interface Collaborator {
   name: string;
@@ -122,12 +124,24 @@ export default function MenagerProjects() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [searchTerm, setSearchTerm] = useState("")
   const [filterType, setFilterType] = useState("all")
+  
+  // Usar o hook para buscar todos os projetos
+  const { projects, isLoading, error, refetch } = useGetProjectsAll()
 
+  // Filtrar projetos
   const filteredProjects = projects.filter(
     (project) =>
-      project.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (filterType === "all" || project.type === filterType)
   )
+
+  if (isLoading) {
+    return <div>Carregando projetos...</div>
+  }
+
+  if (error) {
+    return <div>Erro ao carregar projetos: {error.message}</div>
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-8">
@@ -187,7 +201,7 @@ export default function MenagerProjects() {
         </div>
       </div>
 
-      {/* Grid de Projetos - substituir motion.div por div */}
+      {/* Grid de Projetos */}
       <div className={`grid gap-6 transition-all duration-300 ${
         viewMode === "grid" 
           ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" 
@@ -212,7 +226,7 @@ function ProjectCard({
   colorClass, 
   viewMode 
 }: { 
-  project: Project
+  project: ProjectType
   colorClass: string
   viewMode: "grid" | "list"
 }) {
@@ -248,7 +262,7 @@ function ProjectCard({
                   className="text-lg font-semibold tracking-tight hover:text-primary 
                            transition-colors cursor-pointer truncate"
                 >
-                  {project.title}
+                  {project.name}
                 </h3>
                 <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
                   {project.description}
@@ -292,7 +306,7 @@ function ProjectCard({
                   className="font-semibold tracking-tight hover:text-primary 
                            transition-colors cursor-pointer"
                 >
-                  {project.title}
+                  {project.name}
                 </h3>
                 <p className="text-sm text-muted-foreground line-clamp-2">
                   {project.description}
@@ -316,7 +330,7 @@ function ProjectCard({
 }
 
 // Adicionar os componentes auxiliares que faltam
-function ProjectMenu({ project }: { project: Project }) {
+function ProjectMenu({ project }: { project: ProjectType }) {
   const router = useRouter()
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 

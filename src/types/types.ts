@@ -64,6 +64,7 @@ interface Project {
   id: string
   userId: string
   name: string
+  title: string
   description: string
   logo: string
   createdAt: string
@@ -75,6 +76,9 @@ interface Project {
   visibility: ProjectVisibility
   progress: number
   type: ProjectType
+  status?: string
+  collaborators: Array<{ name: string; avatar: string }> | number
+  tags?: string[]
   author: {
     name: string
     avatar: string
