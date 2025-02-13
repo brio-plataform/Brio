@@ -21,7 +21,8 @@ import {
   Copy,
   Reply,
   Link,
-  User
+  User,
+  FileText
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -38,6 +39,35 @@ import {
 import { AIAssistantProps, AIAssistantState } from './types'
 import { MOCK_MESSAGES } from './mockData'
 import { formatRelativeTime } from "@/lib/utils"
+
+// Ajuste nas quick actions
+const quickActions = [
+  {
+    icon: Book,
+    label: "Resumir conteúdo",
+    action: "Pode fazer um resumo deste conteúdo?"
+  },
+  {
+    icon: Search,
+    label: "Explicar conceitos",
+    action: "Pode me explicar melhor sobre..."
+  },
+  {
+    icon: MessageSquare,
+    label: "Tirar dúvidas",
+    action: "Tenho uma dúvida sobre..."
+  },
+  {
+    icon: FileText,
+    label: "Ver referências",
+    action: "Quais são as principais referências deste conteúdo?"
+  },
+  {
+    icon: Sparkles,
+    label: "Insights principais",
+    action: "Quais são os principais insights deste conteúdo?"
+  }
+]
 
 export function AISideBar({
   defaultCollapsed = false,
@@ -179,219 +209,187 @@ export function AISideBar({
           
         </div>
         {!state.isCollapsed && (
-            <p className="text-sm text-muted-foreground my-6">
-              Assistente IA para ajudar em seu projeto. Faça perguntas, peça sugestões ou solicite revisões.
+          <div className="mt-4 space-y-2">
+            <p className="text-sm text-muted-foreground">
+              Olá! Estou aqui para ajudar você a compreender melhor este conteúdo.
             </p>
-          )}
+            {context && (
+              <p className="text-sm font-medium">
+                Conteúdo atual: <span className="text-primary">{context}</span>
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       <ScrollArea className="flex-1 min-w-0">
-        <div className="space-y-2 px-3 pt-3">
-          <TooltipProvider delayDuration={300}>
-            <div className="space-y-1">
-              <Tooltip>
-                <Collapsible
-                  open={state.openSections.includes('chat')}
-                  onOpenChange={() => toggleSection('chat')}
+        <div className="p-3">
+          {!state.isCollapsed && (
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              {quickActions.map((action, i) => (
+                <Button
+                  key={i}
+                  variant="outline"
+                  size="sm"
+                  className="h-auto py-3 px-3 flex flex-col items-center gap-2 bg-background/40 
+                           hover:bg-background/60 transition-colors text-xs font-medium"
+                  onClick={() => onSuggestionClick?.(action.action)}
                 >
-                  <TooltipTrigger asChild>
-                    <CollapsibleTrigger asChild>
-                      {renderButton(MessageSquare, "Chat", 'chat')}
-                    </CollapsibleTrigger>
-                  </TooltipTrigger>
-                  {state.isCollapsed && (
-                    <TooltipContent side="right" className="select-none">
-                      <p>Chat</p>
-                    </TooltipContent>
-                  )}
-                  {!state.isCollapsed && (
-                    <CollapsibleContent className="py-2">
-                      <div className="space-y-4">
-                        <div className="flex flex-wrap gap-2 px-1">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="bg-background/40 hover:bg-background/60 transition-colors"
-                            onClick={() => onSuggestionClick?.("Revisar meu texto")}
-                          >
-                            <FileCheck className="h-3 w-3 mr-1.5" />
-                            Revisar texto
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="bg-background/40 hover:bg-background/60 transition-colors"
-                            onClick={() => onSuggestionClick?.("Sugerir melhorias")}
-                          >
-                            <Sparkles className="h-3 w-3 mr-1.5" />
-                            Sugerir melhorias
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="bg-background/40 hover:bg-background/60 transition-colors"
-                            onClick={() => onSuggestionClick?.("Encontrar referências")}
-                          >
-                            <Search className="h-3 w-3 mr-1.5" />
-                            Buscar referências
-                          </Button>
-                        </div>
+                  <action.icon className="h-4 w-4 text-primary" />
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          )}
 
-                        <div className="space-y-6 px-1">
-                          {state.messages.map((message) => (
-                            <div
-                              key={message.id}
+          <div className="space-y-6">
+            {state.messages.map((message) => (
+              <div
+                key={message.id}
+                className={cn(
+                  "group flex flex-col",
+                  message.type === "user" ? "items-end" : "items-start"
+                )}
+              >
+                <div className={cn(
+                  "flex items-center gap-2 mb-1",
+                  message.type === "user" && "flex-row-reverse"
+                )}>
+                  <div className={cn(
+                    "flex items-center justify-center w-6 h-6 rounded-full",
+                    message.type === "user" 
+                      ? "bg-primary/10" 
+                      : "bg-primary/5"
+                  )}>
+                    {message.type === "ai" 
+                      ? <Bot className="h-3.5 w-3.5 text-primary" />
+                      : <User className="h-3.5 w-3.5 text-primary" />
+                    }
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    {formatRelativeTime(message.timestamp)}
+                  </span>
+                </div>
+
+                <div className="flex flex-col max-w-[85%] group">
+                  <div
+                    className={cn(
+                      "rounded-2xl px-4 py-2.5 shadow-sm",
+                      message.type === "user" 
+                        ? "bg-primary text-primary-foreground rounded-tr-none" 
+                        : "bg-muted rounded-tl-none"
+                    )}
+                  >
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                      {message.content}
+                    </p>
+
+                    {message.references && (
+                      <div className="mt-3 pt-3 border-t border-primary/10">
+                        <p className="text-xs font-medium mb-2 opacity-70">
+                          Referências:
+                        </p>
+                        <div className="space-y-1.5">
+                          {message.references.map((ref, i) => (
+                            <a
+                              key={i}
+                              href={ref.link}
                               className={cn(
-                                "group flex flex-col",
-                                message.type === "user" ? "items-end" : "items-start"
+                                "flex items-center gap-1.5 text-xs hover:underline transition-colors",
+                                message.type === "user" 
+                                  ? "text-primary-foreground/90 hover:text-primary-foreground" 
+                                  : "text-primary/90 hover:text-primary"
                               )}
                             >
-                              <div className={cn(
-                                "flex items-center gap-2 mb-1",
-                                message.type === "user" && "flex-row-reverse"
-                              )}>
-                                <div className={cn(
-                                  "flex items-center justify-center w-6 h-6 rounded-full",
-                                  message.type === "user" 
-                                    ? "bg-primary/10" 
-                                    : "bg-primary/5"
-                                )}>
-                                  {message.type === "ai" 
-                                    ? <Bot className="h-3.5 w-3.5 text-primary" />
-                                    : <User className="h-3.5 w-3.5 text-primary" />
-                                  }
-                                </div>
-                                <span className="text-xs text-muted-foreground">
-                                  {formatRelativeTime(message.timestamp)}
-                                </span>
-                              </div>
-
-                              <div className="flex flex-col max-w-[85%] group">
-                                <div
-                                  className={cn(
-                                    "rounded-2xl px-4 py-2.5 shadow-sm",
-                                    message.type === "user" 
-                                      ? "bg-primary text-primary-foreground rounded-tr-none" 
-                                      : "bg-muted rounded-tl-none"
-                                  )}
-                                >
-                                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                                    {message.content}
-                                  </p>
-
-                                  {message.references && (
-                                    <div className="mt-3 pt-3 border-t border-primary/10">
-                                      <p className="text-xs font-medium mb-2 opacity-70">
-                                        Referências:
-                                      </p>
-                                      <div className="space-y-1.5">
-                                        {message.references.map((ref, i) => (
-                                          <a
-                                            key={i}
-                                            href={ref.link}
-                                            className={cn(
-                                              "flex items-center gap-1.5 text-xs hover:underline transition-colors",
-                                              message.type === "user" 
-                                                ? "text-primary-foreground/90 hover:text-primary-foreground" 
-                                                : "text-primary/90 hover:text-primary"
-                                            )}
-                                          >
-                                            <Link className="h-3 w-3" />
-                                            {ref.title}
-                                          </a>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-
-                                {message.suggestions && (
-                                  <div className="flex flex-wrap gap-1.5 mt-2">
-                                    {message.suggestions.map((suggestion, i) => (
-                                      <Button
-                                        key={i}
-                                        variant="outline"
-                                        size="sm"
-                                        className="h-7 bg-background/80 hover:bg-background border-primary/20 
-                                                 hover:border-primary/40 text-xs shadow-sm transition-all"
-                                        onClick={() => onSuggestionClick?.(suggestion)}
-                                      >
-                                        <Wand2 className="h-3 w-3 mr-1.5 text-primary/70" />
-                                        {suggestion}
-                                      </Button>
-                                    ))}
-                                  </div>
-                                )}
-
-                                <div className={cn(
-                                  "absolute opacity-0 group-hover:opacity-100 transition-opacity",
-                                  message.type === "user" ? "-left-8" : "-right-8",
-                                  "top-8"
-                                )}>
-                                  <div className="flex flex-col gap-1">
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            className="h-6 w-6 hover:bg-background"
-                                          >
-                                            <Copy className="h-3.5 w-3.5 text-muted-foreground" />
-                                          </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent side={message.type === "user" ? "left" : "right"}>
-                                          Copiar mensagem
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
-
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            className="h-6 w-6 hover:bg-background"
-                                          >
-                                            <Reply className="h-3.5 w-3.5 text-muted-foreground" />
-                                          </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent side={message.type === "user" ? "left" : "right"}>
-                                          Responder
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                              <Link className="h-3 w-3" />
+                              {ref.title}
+                            </a>
                           ))}
-
-                          {state.isTyping && (
-                            <div className="flex items-center gap-3">
-                              <div className="w-6 h-6 rounded-full bg-primary/5 flex items-center justify-center">
-                                <Bot className="h-3.5 w-3.5 text-primary" />
-                              </div>
-                              <div className="bg-muted px-4 py-2.5 rounded-2xl rounded-tl-none shadow-sm">
-                                <div className="flex gap-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" />
-                                  <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce delay-150" />
-                                  <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce delay-300" />
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                          
-                          <div ref={messagesEndRef} />
                         </div>
                       </div>
-                    </CollapsibleContent>
+                    )}
+                  </div>
+
+                  {message.suggestions && (
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {message.suggestions.map((suggestion, i) => (
+                        <Button
+                          key={i}
+                          variant="outline"
+                          size="sm"
+                          className="h-7 bg-background/80 hover:bg-background border-primary/20 
+                                   hover:border-primary/40 text-xs shadow-sm transition-all"
+                          onClick={() => onSuggestionClick?.(suggestion)}
+                        >
+                          <Wand2 className="h-3 w-3 mr-1.5 text-primary/70" />
+                          {suggestion}
+                        </Button>
+                      ))}
+                    </div>
                   )}
-                </Collapsible>
-              </Tooltip>
-            </div>
-          </TooltipProvider>
+
+                  <div className={cn(
+                    "absolute opacity-0 group-hover:opacity-100 transition-opacity",
+                    message.type === "user" ? "-left-8" : "-right-8",
+                    "top-8"
+                  )}>
+                    <div className="flex flex-col gap-1">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-6 w-6 hover:bg-background"
+                            >
+                              <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side={message.type === "user" ? "left" : "right"}>
+                            Copiar mensagem
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-6 w-6 hover:bg-background"
+                            >
+                              <Reply className="h-3.5 w-3.5 text-muted-foreground" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side={message.type === "user" ? "left" : "right"}>
+                            Responder
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {state.isTyping && (
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full bg-primary/5 flex items-center justify-center">
+                  <Bot className="h-3.5 w-3.5 text-primary" />
+                </div>
+                <div className="bg-muted px-4 py-2.5 rounded-2xl rounded-tl-none shadow-sm">
+                  <div className="flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce delay-150" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce delay-300" />
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div ref={messagesEndRef} />
+          </div>
         </div>
       </ScrollArea>
 
@@ -399,7 +397,7 @@ export function AISideBar({
         <div className="border-t p-4 bg-muted min-w-0">
           <div className="flex gap-2">
             <Input
-              placeholder="Digite sua mensagem..."
+              placeholder="Faça uma pergunta sobre o conteúdo..."
               value={state.currentMessage}
               onChange={(e) => setState(prev => ({ ...prev, currentMessage: e.target.value }))}
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
