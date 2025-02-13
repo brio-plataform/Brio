@@ -1,6 +1,5 @@
 "use client"
 
-import { LeftSidebar } from "@/components/Left-SideBar/left-sidebar";
 import { Main } from "@/components/Main";
 import { AISideBar } from "@/components/AI-SideBar/ai-sidebar";
 
@@ -13,9 +12,6 @@ import ErrorPage from "@/components/Error/NotFound/notFound";
 import LoadingProject from "@/components/Loading/loading-project";
 import { Project } from "@/components/Project/Project";
 import { ProjectViewerHeader } from "@/components/Header/ViewHeader/ViewHeader";
-import { MOCK_SECTIONS } from "@/components/Right-SideBar/mockData";
-import { MOCK_REVIEWS } from "@/components/Right-SideBar/mockData";
-import { RightSidebar } from "@/components/Right-SideBar/right-sidebar";
 
 export default function ViewProjectPage() {
 
@@ -46,11 +42,7 @@ export default function ViewProjectPage() {
 
 
   return (
-    <div className="flex w-full h-full min-h-screen">
-      <div className="sticky top-0 h-screen">
-        <LeftSidebar />
-      </div>
-      
+      <>
       <div className="flex-1 transition-all duration-300">
         <Main>
           <ProjectViewerHeader projectId={projectId} />
@@ -71,6 +63,6 @@ export default function ViewProjectPage() {
           }}
         />
       </div>
-    </div>
+      </>
   );
 }

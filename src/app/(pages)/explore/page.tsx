@@ -10,15 +10,11 @@ export const metadata: Metadata = {
 
 export default function ExplorePage() {
   return (
-    <div className="flex w-full h-full min-h-screen relative">
-      <div className="sticky top-0 h-screen">
-        <LeftSidebar />
-      </div>
+
       <div className="flex-1 transition-all duration-300 overflow-auto scrollbar-none">
         <Main>
           <FeedExplore />
         </Main>
       </div>
-    </div>
   )
 }
