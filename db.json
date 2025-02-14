@@ -19,9 +19,8 @@
       "wordCount": 0,
       "citations": [],
       "model": "article",
-      "visibility": "private",
+      "visibility": "public",
       "progress": 40,
-      "type": "institutional",
       "author": {
         "name": "John Doe",
         "avatar": "/path/to/avatar.jpg",
@@ -241,7 +240,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-14T14:00:44.587Z"
+      "updatedAt": "2025-02-14T15:11:10.483Z"
     }
   ]
 }

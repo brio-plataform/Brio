@@ -7,9 +7,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { 
-  Edit3, Share2, Trash2, Users, GitFork, Star, 
+  Edit3, Share2, Trash2, GitFork, Star, 
   MessageSquare, Grid, List, Plus, MoreVertical,
-  Book, FileText, ExternalLink, Flag, X, Eye
+  Book, FileText, ExternalLink, X,
+  Lock, Globe, Building2
 } from 'lucide-react'
 import {
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
@@ -26,19 +27,8 @@ import {
 import { Modal } from "@/components/Modal/modal"
 import { Project } from "@/components/Project/Project"
 import { useGetAllProjects } from '@/store/useGetAllProjects'
-import type { Project as ProjectType } from '@/types/types'
 import axios from 'axios'
 import { MockProject } from '@/types/types'
-
-interface Collaborator {
-  name: string;
-  avatar: string;
-}
-
-interface Institution {
-  name: string;
-  logo: string;
-}
 
 interface ProjectStats {
   views?: number;
@@ -57,76 +47,19 @@ const projectColors = [
 ]
 
 // Primeiro, vamos definir os tipos possíveis como uma constante
-const PROJECT_TYPES = {
-  RESEARCH_PAPER: "Research Paper",
-  BOOK: "Book",
-  ARTICLE: "Article",
-  RESEARCH_PROJECT: "Research Project",
-  CASE_STUDY: "Case Study"
+const PROJECT_MODELS = {
+  ARTICLE: "article",
+  THESIS: "thesis",
+  BOOK: "book",
+  RESEARCH: "research"
 } as const
 
-// Mock de projetos adicionais
-const MOCK_PROJECTS: MockProject[] = [
-  {
-    id: "mock-1",
-    title: "Análise de Dados em Saúde Pública",
-    description: "Estudo sobre padrões epidemiológicos usando machine learning",
-    type: PROJECT_TYPES.RESEARCH_PAPER,
-    progress: 75,
-    institutional: true,
-    institution: {
-      name: "FIOCRUZ",
-      avatar: "/institutions/fiocruz.jpg"
-    },
-    stats: {
-      stars: 45,
-      comments: 23,
-      shares: 12,
-      views: 150,
-      forks: 8
-    },
-    status: "Em Andamento",
-    tags: ["Saúde", "Machine Learning", "Dados"],
-    collaborators: [
-      { name: "Ana Silva", avatar: "/avatars/ana.jpg" },
-      { name: "João Santos", avatar: "/avatars/joao.jpg" }
-    ]
-  },
-  {
-    id: "mock-2",
-    title: "Impacto da IA na Educação Básica",
-    description: "Pesquisa sobre o uso de inteligência artificial em escolas públicas",
-    type: PROJECT_TYPES.RESEARCH_PROJECT,
-    progress: 60,
-    institutional: true,
-    institution: {
-      name: "USP",
-      avatar: "/institutions/usp.jpg"
-    },
-    stats: {
-      stars: 89,
-      comments: 34,
-      shares: 27
-    }
-  },
-  {
-    id: "mock-3",
-    title: "Desenvolvimento Sustentável em Comunidades Ribeirinhas",
-    description: "Projeto de pesquisa-ação sobre sustentabilidade na Amazônia",
-    type: PROJECT_TYPES.CASE_STUDY,
-    progress: 40,
-    institutional: true,
-    institution: {
-      name: "UFAM",
-      avatar: "/institutions/ufam.jpg"
-    },
-    stats: {
-      stars: 67,
-      comments: 45,
-      shares: 31
-    }
-  }
-]
+// Adicionar constante para visibilidade
+const PROJECT_VISIBILITY = {
+  PRIVATE: "private",
+  PUBLIC: "public",
+  INSTITUTIONAL: "institutional"
+} as const
 
 export default function MenagerProjects() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -145,7 +78,7 @@ export default function MenagerProjects() {
   // Filtrar projetos
   const filteredProjects = projects.filter((project) => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesType = filterType === "all" || project.type === filterType
+    const matchesType = filterType === "all" || project.model === filterType
     return matchesSearch && matchesType
   })
 
@@ -161,10 +94,9 @@ export default function MenagerProjects() {
         banner: "/placeholder.svg",
         wordCount: 0,
         citations: [],
-        model: "article",
-        visibility: "institutional",
+        model: PROJECT_MODELS.ARTICLE,
+        visibility: "private",
         progress: 0,
-        type: PROJECT_TYPES.RESEARCH_PROJECT,
         author: {
           name: "John Doe", // Idealmente, pegar do contexto de autenticação
           avatar: "/path/to/avatar.jpg",
@@ -212,7 +144,8 @@ export default function MenagerProjects() {
         id: response.data.id,
         title: response.data.name,
         description: response.data.description || "",
-        type: response.data.type || PROJECT_TYPES.RESEARCH_PROJECT,
+        model: response.data.model || PROJECT_MODELS.ARTICLE,
+        visibility: response.data.visibility || PROJECT_VISIBILITY.PRIVATE,
         progress: response.data.progress || 0,
         institutional: true,
         institution: {
@@ -283,11 +216,10 @@ export default function MenagerProjects() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todos os tipos</SelectItem>
-              {Object.values(PROJECT_TYPES).map(type => (
-                <SelectItem key={type} value={type}>
-                  {type}
-                </SelectItem>
-              ))}
+              <SelectItem value="article">Artigo</SelectItem>
+              <SelectItem value="thesis">Tese</SelectItem>
+              <SelectItem value="book">Livro</SelectItem>
+              <SelectItem value="research">Pesquisa</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -364,11 +296,32 @@ function ProjectCard({
                 {/* Informações Principais */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    {project.type && (
-                      <Badge variant="secondary" className="bg-secondary/10">
-                        {project.type}
-                      </Badge>
-                    )}
+                    <Badge variant="secondary" className="bg-secondary/10">
+                      {project.model === PROJECT_MODELS.ARTICLE && 'Artigo'}
+                      {project.model === PROJECT_MODELS.THESIS && 'Tese'}
+                      {project.model === PROJECT_MODELS.BOOK && 'Livro'}
+                      {project.model === PROJECT_MODELS.RESEARCH && 'Pesquisa'}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs flex items-center gap-1">
+                      {project.visibility === PROJECT_VISIBILITY.PRIVATE && (
+                        <>
+                          <Lock className="w-3 h-3" />
+                          <span>Privado</span>
+                        </>
+                      )}
+                      {project.visibility === PROJECT_VISIBILITY.PUBLIC && (
+                        <>
+                          <Globe className="w-3 h-3" />
+                          <span>Público</span>
+                        </>
+                      )}
+                      {project.visibility === PROJECT_VISIBILITY.INSTITUTIONAL && (
+                        <>
+                          <Building2 className="w-3 h-3" />
+                          <span>Institucional</span>
+                        </>
+                      )}
+                    </Badge>
                     {project.status && (
                       <Badge variant={project.status === "Em Andamento" ? "default" : "secondary"}
                              className="text-xs">
@@ -418,11 +371,32 @@ function ProjectCard({
             <CardHeader className="flex-[0.25] space-y-1 p-4">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex gap-1 flex-wrap">
-                  {project.type && (
-                    <Badge variant="secondary" className="bg-secondary/10 text-xs px-2 py-0">
-                      {project.type}
-                    </Badge>
-                  )}
+                  <Badge variant="secondary" className="bg-secondary/10">
+                    {project.model === PROJECT_MODELS.ARTICLE && 'Artigo'}
+                    {project.model === PROJECT_MODELS.THESIS && 'Tese'}
+                    {project.model === PROJECT_MODELS.BOOK && 'Livro'}
+                    {project.model === PROJECT_MODELS.RESEARCH && 'Pesquisa'}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs flex items-center gap-1">
+                    {project.visibility === PROJECT_VISIBILITY.PRIVATE && (
+                      <>
+                        <Lock className="w-3 h-3" />
+                        <span>Privado</span>
+                      </>
+                    )}
+                    {project.visibility === PROJECT_VISIBILITY.PUBLIC && (
+                      <>
+                        <Globe className="w-3 h-3" />
+                        <span>Público</span>
+                      </>
+                    )}
+                    {project.visibility === PROJECT_VISIBILITY.INSTITUTIONAL && (
+                      <>
+                        <Building2 className="w-3 h-3" />
+                        <span>Institucional</span>
+                      </>
+                    )}
+                  </Badge>
                   {project.status && (
                     <Badge variant={project.status === "Em Andamento" ? "default" : "secondary"}
                            className="text-xs px-2 py-0">
@@ -443,7 +417,7 @@ function ProjectCard({
             </CardHeader>
 
             {/* Content mais compacto - 75% altura */}
-            <CardContent className="flex-[0.75] flex flex-col justify-between p-4">
+            <CardContent className="flex-[0.75] flex flex-col justify-between px-4">
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground line-clamp-2">
                   {project.description}

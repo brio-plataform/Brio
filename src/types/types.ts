@@ -802,7 +802,8 @@ export interface MockProject {
   id: string;
   title: string;
   description: string;
-  type?: string;
+  model: 'article' | 'thesis' | 'book' | 'research';
+  visibility: 'private' | 'public' | 'institutional';
   progress: number;
   institutional: boolean;
   institution: {

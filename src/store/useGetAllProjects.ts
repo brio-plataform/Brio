@@ -15,7 +15,8 @@ export const useGetAllProjects = create<ProjectsStore>((set, get) => ({
         id: project.id.toString(),
         title: project.name,
         description: project.description || "",
-        type: project.type || "Research Project",
+        model: project.model || "article",
+        visibility: project.visibility || "private",
         progress: project.progress || 0,
         institutional: true,
         institution: {
