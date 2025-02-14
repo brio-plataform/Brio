@@ -27,6 +27,7 @@ import { Modal } from "@/components/Modal/modal"
 import { Project } from "@/components/Project/Project"
 import { useGetProjectsAll } from '@/hooks/useGetProjectsAll'
 import type { Project as ProjectType } from '@/types/types'
+import axios from 'axios'
 
 interface Collaborator {
   name: string;
@@ -74,13 +75,22 @@ const projectColors = [
   "from-purple-500 to-indigo-500",
 ]
 
+// Primeiro, vamos definir os tipos possíveis como uma constante
+const PROJECT_TYPES = {
+  RESEARCH_PAPER: "Research Paper",
+  BOOK: "Book",
+  ARTICLE: "Article",
+  RESEARCH_PROJECT: "Research Project",
+  CASE_STUDY: "Case Study"
+} as const
+
 // Mock de projetos adicionais
 const MOCK_PROJECTS: MockProject[] = [
   {
     id: "mock-1",
     title: "Análise de Dados em Saúde Pública",
     description: "Estudo sobre padrões epidemiológicos usando machine learning",
-    type: "Pesquisa",
+    type: PROJECT_TYPES.RESEARCH_PAPER,
     progress: 75,
     institutional: true,
     institution: {
@@ -105,6 +115,7 @@ const MOCK_PROJECTS: MockProject[] = [
     id: "mock-2",
     title: "Impacto da IA na Educação Básica",
     description: "Pesquisa sobre o uso de inteligência artificial em escolas públicas",
+    type: PROJECT_TYPES.RESEARCH_PROJECT,
     progress: 60,
     institutional: true,
     institution: {
@@ -121,6 +132,7 @@ const MOCK_PROJECTS: MockProject[] = [
     id: "mock-3",
     title: "Desenvolvimento Sustentável em Comunidades Ribeirinhas",
     description: "Projeto de pesquisa-ação sobre sustentabilidade na Amazônia",
+    type: PROJECT_TYPES.CASE_STUDY,
     progress: 40,
     institutional: true,
     institution: {
@@ -142,6 +154,7 @@ export default function MenagerProjects() {
   const [allProjects, setAllProjects] = useState<MockProject[]>([...MOCK_PROJECTS])
   
   const { projects, isLoading, error, refetch } = useGetProjectsAll()
+  const router = useRouter()
 
   // Função para converter projeto da API para formato mock
   const convertApiProjectToMock = (apiProject: any): MockProject => {
@@ -149,7 +162,7 @@ export default function MenagerProjects() {
       id: apiProject.id.toString(),
       title: apiProject.name,
       description: apiProject.description || "",
-      type: apiProject.type || "Projeto",
+      type: apiProject.type || PROJECT_TYPES.RESEARCH_PROJECT,
       progress: apiProject.progress || 0,
       institutional: true,
       institution: {
@@ -186,11 +199,79 @@ export default function MenagerProjects() {
   }, [projects])
 
   // Filtrar projetos
-  const filteredProjects = allProjects.filter(
-    (project) =>
-      project.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterType === "all" || project.type === filterType)
-  )
+  const filteredProjects = allProjects.filter((project) => {
+    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = filterType === "all" || project.type === filterType;
+    return matchesSearch && matchesType;
+  })
+
+  // Função para criar novo projeto
+  const handleCreateNewProject = async () => {
+    try {
+      // Template para novo projeto
+      const newProject = {
+        userId: "1", // Idealmente, pegar do contexto de autenticação
+        name: "Novo Projeto",
+        description: "Descrição do novo projeto",
+        logo: "/placeholder.svg",
+        createdAt: new Date().toISOString(),
+        banner: "/placeholder.svg",
+        wordCount: 0,
+        citations: [],
+        model: "article",
+        visibility: "institutional",
+        progress: 0,
+        type: PROJECT_TYPES.RESEARCH_PROJECT,
+        author: {
+          name: "John Doe", // Idealmente, pegar do contexto de autenticação
+          avatar: "/path/to/avatar.jpg",
+          institution: "Institution Name"
+        },
+        stats: {
+          views: 0,
+          stars: 0,
+          forks: 0,
+          comments: 0
+        },
+        version: [
+          {
+            version: "1.0.0",
+            updatedAt: new Date().toISOString()
+          }
+        ],
+        content: [
+          {
+            id: crypto.randomUUID(),
+            type: "heading",
+            props: {
+              textColor: "default",
+              backgroundColor: "default",
+              textAlignment: "left",
+              level: 1
+            },
+            content: [
+              {
+                type: "text",
+                text: "Novo Projeto",
+                styles: {}
+              }
+            ],
+            children: []
+          }
+        ],
+        updatedAt: new Date().toISOString()
+      }
+
+      // Fazer a requisição POST usando axios
+      const response = await axios.post('http://localhost:3001/projects', newProject)
+
+      // Redirecionar para a página do novo projeto
+      router.push(`/user/projects/${response.data.id}`)
+    } catch (error) {
+      console.error('Erro ao criar projeto:', error)
+      // Aqui você pode adicionar uma notificação de erro para o usuário
+    }
+  }
 
   if (isLoading) {
     return <div>Carregando projetos...</div>
@@ -211,7 +292,10 @@ export default function MenagerProjects() {
             Gerencie e colabore em seus projetos acadêmicos
           </p>
         </div>
-        <Button className="gap-2">
+        <Button 
+          className="gap-2"
+          onClick={handleCreateNewProject}
+        >
           <Plus className="w-4 h-4" />
           Novo Projeto
         </Button>
@@ -232,11 +316,11 @@ export default function MenagerProjects() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todos os tipos</SelectItem>
-              <SelectItem value="Research Paper">Artigo de Pesquisa</SelectItem>
-              <SelectItem value="Book">Livro</SelectItem>
-              <SelectItem value="Article">Artigo</SelectItem>
-              <SelectItem value="Research Project">Projeto de Pesquisa</SelectItem>
-              <SelectItem value="Case Study">Estudo de Caso</SelectItem>
+              {Object.values(PROJECT_TYPES).map(type => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -417,10 +501,68 @@ function ProjectCard({
   )
 }
 
-// Adicionar os componentes auxiliares que faltam
+// Primeiro, vamos criar um componente para o Modal de Confirmação
+function DeleteProjectModal({ 
+  isOpen, 
+  onClose, 
+  onConfirm, 
+  projectTitle 
+}: { 
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+  projectTitle: string
+}) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="p-6 space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold tracking-tight">
+            Excluir Projeto
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            Tem certeza que deseja excluir o projeto <span className="font-medium">"{projectTitle}"</span>? 
+            Esta ação não pode ser desfeita.
+          </p>
+        </div>
+
+        <div className="flex justify-end gap-2">
+          <Button
+            variant="outline"
+            onClick={onClose}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={onConfirm}
+            className="gap-2"
+          >
+            <Trash2 className="w-4 h-4" />
+            Excluir Projeto
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  )
+}
+
+// Atualizar o ProjectMenu para incluir o modal de confirmação
 function ProjectMenu({ project }: { project: MockProject }) {
   const router = useRouter()
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  const handleDeleteProject = async () => {
+    try {
+      await axios.delete(`http://localhost:3001/projects/${project.id}`)
+      // Recarregar a página ou atualizar a lista de projetos
+      window.location.reload()
+    } catch (error) {
+      console.error('Erro ao excluir projeto:', error)
+      // Aqui você pode adicionar uma notificação de erro para o usuário
+    }
+  }
 
   return (
     <>
@@ -457,7 +599,10 @@ function ProjectMenu({ project }: { project: MockProject }) {
             Abrir em Nova Aba
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-destructive">
+          <DropdownMenuItem 
+            className="text-destructive"
+            onClick={() => setIsDeleteModalOpen(true)}
+          >
             <Trash2 className="w-4 h-4 mr-2" />
             Excluir
           </DropdownMenuItem>
@@ -484,6 +629,17 @@ function ProjectMenu({ project }: { project: MockProject }) {
           <Project editable={false}  projectId="1"/>
         </div>
       </Modal>
+
+      {/* Modal de Confirmação de Exclusão */}
+      <DeleteProjectModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          handleDeleteProject()
+          setIsDeleteModalOpen(false)
+        }}
+        projectTitle={project.title}
+      />
     </>
   )
 }
