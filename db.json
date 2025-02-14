@@ -11,8 +11,8 @@
     {
       "id": "1",
       "userId": "1",
-      "name": "Projeto Brio AAAAAAAAAA",
-      "description": "Descrição do Teste Brio AAAAAAAAAAAAAAAAAAAAA",
+      "name": "Projeto Brio",
+      "description": "Descrição do Teste Brio",
       "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_%28with_h-alpha%29.jpg",
       "createdAt": "2025-01-31T23:47:47.093Z",
       "banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_h-alpha%29.jpg",
@@ -21,16 +21,38 @@
       "model": "article",
       "visibility": "public",
       "progress": 40,
+      "status": "Em Andamento",
+      "tags": [
+        "UI/UX",
+        "Design",
+        "Research",
+        "Development"
+      ],
       "author": {
         "name": "John Doe",
         "avatar": "/path/to/avatar.jpg",
-        "institution": "Institution Name"
+        "institution": "Universidade de São Paulo"
       },
+      "collaborators": [
+        {
+          "name": "Maria Silva",
+          "avatar": "/avatars/maria.jpg"
+        },
+        {
+          "name": "Pedro Santos",
+          "avatar": "/avatars/pedro.jpg"
+        },
+        {
+          "name": "Ana Oliveira",
+          "avatar": "/avatars/ana.jpg"
+        }
+      ],
       "stats": {
-        "views": 1,
-        "stars": 2,
-        "forks": 3,
-        "comments": 4
+        "views": 150,
+        "stars": 45,
+        "forks": 8,
+        "comments": 23,
+        "shares": 12
       },
       "version": [
         {
@@ -240,7 +262,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-14T15:11:10.483Z"
+      "updatedAt": "2025-02-14T15:21:45.808Z"
     }
   ]
 }

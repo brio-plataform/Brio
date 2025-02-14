@@ -10,7 +10,8 @@ import {
   Edit3, Share2, Trash2, GitFork, Star, 
   MessageSquare, Grid, List, Plus, MoreVertical,
   Book, FileText, ExternalLink, X,
-  Lock, Globe, Building2
+  Lock, Globe, Building2,
+  Users
 } from 'lucide-react'
 import {
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
@@ -60,6 +61,39 @@ const PROJECT_VISIBILITY = {
   PUBLIC: "public",
   INSTITUTIONAL: "institutional"
 } as const
+
+// Adicionar constantes para as cores dos badges
+const MODEL_BADGE_STYLES = {
+  article: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+  thesis: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+  book: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  research: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+}
+
+const VISIBILITY_BADGE_STYLES = {
+  private: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
+  public: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300",
+  institutional: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300"
+}
+
+// Definir tipo para status
+type ProjectStatus = "Em Andamento" | "Concluído" | string;
+
+// Atualizar a constante com tipo
+const STATUS_BADGE_STYLES: Record<ProjectStatus, string> = {
+  "Em Andamento": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+  "Concluído": "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300",
+  default: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300"
+} as const;
+
+// Adicionar constantes para as cores dos badges no topo do arquivo
+const TAG_BADGE_STYLES = {
+  "UI/UX": "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300",
+  "Design": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+  "Research": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+  "Development": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+  default: "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300"
+} as const;
 
 export default function MenagerProjects() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -296,13 +330,17 @@ function ProjectCard({
                 {/* Informações Principais */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="secondary" className="bg-secondary/10">
+                    <Badge variant="secondary" 
+                           className={`${MODEL_BADGE_STYLES[project.model]} border-0`}>
                       {project.model === PROJECT_MODELS.ARTICLE && 'Artigo'}
                       {project.model === PROJECT_MODELS.THESIS && 'Tese'}
                       {project.model === PROJECT_MODELS.BOOK && 'Livro'}
                       {project.model === PROJECT_MODELS.RESEARCH && 'Pesquisa'}
                     </Badge>
-                    <Badge variant="outline" className="text-xs flex items-center gap-1">
+                    
+                    <Badge variant="secondary" 
+                           className={`text-xs flex items-center gap-1 border-0
+                                      ${VISIBILITY_BADGE_STYLES[project.visibility]}`}>
                       {project.visibility === PROJECT_VISIBILITY.PRIVATE && (
                         <>
                           <Lock className="w-3 h-3" />
@@ -322,9 +360,11 @@ function ProjectCard({
                         </>
                       )}
                     </Badge>
+                    
                     {project.status && (
-                      <Badge variant={project.status === "Em Andamento" ? "default" : "secondary"}
-                             className="text-xs">
+                      <Badge variant="secondary"
+                             className={`text-xs px-2 py-0 border-0
+                                          ${STATUS_BADGE_STYLES[project.status as ProjectStatus] || STATUS_BADGE_STYLES.default}`}>
                         {project.status}
                       </Badge>
                     )}
@@ -367,17 +407,21 @@ function ProjectCard({
           <div className="flex flex-col h-full">
             <div className={`h-1.5 bg-gradient-to-r ${colorClass}`} />
             
-            {/* Header mais compacto - 25% altura */}
+            {/* Header - mantém o mesmo design */}
             <CardHeader className="flex-[0.25] space-y-1 p-4">
               <div className="flex items-center justify-between gap-2">
-                <div className="flex gap-1 flex-wrap">
-                  <Badge variant="secondary" className="bg-secondary/10">
+                <div className="flex gap-3 flex-wrap">
+                  <Badge variant="secondary" 
+                         className={`${MODEL_BADGE_STYLES[project.model]} border-0`}>
                     {project.model === PROJECT_MODELS.ARTICLE && 'Artigo'}
                     {project.model === PROJECT_MODELS.THESIS && 'Tese'}
                     {project.model === PROJECT_MODELS.BOOK && 'Livro'}
                     {project.model === PROJECT_MODELS.RESEARCH && 'Pesquisa'}
                   </Badge>
-                  <Badge variant="outline" className="text-xs flex items-center gap-1">
+                  
+                  <Badge variant="secondary" 
+                         className={`text-xs flex items-center gap-1 border-0
+                                    ${VISIBILITY_BADGE_STYLES[project.visibility]}`}>
                     {project.visibility === PROJECT_VISIBILITY.PRIVATE && (
                       <>
                         <Lock className="w-3 h-3" />
@@ -397,9 +441,11 @@ function ProjectCard({
                       </>
                     )}
                   </Badge>
+                  
                   {project.status && (
-                    <Badge variant={project.status === "Em Andamento" ? "default" : "secondary"}
-                           className="text-xs px-2 py-0">
+                    <Badge variant="secondary"
+                           className={`text-xs px-2 py-0 border-0
+                                        ${STATUS_BADGE_STYLES[project.status as ProjectStatus] || STATUS_BADGE_STYLES.default}`}>
                       {project.status}
                     </Badge>
                   )}
@@ -407,31 +453,46 @@ function ProjectCard({
                 <ProjectMenu project={project} />
               </div>
 
-              <h3 
-                onClick={() => router.push(`/user/projects/${project.id}`)}
-                className="font-semibold tracking-tight hover:text-primary 
-                         transition-colors cursor-pointer line-clamp-1"
-              >
-                {project.title}
-              </h3>
+              {/* Título e Instituição agrupados */}
+              <div className="space-y-1">
+                <h3 
+                  onClick={() => router.push(`/user/projects/${project.id}`)}
+                  className="font-semibold tracking-tight hover:text-primary 
+                            transition-colors cursor-pointer line-clamp-1"
+                >
+                  {project.title}
+                </h3>
+                <div className="flex items-center gap-2">
+                  <Avatar className="w-4 h-4">
+                    <AvatarImage src={project.institution.avatar} alt={project.institution.name} />
+                    <AvatarFallback>{project.institution.name.slice(0, 2)}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-xs text-muted-foreground">
+                    {project.institution.name}
+                  </span>
+                </div>
+              </div>
             </CardHeader>
 
-            {/* Content mais compacto - 75% altura */}
+            {/* Content - melhor organizado */}
             <CardContent className="flex-[0.75] flex flex-col justify-between px-4">
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground line-clamp-2">
                   {project.description}
                 </p>
-                <ProjectTags tags={project.tags} />
+                
+                <div className="flex items-center justify-between">
+                  <ProjectTags tags={project.tags} />
+                </div>
               </div>
 
               <div className="space-y-3 mt-auto">
                 <div className="flex items-center justify-between">
-                  <ProjectProgress progress={project.progress} status={project.status} />
-                  <ProjectCollaborators collaborators={project.collaborators} />
-                </div>
-                <div className="pt-2 border-t">
-                  <ProjectStats stats={project.stats} />
+                  <ProjectStats stats={project.stats} compact />
+                  <div className="flex items-center gap-2">
+                    <ProjectCollaborators collaborators={project.collaborators} />
+                    <ProjectProgress progress={project.progress} status={project.status} />
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -612,12 +673,17 @@ function ProjectProgress({ progress = 0, status = 'N/A' }: { progress?: number; 
 }
 
 function ProjectTags({ tags }: { tags?: string[] }) {
-  if (!tags?.length) return null
+  if (!tags?.length) return null;
+  
   return (
     <div className="flex flex-wrap gap-1">
       {tags.map((tag) => (
-        <Badge key={tag} variant="secondary" 
-               className="bg-secondary/10 px-2 py-0 text-xs">
+        <Badge 
+          key={tag} 
+          variant="secondary" 
+          className={`${TAG_BADGE_STYLES[tag as keyof typeof TAG_BADGE_STYLES] || TAG_BADGE_STYLES.default} 
+                     border-0 px-2 py-0.5 text-xs hover:opacity-80 transition-opacity cursor-pointer`}
+        >
           {tag}
         </Badge>
       ))}
@@ -629,23 +695,12 @@ function ProjectCollaborators({ collaborators }: { collaborators?: Array<{ name:
   if (!collaborators?.length) return null;
 
   return (
-    <div className="flex -space-x-2">
-      {collaborators.map((collaborator, index) => (
-        <TooltipProvider key={index}>
-          <Tooltip>
-            <TooltipTrigger>
-              <Avatar className="w-8 h-8 border-2 border-background">
-                <AvatarImage src={collaborator.avatar} alt={collaborator.name} />
-                <AvatarFallback>{collaborator.name.slice(0, 2)}</AvatarFallback>
-              </Avatar>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{collaborator.name}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      ))}
-    </div>
+    <Badge variant="secondary" 
+           className="bg-violet-100 text-violet-700 dark:bg-violet-900/30 
+                    dark:text-violet-300 border-0 flex items-center gap-1">
+      <Users className="w-3 h-3" />
+      <span>{collaborators.length}</span>
+    </Badge>
   )
 }
 
