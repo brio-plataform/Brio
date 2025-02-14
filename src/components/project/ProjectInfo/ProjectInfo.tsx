@@ -102,7 +102,7 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
             </div>
           )}
         </div>
-        <div>
+        <div className="flex flex-col gap-2 w-full">
           <input
             type="text"
             value={currentProject?.name || ''}
