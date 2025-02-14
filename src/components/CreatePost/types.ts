@@ -86,6 +86,7 @@ export interface CreatePostProps {
   onFileAdd?: (file: File) => Promise<void>
   /** Função chamada ao adicionar link */
   onLinkAdd?: (url: string) => Promise<void>
+  img: StaticImageData | string
 }
 
 export interface DialogState {

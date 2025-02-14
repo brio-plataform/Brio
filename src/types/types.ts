@@ -471,6 +471,7 @@ interface ProjectViewerHeaderProps {
 
 // Tipos relacionados ao Left Sidebar
 import { LucideIcon } from "lucide-react"
+import { StaticImageData } from "next/image"
 
 // Tipos base compartilhados
 interface BaseSidebarState {
@@ -689,9 +690,18 @@ export interface CreatePostDialogState {
 }
 
 export interface CreatePostProps {
-  onSuccess?: () => void
-  onError?: (error: Error) => void
-  className?: string
+  user?: User;
+  placeholder?: string;
+  showMediaButton?: boolean;
+  showFileButton?: boolean;
+  showLinkButton?: boolean;
+  customActions?: React.ReactNode;
+  className?: string;
+  onSubmit?: (content: string) => Promise<void>;
+  onMediaAdd?: () => void;
+  onFileAdd?: () => void;
+  onLinkAdd?: () => void;
+  img: StaticImageData | string;
 }
 
 // Constantes

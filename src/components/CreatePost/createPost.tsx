@@ -52,8 +52,6 @@ import { DateRange } from "react-day-picker"
 import {
   QuestionType,
   PollOption,
-  DebateSettings,
-  EventSettings,
   Mention,
   Attachment,
   Template,
@@ -66,7 +64,6 @@ import {
   ReferenceType, 
   CreatePostProps,
   CreatePostState,
-  CreatePostDialogState,
   PostType
 } from './types'
 import { cn } from "@/lib/utils"
@@ -134,12 +131,6 @@ const initialState: CreatePostState = {
   showLinkModal: false,
   linkUrl: '',
 }
-
-const initialDialogState: CreatePostDialogState = {
-  isOpen: false,
-  isSubmitting: false
-}
-
 export function CreatePost({
   user,
   placeholder = "O que você está pensando?",
@@ -149,9 +140,7 @@ export function CreatePost({
   customActions,
   className,
   onSubmit,
-  onMediaAdd,
-  onFileAdd,
-  onLinkAdd
+  img = "/images/placeholder.svg"
 }: CreatePostProps) {
   const [state, setState] = useState<CreatePostState>(initialState)
   const [dialogState, setDialogState] = useState<DialogState>({
@@ -163,7 +152,6 @@ export function CreatePost({
   const [title, setTitle] = useState('')
   const [showMentions, setShowMentions] = useState(false)
   const [attachments, setAttachments] = useState<Attachment[]>([])
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [tags, setTags] = useState<string[]>([])
   const [currentTag, setCurrentTag] = useState('')
@@ -177,15 +165,6 @@ export function CreatePost({
     { id: '2', text: '' }
   ]);
   const [debateTopics, setDebateTopics] = useState<string[]>(['', '']);
-  const [debateSettings, setDebateSettings] = useState<DebateSettings>({
-    moderationEnabled: true,
-    topics: ['', '']
-  });
-  const [eventSettings, setEventSettings] = useState<EventSettings>({
-    requiresRegistration: false,
-    isPrivate: false,
-    startDate: new Date()
-  });
 
   const mentions: Mention[] = [
     {
@@ -214,19 +193,6 @@ export function CreatePost({
         { name: "Sarah Wilson", avatar: "/placeholder.svg?height=20&width=20" },
         { name: "Tom Brown", avatar: "/placeholder.svg?height=20&width=20" },
       ],
-    },
-  ]
-
-  const templates: Template[] = [
-    {
-      id: "1",
-      name: "Research Proposal",
-      description: "Template for academic research proposals",
-    },
-    {
-      id: "2",
-      name: "Literature Review",
-      description: "Template for literature review submissions",
     },
   ]
 
@@ -330,7 +296,7 @@ export function CreatePost({
         return (
           <div className="flex items-center gap-3 p-2 rounded-md bg-muted/50">
             <Avatar className="h-8 w-8">
-              <AvatarImage src="/placeholder.svg" />
+              <AvatarImage src={typeof img === 'string' ? img : img.src} />
               <AvatarFallback>{ref.content[1]}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
@@ -413,7 +379,10 @@ export function CreatePost({
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
           <Avatar>
-            <AvatarImage src={user?.avatar?.toString()} alt={user?.name} />
+            <AvatarImage 
+              src={typeof img === 'string' ? img : img.src} 
+              alt="Avatar" 
+            />
             <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
           </Avatar>
           <Dialog open={dialogState.isOpen} onOpenChange={(isOpen) => {

@@ -4,12 +4,14 @@ import { FeedItem } from "../../FeedItem/feedItem"
 import { ColumnFeed } from "../../ColumnFeed/columnFeed"
 import { MOCK_FEED_ITEMS } from './mockData'
 
+const MAICON_AVATAR = "/images/maicon.jpg"
+
 export function Feed() {
   return (
     <div className="flex w-full justify-center items-start px-8 py-4 gap-8">
         <div className="flex flex-col w-full justify-center items-center gap-8">
             <BannerCarousel />
-            <CreatePost />
+            <CreatePost img={MAICON_AVATAR} />
         {MOCK_FEED_ITEMS.map((item, index) => (
                     <FeedItem key={index} {...item} />
             ))}
