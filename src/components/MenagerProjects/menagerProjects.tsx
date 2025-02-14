@@ -14,9 +14,6 @@ import {
   Users
 } from 'lucide-react'
 import {
-  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
-} from "@/components/ui/tooltip"
-import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
@@ -86,14 +83,37 @@ const STATUS_BADGE_STYLES: Record<ProjectStatus, string> = {
   default: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300"
 } as const;
 
-// Adicionar constantes para as cores dos badges no topo do arquivo
-const TAG_BADGE_STYLES = {
-  "UI/UX": "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300",
-  "Design": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
-  "Research": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "Development": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
-  default: "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300"
-} as const;
+// Remover o TAG_BADGE_STYLES fixo e adicionar função para gerar cores
+function generateTagColor(tag: string) {
+  // Função para gerar um hash simples da string
+  const hashString = (str: string) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash);
+  };
+
+  // Array de combinações de cores predefinidas (mais suaves e adequadas para badges)
+  const colorPairs = [
+    { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-700 dark:text-blue-300" },
+    { bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-700 dark:text-purple-300" },
+    { bg: "bg-pink-100 dark:bg-pink-900/30", text: "text-pink-700 dark:text-pink-300" },
+    { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-700 dark:text-emerald-300" },
+    { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-700 dark:text-amber-300" },
+    { bg: "bg-indigo-100 dark:bg-indigo-900/30", text: "text-indigo-700 dark:text-indigo-300" },
+    { bg: "bg-rose-100 dark:bg-rose-900/30", text: "text-rose-700 dark:text-rose-300" },
+    { bg: "bg-teal-100 dark:bg-teal-900/30", text: "text-teal-700 dark:text-teal-300" },
+    { bg: "bg-cyan-100 dark:bg-cyan-900/30", text: "text-cyan-700 dark:text-cyan-300" },
+    { bg: "bg-violet-100 dark:bg-violet-900/30", text: "text-violet-700 dark:text-violet-300" }
+  ];
+
+  // Selecionar cor baseada no hash da tag
+  const colorIndex = hashString(tag) % colorPairs.length;
+  return `${colorPairs[colorIndex].bg} ${colorPairs[colorIndex].text}`;
+}
 
 export default function MenagerProjects() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -454,19 +474,19 @@ function ProjectCard({
               </div>
 
               {/* Título e Instituição agrupados */}
-              <div className="space-y-1">
-                <h3 
-                  onClick={() => router.push(`/user/projects/${project.id}`)}
-                  className="font-semibold tracking-tight hover:text-primary 
-                            transition-colors cursor-pointer line-clamp-1"
-                >
-                  {project.title}
-                </h3>
-                <div className="flex items-center gap-2">
-                  <Avatar className="w-4 h-4">
-                    <AvatarImage src={project.institution.avatar} alt={project.institution.name} />
-                    <AvatarFallback>{project.institution.name.slice(0, 2)}</AvatarFallback>
-                  </Avatar>
+              <div className="flex items-center gap-2">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={project.institution.avatar} alt={project.institution.name} />
+                  <AvatarFallback>{project.title.slice(0, 2)}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                  <h3 
+                    onClick={() => router.push(`/user/projects/${project.id}`)}
+                    className="font-semibold tracking-tight hover:text-primary 
+                              transition-colors cursor-pointer line-clamp-1"
+                  >
+                    {project.title}
+                  </h3>
                   <span className="text-xs text-muted-foreground">
                     {project.institution.name}
                   </span>
@@ -672,21 +692,26 @@ function ProjectProgress({ progress = 0, status = 'N/A' }: { progress?: number; 
   )
 }
 
+// Atualizar o componente ProjectTags
 function ProjectTags({ tags }: { tags?: string[] }) {
   if (!tags?.length) return null;
   
   return (
     <div className="flex flex-wrap gap-1">
-      {tags.map((tag) => (
-        <Badge 
-          key={tag} 
-          variant="secondary" 
-          className={`${TAG_BADGE_STYLES[tag as keyof typeof TAG_BADGE_STYLES] || TAG_BADGE_STYLES.default} 
-                     border-0 px-2 py-0.5 text-xs hover:opacity-80 transition-opacity cursor-pointer`}
-        >
-          {tag}
-        </Badge>
-      ))}
+      {tags.map((tag) => {
+        const tagColor = generateTagColor(tag);
+        
+        return (
+          <Badge 
+            key={tag} 
+            variant="secondary" 
+            className={`${tagColor} border-0 px-2 py-0.5 text-xs 
+                       hover:opacity-80 transition-opacity cursor-pointer`}
+          >
+            {tag}
+          </Badge>
+        );
+      })}
     </div>
   )
 }

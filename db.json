@@ -263,6 +263,159 @@
         }
       ],
       "updatedAt": "2025-02-14T15:21:45.808Z"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "name": "Impacto da IA na Educação",
+      "description": "Pesquisa sobre como a Inteligência Artificial está transformando os métodos de ensino e aprendizagem no ensino superior.",
+      "logo": "/path/to/ai-education-logo.jpg",
+      "createdAt": "2025-01-15T10:30:00.000Z",
+      "banner": "/path/to/ai-education-banner.jpg",
+      "wordCount": 3500,
+      "citations": [],
+      "model": "research",
+      "visibility": "public",
+      "progress": 75,
+      "status": "Em Andamento",
+      "tags": [
+        "AI",
+        "Education",
+        "Research",
+        "Technology"
+      ],
+      "author": {
+        "name": "John Doe",
+        "avatar": "/path/to/avatar.jpg",
+        "institution": "MIT"
+      },
+      "collaborators": [
+        {
+          "name": "Sarah Johnson",
+          "avatar": "/avatars/sarah.jpg"
+        },
+        {
+          "name": "Michael Chen",
+          "avatar": "/avatars/michael.jpg"
+        }
+      ],
+      "stats": {
+        "views": 230,
+        "stars": 89,
+        "forks": 12,
+        "comments": 45,
+        "shares": 28
+      },
+      "version": [
+        {
+          "version": "2.1.0",
+          "updatedAt": "2025-02-10T15:30:00.000Z"
+        }
+      ],
+      "content": [],
+      "updatedAt": "2025-02-14T15:30:00.000Z"
+    },
+    {
+      "id": "3",
+      "userId": "1",
+      "name": "Sustentabilidade em Cidades Inteligentes",
+      "description": "Análise das práticas sustentáveis implementadas em smart cities e seu impacto ambiental a longo prazo.",
+      "logo": "/path/to/smart-cities-logo.jpg",
+      "createdAt": "2025-02-01T08:15:00.000Z",
+      "banner": "/path/to/smart-cities-banner.jpg",
+      "wordCount": 2800,
+      "citations": [],
+      "model": "thesis",
+      "visibility": "institutional",
+      "progress": 45,
+      "status": "Em Andamento",
+      "tags": [
+        "Sustainability",
+        "Smart Cities",
+        "Environment",
+        "Urban Planning"
+      ],
+      "author": {
+        "name": "John Doe",
+        "avatar": "/path/to/avatar.jpg",
+        "institution": "Stanford University"
+      },
+      "collaborators": [
+        {
+          "name": "Emma Wilson",
+          "avatar": "/avatars/emma.jpg"
+        }
+      ],
+      "stats": {
+        "views": 180,
+        "stars": 56,
+        "forks": 7,
+        "comments": 32,
+        "shares": 19
+      },
+      "version": [
+        {
+          "version": "1.5.0",
+          "updatedAt": "2025-02-12T09:45:00.000Z"
+        }
+      ],
+      "content": [],
+      "updatedAt": "2025-02-14T09:45:00.000Z"
+    },
+    {
+      "id": "4",
+      "userId": "1",
+      "name": "Literatura Brasileira Contemporânea",
+      "description": "Um estudo sobre as tendências e transformações na literatura brasileira do século XXI.",
+      "logo": "/path/to/literature-logo.jpg",
+      "createdAt": "2025-01-20T14:20:00.000Z",
+      "banner": "/path/to/literature-banner.jpg",
+      "wordCount": 5200,
+      "citations": [],
+      "model": "book",
+      "visibility": "private",
+      "progress": 90,
+      "status": "Em Andamento",
+      "tags": [
+        "Literature",
+        "Brazilian Culture",
+        "Contemporary",
+        "Research"
+      ],
+      "author": {
+        "name": "John Doe",
+        "avatar": "/path/to/avatar.jpg",
+        "institution": "Universidade de São Paulo"
+      },
+      "collaborators": [
+        {
+          "name": "Ana Silva",
+          "avatar": "/avatars/ana.jpg"
+        },
+        {
+          "name": "Carlos Santos",
+          "avatar": "/avatars/carlos.jpg"
+        },
+        {
+          "name": "Beatriz Lima",
+          "avatar": "/avatars/beatriz.jpg"
+        }
+      ],
+      "stats": {
+        "views": 95,
+        "stars": 34,
+        "forks": 3,
+        "comments": 27,
+        "shares": 15
+      },
+      "version": [
+        {
+          "version": "3.0.0",
+          "updatedAt": "2025-02-13T16:20:00.000Z"
+        }
+      ],
+      "content": [],
+      "updatedAt": "2025-02-14T16:20:00.000Z"
     }
   ]
 }
