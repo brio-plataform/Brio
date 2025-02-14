@@ -15,6 +15,7 @@ import {
   Flag,
   ExternalLink,
   Book,
+  Star,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { InstitutionProfileProps } from './types'
@@ -28,6 +29,8 @@ export function InstitutionalProfileSmall({
   className 
 }: InstitutionProfileProps) {
   const [avatarError, setAvatarError] = useState(false)
+  const [showAllAreas, setShowAllAreas] = useState(false)
+  const [showAllAchievements, setShowAllAchievements] = useState(false)
   
   const getInitials = (name: string) => {
     return name
@@ -50,6 +53,59 @@ export function InstitutionalProfileSmall({
       return (num / 1000).toFixed(1) + 'K'
     }
     return num.toString()
+  }
+
+  const getAreaStyle = (area: string): string => {
+    const areaStyles: { [key: string]: string } = {
+      "Ciência da Computação": "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20",
+      "Medicina": "bg-red-500/10 text-red-500 hover:bg-red-500/20",
+      "Direito": "bg-purple-500/10 text-purple-500 hover:bg-purple-500/20",
+      "Administração": "bg-orange-500/10 text-orange-500 hover:bg-orange-500/20",
+      "Engenharia": "bg-cyan-500/10 text-cyan-500 hover:bg-cyan-500/20",
+      "Física": "bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500/20",
+      "Química": "bg-green-500/10 text-green-500 hover:bg-green-500/20"
+    }
+    return areaStyles[area] || "bg-gray-500/10 text-gray-500 hover:bg-gray-500/20"
+  }
+
+  const getAchievementStyle = (achievement: string): { icon: JSX.Element; className: string } => {
+    if (achievement.includes("Melhor") || achievement.includes("Top")) {
+      return {
+        icon: <Trophy className="h-3 w-3" />,
+        className: "bg-amber-500/10 text-amber-500 hover:bg-amber-500/20"
+      }
+    }
+    if (achievement.includes("Produção") || achievement.includes("Publicações")) {
+      return {
+        icon: <Book className="h-3 w-3" />,
+        className: "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20"
+      }
+    }
+    if (achievement.includes("Impacto") || achievement.includes("Líder")) {
+      return {
+        icon: <Star className="h-3 w-3" />,
+        className: "bg-green-500/10 text-green-500 hover:bg-green-500/20"
+      }
+    }
+    return {
+      icon: <Trophy className="h-3 w-3" />,
+      className: "bg-purple-500/10 text-purple-500 hover:bg-purple-500/20"
+    }
+  }
+
+  // Função para limitar e organizar itens
+  const organizeItems = <T,>(
+    items: T[], 
+    isExpanded: boolean, 
+    initialLimit: number
+  ): { visibleItems: T[], hiddenCount: number } => {
+    if (!items) return { visibleItems: [], hiddenCount: 0 }
+    if (isExpanded) return { visibleItems: items, hiddenCount: 0 }
+    
+    return {
+      visibleItems: items.slice(0, initialLimit),
+      hiddenCount: Math.max(0, items.length - initialLimit)
+    }
   }
 
   return (
@@ -142,27 +198,106 @@ export function InstitutionalProfileSmall({
               )}
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {institution.researchAreas?.map((area) => (
-              <Badge key={area} variant="secondary">
-                {area}
-              </Badge>
-            ))}
-            {institution.achievements?.map((achievement) => (
-              <TooltipProvider key={achievement}>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Badge variant="secondary" className="gap-1">
-                      <Trophy className="h-3 w-3" />
-                      {achievement}
+          <div className="flex flex-col gap-2">
+            {/* Áreas de Pesquisa */}
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-sm font-medium text-muted-foreground">
+                Áreas:
+              </span>
+              {institution.researchAreas && (
+                <>
+                  {organizeItems(
+                    institution.researchAreas,
+                    showAllAreas,
+                    3
+                  ).visibleItems.map((area) => (
+                    <Badge 
+                      key={area} 
+                      variant="secondary"
+                      className={`transition-colors duration-200 ${getAreaStyle(area)}`}
+                    >
+                      {area}
                     </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{achievement}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ))}
+                  ))}
+                  {!showAllAreas && organizeItems(institution.researchAreas, false, 3).hiddenCount > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs"
+                      onClick={() => setShowAllAreas(true)}
+                    >
+                      +{organizeItems(institution.researchAreas, false, 3).hiddenCount}
+                    </Button>
+                  )}
+                  {showAllAreas && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs"
+                      onClick={() => setShowAllAreas(false)}
+                    >
+                      Mostrar menos
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Conquistas */}
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-sm font-medium text-muted-foreground">
+                Conquistas:
+              </span>
+              {institution.achievements && (
+                <>
+                  {organizeItems(
+                    institution.achievements,
+                    showAllAchievements,
+                    2
+                  ).visibleItems.map((achievement) => {
+                    const { icon, className: achievementClass } = getAchievementStyle(achievement)
+                    return (
+                      <TooltipProvider key={achievement}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Badge 
+                              variant="secondary" 
+                              className={`gap-1 transition-colors duration-200 ${achievementClass}`}
+                            >
+                              {icon}
+                              {achievement}
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{achievement}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )
+                  })}
+                  {!showAllAchievements && organizeItems(institution.achievements, false, 2).hiddenCount > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs"
+                      onClick={() => setShowAllAchievements(true)}
+                    >
+                      +{organizeItems(institution.achievements, false, 2).hiddenCount}
+                    </Button>
+                  )}
+                  {showAllAchievements && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs"
+                      onClick={() => setShowAllAchievements(false)}
+                    >
+                      Mostrar menos
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
           </div>
           {institution.description && (
             <p className="text-sm text-muted-foreground max-w-3xl">

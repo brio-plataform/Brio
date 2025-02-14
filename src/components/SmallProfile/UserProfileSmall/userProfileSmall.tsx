@@ -39,16 +39,28 @@ export function UserProfileSmall({
       .slice(0, 2)
   }
 
-  const getBadgeIcon = (type: BadgeType) => {
+  const getBadgeStyle = (type: BadgeType): { icon: JSX.Element; className: string } => {
     switch (type) {
       case 'top-contributor':
-        return <Trophy className="h-3 w-3" />
+        return {
+          icon: <Trophy className="h-3 w-3" />,
+          className: "bg-amber-500/10 text-amber-500 hover:bg-amber-500/20"
+        }
       case 'expert':
-        return <Star className="h-3 w-3" />
+        return {
+          icon: <Star className="h-3 w-3" />,
+          className: "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20"
+        }
       case 'mentor':
-        return <Users className="h-3 w-3" />
+        return {
+          icon: <Users className="h-3 w-3" />,
+          className: "bg-green-500/10 text-green-500 hover:bg-green-500/20"
+        }
       default:
-        return null
+        return {
+          icon: <div />,
+          className: "bg-secondary/10 text-secondary hover:bg-secondary/20"
+        }
     }
   }
 
@@ -165,21 +177,27 @@ export function UserProfileSmall({
           </div>
           {user.badges && user.badges.length > 0 && (
             <div className="flex gap-2">
-              {user.badges.map((badge) => (
-                <TooltipProvider key={badge.type}>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <Badge variant="secondary" className="gap-1">
-                        {getBadgeIcon(badge.type)}
-                        {badge.label}
-                      </Badge>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{badge.tooltip}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ))}
+              {user.badges.map((badge) => {
+                const { icon, className: badgeClass } = getBadgeStyle(badge.type)
+                return (
+                  <TooltipProvider key={badge.type}>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Badge 
+                          variant="secondary" 
+                          className={`gap-1 transition-colors duration-200 ${badgeClass}`}
+                        >
+                          {icon}
+                          {badge.label}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{badge.tooltip}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )
+              })}
             </div>
           )}
 

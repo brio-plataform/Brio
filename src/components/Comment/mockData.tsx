@@ -6,11 +6,11 @@ import placeholder from "../../../public/images/placeholder.svg"
 const replyComment: Omit<CommentProps, 'children'> = {
   id: "1.1",
   author: {
-    name: "Dr. Richard Feynman",
-    avatar: "/avatars/feynman.jpg",
-    institution: "Caltech"
+    name: "Dr. César Lattes",
+    avatar: "/avatars/lattes.jpg",
+    institution: "UNICAMP"
   },
-  content: "Excellent point about cryptography. The quantum resistance of current encryption methods is definitely a concern we should address.",
+  content: "Excelente observação sobre criptografia. A resistência quântica dos métodos atuais de criptografia é definitivamente uma preocupação que devemos abordar.",
   timestamp: new Date("2024-03-15T11:15:00"),
   likes: 28,
   replies: 1,
@@ -22,11 +22,11 @@ export const MOCK_COMMENTS: CommentProps[] = [
   {
     id: "1",
     author: {
-      name: "Dr. Marie Curie",
-      avatar: "/avatars/marie-curie.jpg",
-      institution: "University of Paris"
+      name: "Dra. Johanna Döbereiner",
+      avatar: "/avatars/johanna.jpg",
+      institution: "EMBRAPA"
     },
-    content: "Fascinating research! The implications for quantum computing are remarkable. Have you considered the potential applications in cryptography?",
+    content: "Pesquisa fascinante! As implicações para computação quântica são notáveis. Vocês consideraram as potenciais aplicações em criptografia?",
     timestamp: new Date("2024-03-15T10:30:00"),
     likes: 42,
     replies: 3,
@@ -37,11 +37,11 @@ export const MOCK_COMMENTS: CommentProps[] = [
   {
     id: "2",
     author: {
-      name: "Dr. Neil deGrasse Tyson",
-      avatar: "/avatars/tyson.jpg",
-      institution: "Hayden Planetarium"
+      name: "Dr. Marcelo Gleiser",
+      avatar: "/avatars/gleiser.jpg",
+      institution: "UFRN"
     },
-    content: "This reminds me of some recent developments in quantum entanglement. Would love to collaborate on extending this research.",
+    content: "Isso me lembra alguns desenvolvimentos recentes em emaranhamento quântico. Adoraria colaborar na extensão desta pesquisa.",
     timestamp: new Date("2024-03-15T12:45:00"),
     likes: 35,
     replies: 0,

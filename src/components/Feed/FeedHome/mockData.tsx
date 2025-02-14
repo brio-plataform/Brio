@@ -4,105 +4,104 @@ import { FeedItemProps } from "./types"
 export const MOCK_FEED_ITEMS: FeedItemProps[] = [
   {
     author: {
-      id: "jane-smith",
-      name: "Dr. Jane Smith",
+      id: "ana-silva",
+      name: "Dra. Ana Silva",
       avatar: placeholder.src,
       institution: {
-        name: "Harvard University",
-        link: "/institution/harvard-university"
+        name: "Universidade de São Paulo",
+        link: "/institution/usp"
       },
     },
-    title: "The Impact of AI on Modern Education",
+    title: "O Impacto da IA na Educação Moderna Brasileira",
     content: {
-      summary: "This study explores how artificial intelligence is reshaping educational paradigms and methodologies in the 21st century.\n\nWe found that AI-powered adaptive learning systems can significantly improve student outcomes by personalizing the learning experience.",
-      full: "This comprehensive study explores how artificial intelligence is reshaping educational paradigms and methodologies in the 21st century.\n\nWe found that AI-powered adaptive learning systems can significantly improve student outcomes by personalizing the learning experience. Our research indicates that students using AI-enhanced platforms showed a 23% improvement in test scores compared to traditional methods.\n\nHowever, there are also challenges to consider, such as data privacy concerns and the need for extensive teacher training. We surveyed over 500 educators and found that while 78% were excited about AI's potential, 62% felt underprepared to implement it effectively.\n\nFurther research is needed to fully understand the long-term implications of AI in education, particularly in areas such as creativity development and social-emotional learning. We propose a framework for ongoing assessment and ethical implementation of AI in educational settings.\n\nIn conclusion, while AI presents tremendous opportunities for enhancing education, it must be implemented thoughtfully and responsibly to ensure it benefits all learners and supports, rather than replaces, human educators.",
+      summary: "Este estudo explora como a inteligência artificial está remodelando os paradigmas e metodologias educacionais no Brasil do século XXI.\n\nDescobrimos que sistemas de aprendizado adaptativo baseados em IA podem melhorar significativamente o desempenho dos alunos através da personalização da experiência de aprendizagem.",
+      full: "Este estudo abrangente explora como a inteligência artificial está remodelando os paradigmas e metodologias educacionais no Brasil do século XXI.\n\nDescobrimos que sistemas de aprendizado adaptativo baseados em IA podem melhorar significativamente o desempenho dos alunos através da personalização da experiência de aprendizagem. Nossa pesquisa indica que estudantes usando plataformas aprimoradas por IA mostraram uma melhoria de 23% nas notas em comparação com métodos tradicionais.\n\nNo entanto, existem desafios a considerar, como preocupações com privacidade de dados e a necessidade de capacitação extensiva de professores. Entrevistamos mais de 500 educadores e descobrimos que, embora 78% estivessem entusiasmados com o potencial da IA, 62% se sentiam despreparados para implementá-la efetivamente.\n\nMais pesquisas são necessárias para compreender completamente as implicações de longo prazo da IA na educação, particularmente em áreas como desenvolvimento da criatividade e aprendizagem socioemocional. Propomos um framework para avaliação contínua e implementação ética da IA em ambientes educacionais brasileiros.",
     },
-    tags: ["AI", "Education", "Technology"],
+    tags: ["IA", "Educação", "Tecnologia"],
     likes: 342,
     comments: [
       {
         id: "1",
         author: {
-          name: "Prof. Maria Garcia",
+          name: "Profa. Maria Santos",
           avatar: placeholder.src,
-          institution: "Stanford University",
+          institution: "UFRGS",
         },
-        content: "Excellent analysis! I particularly appreciate the focus on teacher training needs. Have you considered exploring the impact of AI on student creativity?",
-        timestamp: new Date(Date.now() - 3600000), // 1 hour ago
+        content: "Excelente análise! Particularmente apreciei o foco nas necessidades de capacitação dos professores. Vocês consideraram explorar o impacto da IA na criatividade dos alunos?",
+        timestamp: new Date(Date.now() - 3600000),
         likes: 15,
         replies: [
           {
             id: "1.1",
             author: {
-              name: "Dr. Jane Smith",
+              name: "Dra. Ana Silva",
               avatar: placeholder.src,
-              institution: "Harvard University",
+              institution: "USP",
             },
-            content: "Thank you, Prof. Garcia! Yes, we're actually starting a new study focused specifically on AI's impact on creative thinking and problem-solving skills.",
-            timestamp: new Date(Date.now() - 1800000), // 30 minutes ago
+            content: "Obrigada, Profa. Santos! Sim, estamos iniciando um novo estudo focado especificamente no impacto da IA no pensamento criativo e habilidades de resolução de problemas.",
+            timestamp: new Date(Date.now() - 1800000),
             likes: 8,
             replies: [],
           },
         ],
       },
-      // ... outros comentários
     ],
     forks: 23,
     citations: 12,
     references: [
-      { type: "person", content: "Prof. Alan Turing", link: "/user/alan-turing" },
-      { type: "article", content: "Machine Learning in Education", link: "/article/machine-learning-education" },
-      { type: "post", content: "AI Ethics in Classrooms", link: "/post/ai-ethics-classrooms" },
-      { type: "media", content: "AI in Education Infographic", link: "/media/ai-education-infographic" },
+      { type: "person", content: "Prof. Paulo Freire", link: "/user/paulo-freire" },
+      { type: "article", content: "Aprendizado de Máquina na Educação", link: "/article/machine-learning-education" },
+      { type: "post", content: "Ética da IA nas Salas de Aula", link: "/post/ia-etica-sala-aula" },
+      { type: "media", content: "Infográfico: IA na Educação", link: "/media/ia-educacao-infografico" },
     ],
     links: [
       {
-        url: "https://example.com/ai-education-study",
-        title: "Complete Research Paper: AI in Modern Education",
-        description: "Access the full research paper including methodology, data analysis, and detailed findings.",
+        url: "https://example.com/ia-educacao-estudo",
+        title: "Artigo Completo: IA na Educação Moderna",
+        description: "Acesse o artigo completo incluindo metodologia, análise de dados e resultados detalhados.",
         image: placeholder.src,
       },
     ],
-    timestamp: new Date(Date.now() - 86400000), // 1 day ago
+    timestamp: new Date(Date.now() - 86400000),
   },
   {
     author: {
-      id: "richard-feynman",
-      name: "Dr. Richard Feynman",
+      id: "roberto-santos",
+      name: "Dr. Roberto Santos",
       avatar: placeholder.src,
       institution: {
-        name: "Caltech",
-        link: "/institution/caltech"
+        name: "UNICAMP",
+        link: "/institution/unicamp"
       },
     },
-    title: "Quantum Computing: Breaking New Ground in Computational Physics",
+    title: "Computação Quântica: Avanços na Física Computacional",
     content: {
-      summary: "A groundbreaking study on the applications of quantum computing in solving complex physics problems. We demonstrate how quantum algorithms can simulate particle interactions with unprecedented accuracy.",
-      full: "Our research team has achieved a significant breakthrough in quantum computing applications for physics simulations. Using a novel approach to quantum error correction, we've successfully simulated complex particle interactions with an accuracy that surpasses classical computing methods by several orders of magnitude.\n\nThe implications of this advancement are far-reaching, potentially revolutionizing fields from drug discovery to climate modeling. Our quantum simulation framework demonstrates particular promise in modeling quantum mechanical systems that have historically been computationally intractable.\n\nKey findings include:\n- 100x improvement in simulation accuracy\n- 50x reduction in computational resources required\n- New quantum error correction techniques\n- Scalable architecture for future quantum computers",
+      summary: "Um estudo inovador sobre as aplicações da computação quântica na resolução de problemas complexos de física. Demonstramos como algoritmos quânticos podem simular interações de partículas com precisão sem precedentes.",
+      full: "Nossa equipe de pesquisa alcançou um avanço significativo nas aplicações de computação quântica para simulações físicas. Usando uma nova abordagem para correção de erros quânticos, simulamos com sucesso interações complexas de partículas com uma precisão que supera os métodos de computação clássica.\n\nAs implicações deste avanço são amplas, potencialmente revolucionando campos desde a descoberta de medicamentos até a modelagem climática. Nossa estrutura de simulação quântica demonstra particular promessa na modelagem de sistemas quânticos que historicamente eram computacionalmente intratáveis.",
     },
-    tags: ["Quantum Computing", "Physics", "Computer Science", "Research"],
+    tags: ["Computação Quântica", "Física", "Ciência da Computação", "Pesquisa"],
     likes: 567,
     comments: [
       {
         id: "2",
         author: {
-          name: "Dr. Lisa Chen",
+          name: "Dra. Lucia Mendes",
           avatar: placeholder.src,
-          institution: "MIT",
+          institution: "PUC-RS",
         },
-        content: "Fascinating results! The implications for drug discovery are particularly exciting. Would love to collaborate on applying this to protein folding simulations.",
-        timestamp: new Date(Date.now() - 7200000), // 2 hours ago
+        content: "Resultados fascinantes! As implicações para descoberta de medicamentos são particularmente empolgantes. Adoraria colaborar na aplicação disso em simulações de dobramento de proteínas.",
+        timestamp: new Date(Date.now() - 7200000),
         likes: 45,
         replies: [
           {
             id: "2.1",
             author: {
-              name: "Dr. Richard Feynman",
+              name: "Dr. Roberto Santos",
               avatar: placeholder.src,
-              institution: "Caltech",
+              institution: "UNICAMP",
             },
-            content: "Absolutely! I'll send you a DM to discuss potential collaboration opportunities. Your expertise in protein structures would be invaluable.",
-            timestamp: new Date(Date.now() - 5400000), // 1.5 hours ago
+            content: "Com certeza! Vou te enviar uma mensagem para discutirmos possibilidades de colaboração. Sua expertise em estruturas proteicas seria inestimável.",
+            timestamp: new Date(Date.now() - 5400000),
             likes: 12,
             replies: [],
           }
@@ -111,12 +110,12 @@ export const MOCK_FEED_ITEMS: FeedItemProps[] = [
       {
         id: "3",
         author: {
-          name: "Prof. David Wilson",
+          name: "Prof. Daniel Oliveira",
           avatar: placeholder.src,
-          institution: "Oxford University",
+          institution: "UFRJ",
         },
-        content: "Outstanding work! The error correction technique you've developed could be revolutionary. Have you considered its applications in quantum cryptography?",
-        timestamp: new Date(Date.now() - 10800000), // 3 hours ago
+        content: "Trabalho excepcional! A técnica de correção de erros que vocês desenvolveram pode ser revolucionária. Já consideraram suas aplicações em criptografia quântica?",
+        timestamp: new Date(Date.now() - 10800000),
         likes: 38,
         replies: [],
       }
@@ -124,25 +123,25 @@ export const MOCK_FEED_ITEMS: FeedItemProps[] = [
     forks: 89,
     citations: 156,
     references: [
-      { type: "person", content: "Dr. Peter Shor", link: "/user/peter-shor" },
-      { type: "article", content: "Quantum Error Correction: State of the Art", link: "/article/quantum-error-correction" },
-      { type: "post", content: "Quantum Computing Breakthroughs 2024", link: "/post/quantum-computing-2024" },
-      { type: "media", content: "Quantum Simulation Visualization", link: "/media/quantum-sim-viz" },
+      { type: "person", content: "Dra. Yvonne Mascarenhas", link: "/user/yvonne-mascarenhas" },
+      { type: "article", content: "Correção de Erros Quânticos: Estado da Arte", link: "/article/correcao-erros-quanticos" },
+      { type: "post", content: "Avanços em Computação Quântica 2024", link: "/post/computacao-quantica-2024" },
+      { type: "media", content: "Visualização de Simulação Quântica", link: "/media/simulacao-quantica-viz" },
     ],
     links: [
       {
-        url: "https://example.com/quantum-physics-paper",
-        title: "Full Research Paper: Quantum Computing in Physics",
-        description: "Detailed methodology and results of our quantum computing breakthrough in physics simulations.",
+        url: "https://example.com/artigo-fisica-quantica",
+        title: "Artigo Completo: Computação Quântica na Física",
+        description: "Metodologia detalhada e resultados do nosso avanço em simulações quânticas na física.",
         image: placeholder.src,
       },
       {
-        url: "https://example.com/quantum-demo",
-        title: "Interactive Demo: Quantum Simulation",
-        description: "Try our interactive demonstration of quantum particle simulation.",
+        url: "https://example.com/demo-quantica",
+        title: "Demo Interativa: Simulação Quântica",
+        description: "Experimente nossa demonstração interativa de simulação de partículas quânticas.",
         image: placeholder.src,
       }
     ],
-    timestamp: new Date(Date.now() - 172800000), // 2 days ago
+    timestamp: new Date(Date.now() - 172800000),
   }
 ] 

@@ -12,7 +12,7 @@
       "id": "1",
       "userId": "1",
       "name": "Projeto Brio",
-      "description": "Description do Teste Brio",
+      "description": "Descrição do Teste Brio",
       "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_%28with_h-alpha%29.jpg",
       "createdAt": "2025-01-31T23:47:47.093Z",
       "banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_h-alpha%29.jpg",
@@ -241,7 +241,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-13T17:45:51.094Z"
+      "updatedAt": "2025-02-13T17:57:48.369Z"
     }
   ]
 }

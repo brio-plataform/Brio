@@ -2,31 +2,31 @@ import { User } from './types'
 
 export const MOCK_USER: User = {
   id: "1",
-  name: "Dr. Richard Feynman",
-  username: "feynman",
-  avatar: "/avatars/feynman.jpg",
+  name: "Dr. César Lattes",
+  username: "lattes",
+  avatar: "/avatars/lattes.jpg",
   verified: true,
   role: "Professor de Física Teórica",
   institution: {
-    name: "California Institute of Technology",
-    location: "Pasadena, CA"
+    name: "Universidade Estadual de Campinas",
+    location: "Campinas, SP"
   },
-  bio: "Físico teórico, ganhador do Prêmio Nobel e educador apaixonado. Pesquisador em mecânica quântica, computação quântica e nanotecnologia.",
+  bio: "Físico teórico, pioneiro na física de partículas no Brasil. Pesquisador em raios cósmicos e méson pi. Fundador do Centro Brasileiro de Pesquisas Físicas (CBPF).",
   badges: [
     {
       type: "top-contributor",
-      label: "Top Contributor",
+      label: "Contribuidor Elite",
       tooltip: "Entre os maiores contribuidores da plataforma"
     },
     {
       type: "expert",
-      label: "Expert",
-      tooltip: "Especialista verificado em Física Teórica"
+      label: "Especialista",
+      tooltip: "Especialista verificado em Física de Partículas"
     },
     {
       type: "mentor",
       label: "Mentor",
-      tooltip: "Mentor ativo na comunidade"
+      tooltip: "Mentor ativo na comunidade científica brasileira"
     }
   ],
   stats: {

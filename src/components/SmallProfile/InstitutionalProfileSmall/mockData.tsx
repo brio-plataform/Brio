@@ -2,29 +2,32 @@ import { Institution } from './types'
 
 export const MOCK_INSTITUTION: Institution = {
   id: "1",
-  name: "Harvard University",
-  username: "harvard",
-  avatar: "/institutions/harvard.jpg",
+  name: "Universidade de São Paulo",
+  username: "usp",
+  avatar: "/institutions/usp.jpg",
   type: "university",
   verified: true,
-  description: "Harvard University is a private Ivy League research university in Cambridge, Massachusetts. Established in 1636, it is the oldest institution of higher education in the United States.",
-  location: "Cambridge, Massachusetts",
+  description: "A Universidade de São Paulo é a maior universidade pública do Brasil. Fundada em 1934, é a instituição brasileira mais bem ranqueada e líder em produção científica na América Latina.",
+  location: "São Paulo, SP",
   stats: {
-    professors: 2400,
-    publications: 45000,
-    students: 23000,
+    professors: 6000,
+    publications: 75000,
+    students: 90000,
     ranking: "#1"
   },
   researchAreas: [
-    "Computer Science",
-    "Medicine",
-    "Law",
-    "Business",
-    "Engineering"
+    "Ciência da Computação",
+    "Medicina",
+    "Direito",
+    "Administração",
+    "Engenharia",
+    "Física",
+    "Química"
   ],
   achievements: [
-    "Top Global University",
-    "Most Published Papers",
-    "Best Research Impact"
+    "Melhor Universidade da América Latina",
+    "Maior Produção Científica do Brasil",
+    "Maior Impacto em Pesquisa na América do Sul",
+    "Líder em Patentes Registradas"
   ]
 } 
