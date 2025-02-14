@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #5281e0;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #406cc5;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  @apply bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 240 10% 10%; /* Um pouco mais claro que o original */
+    --foreground: 0 0% 90%; /* Um pouco mais escuro que o branco puro */
+    --card: 240 10% 12%; /* Mais claro que o fundo principal */
+    --card-foreground: 0 0% 90%;
+    --popover: 240 10% 12%; /* Igual ao card */
+    --popover-foreground: 0 0% 90%;
+    --primary: 220 70% 60%; /* Azul mais vibrante */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 10% 15%; /* Mais claro que o fundo */
+    --secondary-foreground: 0 0% 90%;
+    --muted: 240 10% 18%; /* Mais claro que o secondary */
+    --muted-foreground: 240 5% 70%; /* Mais claro que o original */
+    --accent: 240 10% 20%; /* Mais claro que o muted */
+    --accent-foreground: 0 0% 90%;
+    --destructive: 0 62.8% 40%; /* Vermelho mais vibrante */
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 10% 20%; /* Mais claro que o original */
+    --input: 240 10% 18%; /* Igual ao muted */
+    --ring: 240 10% 30%; /* Mais claro que o original */
+    --chart-1: 220 70% 60%; /* Azul mais vibrante */
+    --chart-2: 160 60% 50%; /* Verde mais vibrante */
+    --chart-3: 30 80% 60%; /* Laranja mais vibrante */
+    --chart-4: 280 65% 65%; /* Roxo mais vibrante */
+    --chart-5: 340 75% 60%; /* Rosa mais vibrante */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Editor.js Styles */
+.codex-editor {
+  @apply font-sans;
+}
+
+.codex-editor__redactor {
+  @apply px-0 !important;
+}
+
+.ce-block__content {
+  @apply max-w-full !important;
+  @apply px-0 !important;
+}
+
+.ce-toolbar__content {
+  @apply max-w-full !important;
+  @apply px-0 !important;
+}
+
+.ce-toolbar__actions {
+  @apply right-0 !important;
+}
+
+.ce-block--selected .ce-block__content {
+  @apply bg-blue-50/50;
+}
+
+.ce-inline-toolbar {
+  @apply shadow-lg;
+}
+
+.ce-inline-toolbar__buttons {
+  @apply p-1;
+}
+
+.ce-inline-tool {
+  @apply p-2 hover:bg-gray-100 rounded;
+}
+
+.ce-inline-tool--active {
+  @apply text-blue-500;
+}
+
+.ce-conversion-toolbar {
+  @apply border border-gray-200 shadow-lg;
+}
+
+.ce-conversion-tool {
+  @apply p-2 hover:bg-gray-100;
+}
+
+.ce-conversion-tool--focused {
+  @apply bg-gray-100;
+}
+
+.ce-toolbar__plus {
+  @apply text-white hover:text-gray-900 hover:bg-gray-200 rounded-lg;
+}
+
+.ce-toolbar__settings-btn {
+  @apply text-white hover:text-gray-900 hover:bg-gray-200 rounded-lg;
+}
+
+/* Block Specific Styles */
+.ce-header {
+  @apply font-bold mb-4;
+}
+
+h1.ce-header {
+  @apply text-3xl;
+}
+
+h2.ce-header {
+  @apply text-2xl;
+}
+
+h3.ce-header {
+  @apply text-xl;
+}
+
+.ce-paragraph {
+  @apply leading-7 mb-4;
+}
+
+.ce-code {
+  @apply font-mono bg-gray-900 text-white p-4 rounded-lg mb-4;
+}
+
+.cdx-checklist__item {
+  @apply flex items-start mb-2;
+}
+
+.cdx-checklist__item-checkbox {
+  @apply mr-2 mt-1;
+}
+
+.cdx-checklist__item-text {
+  @apply flex-1;
+}
+
+.ce-block--selected .cdx-checklist__item {
+  @apply bg-transparent;
+}
+
+.cdx-quote {
+  @apply border-l-4 border-gray-300 pl-4 italic my-4;
+}
+
+.ce-delimiter {
+  @apply text-center text-gray-400 my-4;
+}
+
+.cdx-warning {
+  @apply bg-yellow-50 border border-yellow-200 p-4 rounded-lg my-4;
+}
+
+.cdx-warning__title {
+  @apply font-bold text-yellow-800 mb-2;
+}
+
+.cdx-warning__message {
+  @apply text-yellow-700;
+}
+
+.ce-block table {
+  @apply w-full border-collapse mb-4;
+}
+
+.ce-block td,
+.ce-block th {
+  @apply border border-gray-300 p-2;
+}
+
+.ce-block th {
+  @apply bg-gray-50 font-semibold;
+}
