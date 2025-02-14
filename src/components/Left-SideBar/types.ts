@@ -26,6 +26,7 @@ export interface MenuItem {
 export interface SidebarState {
   isCollapsed: boolean
   openSections: string[]
+  activeItem: MenuItem
 }
 
 export interface SidebarProps {

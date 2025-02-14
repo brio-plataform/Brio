@@ -29,7 +29,8 @@ import { MOCK_MENU_ITEMS, MOCK_BOTTOM_ITEMS } from './mockData'
 export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProps) {
   const [state, setState] = useState<SidebarState>({
     isCollapsed: defaultCollapsed,
-    openSections: []
+    openSections: [],
+    activeItem: MOCK_MENU_ITEMS[0]
   })
 
   const toggleSidebar = () => {
@@ -41,10 +42,11 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
   
   const toggleSection = (section: string) => {
     if (state.isCollapsed) {
-      setState({
+      setState(prev => ({
+        ...prev,
         isCollapsed: false,
         openSections: [section]
-      })
+      }))
     } else {
       setState(prev => ({
         ...prev,
@@ -53,6 +55,13 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
           : [...prev.openSections, section]
       }))
     }
+  }
+
+  const setActiveItem = (item: MenuItem) => {
+    setState(prev => ({
+      ...prev,
+      activeItem: item
+    }))
   }
 
   const renderMenuItem = (item: MenuItem) => {
@@ -71,7 +80,9 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
                     className={cn(
                       "w-full justify-between",
                       state.isCollapsed && "w-10 h-10 p-0",
+                      state.activeItem.label === item.label && "bg-accent"
                     )}
+                    onClick={() => setActiveItem(item)}
                   >
                     <div className={cn(
                       "flex items-center",
@@ -143,8 +154,10 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
               asChild
               className={cn(
                 "w-full justify-start",
-                state.isCollapsed && "w-10 h-10 p-0"
+                state.isCollapsed && "w-10 h-10 p-0",
+                state.activeItem.label === item.label && "bg-accent"
               )}
+              onClick={() => setActiveItem(item)}
             >
               <Link href={item.href || "#"} className={cn(
                 "flex items-center",
@@ -178,9 +191,11 @@ export function LeftSidebar({ defaultCollapsed = false, className }: SidebarProp
           {!state.isCollapsed && (
             <div className="flex items-center gap-2 px-2">
               <span className="h-6 w-6 rounded-md bg-foreground flex items-center justify-center text-background font-bold">
-                B
+                <state.activeItem.icon className="h-4 w-4" />
               </span>
-              <h2 className="text-sm font-semibold">Brio Path</h2>
+              <h2 className="text-sm font-semibold">
+                Brio - {state.activeItem.label}
+              </h2>
             </div>
           )}
           <TooltipProvider delayDuration={300}>
