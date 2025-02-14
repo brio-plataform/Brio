@@ -22,31 +22,13 @@
       "visibility": "public",
       "progress": 40,
       "status": "Em Andamento",
-      "tags": [
-        "UI/UX",
-        "Design",
-        "Research",
-        "Development"
-      ],
+      "tags": [],
       "author": {
         "name": "John Doe",
         "avatar": "/path/to/avatar.jpg",
         "institution": "Universidade de São Paulo"
       },
-      "collaborators": [
-        {
-          "name": "Maria Silva",
-          "avatar": "/avatars/maria.jpg"
-        },
-        {
-          "name": "Pedro Santos",
-          "avatar": "/avatars/pedro.jpg"
-        },
-        {
-          "name": "Ana Oliveira",
-          "avatar": "/avatars/ana.jpg"
-        }
-      ],
+      "collaborators": [],
       "stats": {
         "views": 150,
         "stars": 45,
@@ -62,7 +44,7 @@
       ],
       "content": [
         {
-          "id": "ebe6c493-de25-428b-9729-ef53bab67942",
+          "id": "1e3436fa-0da9-407c-9b45-844b6b420dda",
           "type": "heading",
           "props": {
             "textColor": "default",
@@ -73,7 +55,7 @@
           "content": [
             {
               "type": "text",
-              "text": "v 1.1.0 Período de Criação da UI e UX",
+              "text": "v 1.1.0 Período de Criação da UI e UX aaa",
               "styles": {}
             }
           ],
@@ -262,16 +244,17 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-14T15:21:45.808Z"
+      "updatedAt": "2025-02-14T16:27:01.171Z",
+      "title": "Projeto Brio"
     },
     {
       "id": "2",
       "userId": "1",
       "name": "Impacto da IA na Educação",
       "description": "Pesquisa sobre como a Inteligência Artificial está transformando os métodos de ensino e aprendizagem no ensino superior.",
-      "logo": "/path/to/ai-education-logo.jpg",
+      "logo": "",
       "createdAt": "2025-01-15T10:30:00.000Z",
-      "banner": "/path/to/ai-education-banner.jpg",
+      "banner": "",
       "wordCount": 3500,
       "citations": [],
       "model": "research",
@@ -312,17 +295,35 @@
           "updatedAt": "2025-02-10T15:30:00.000Z"
         }
       ],
-      "content": [],
-      "updatedAt": "2025-02-14T15:30:00.000Z"
+      "content": [
+        {
+          "id": "default-content-2",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Comece a escrever seu projeto aqui...",
+              "styles": {}
+            }
+          ],
+          "children": []
+        }
+      ],
+      "updatedAt": "2025-02-14T16:27:10.109Z"
     },
     {
       "id": "3",
       "userId": "1",
       "name": "Sustentabilidade em Cidades Inteligentes",
       "description": "Análise das práticas sustentáveis implementadas em smart cities e seu impacto ambiental a longo prazo.",
-      "logo": "/path/to/smart-cities-logo.jpg",
+      "logo": "",
       "createdAt": "2025-02-01T08:15:00.000Z",
-      "banner": "/path/to/smart-cities-banner.jpg",
+      "banner": "",
       "wordCount": 2800,
       "citations": [],
       "model": "thesis",
@@ -359,17 +360,35 @@
           "updatedAt": "2025-02-12T09:45:00.000Z"
         }
       ],
-      "content": [],
-      "updatedAt": "2025-02-14T09:45:00.000Z"
+      "content": [
+        {
+          "id": "default-content-3",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Comece a escrever seu projeto aqui...",
+              "styles": {}
+            }
+          ],
+          "children": []
+        }
+      ],
+      "updatedAt": "2025-02-14T16:27:12.961Z"
     },
     {
       "id": "4",
       "userId": "1",
       "name": "Literatura Brasileira Contemporânea",
       "description": "Um estudo sobre as tendências e transformações na literatura brasileira do século XXI.",
-      "logo": "/path/to/literature-logo.jpg",
+      "logo": "",
       "createdAt": "2025-01-20T14:20:00.000Z",
-      "banner": "/path/to/literature-banner.jpg",
+      "banner": "",
       "wordCount": 5200,
       "citations": [],
       "model": "book",
@@ -414,8 +433,26 @@
           "updatedAt": "2025-02-13T16:20:00.000Z"
         }
       ],
-      "content": [],
-      "updatedAt": "2025-02-14T16:20:00.000Z"
+      "content": [
+        {
+          "id": "default-content-4",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Comece a escrever seu projeto aqui...",
+              "styles": {}
+            }
+          ],
+          "children": []
+        }
+      ],
+      "updatedAt": "2025-02-14T16:27:16.383Z"
     }
   ]
 }

@@ -49,6 +49,27 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
     return <div>Erro ao carregar projeto: {error.message}</div>;
   }
 
+  // Garantir que sempre temos um conteúdo válido
+  const initialContent = project?.content 
+    ? JSON.stringify(project.content)
+    : JSON.stringify([{
+        id: crypto.randomUUID(),
+        type: "paragraph",
+        props: {
+          textColor: "default",
+          backgroundColor: "default",
+          textAlignment: "left"
+        },
+        content: [
+          {
+            type: "text",
+            text: "Comece a escrever seu projeto aqui...",
+            styles: {}
+          }
+        ],
+        children: []
+      }]);
+
   return (
     <div className="p-6 w-full">
       <ProjectBanner editable={editable} />
@@ -61,8 +82,8 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
         <Card className="w-full">
           <CardContent className="p-4 min-h-[300px] w-full">
             <Editor 
-              initialContent={content ? JSON.stringify(content) : undefined} 
-              editable={editable} 
+              initialContent={initialContent}
+              editable={editable}
             />
           </CardContent>
         </Card>

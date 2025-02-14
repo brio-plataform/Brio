@@ -27,18 +27,30 @@ export default function Editor({ initialContent, editable = true }: EditorProps)
     fontFamily: "Inter, sans-serif",
   };
 
+  const defaultContent = [{
+    id: crypto.randomUUID(),
+    type: "paragraph",
+    props: {
+      textColor: "default",
+      backgroundColor: "default",
+      textAlignment: "left"
+    },
+    content: [
+      {
+        type: "text",
+        text: "Comece a escrever seu projeto aqui...",
+        styles: {}
+      }
+    ],
+    children: []
+  }];
+
   const editor = useCreateBlockNote({
     initialContent: initialContent 
-      ? (Array.isArray(JSON.parse(initialContent)) 
-          ? JSON.parse(initialContent) 
-          : [{
-              type: "paragraph",
-              content: []
-            }]) as PartialBlock[]
-      : [{
-          type: "paragraph",
-          content: []
-        }],
+      ? (typeof initialContent === 'string' && initialContent.trim() 
+          ? JSON.parse(initialContent)
+          : defaultContent)
+      : defaultContent
   });
 
   useEffect(() => {

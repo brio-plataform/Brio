@@ -50,7 +50,7 @@ export default function ProjectPage() {
       <div className="flex-1 transition-all duration-300">
         <Main>
           <Header/>
-          <Project />
+          <Project editable={true} projectId={projectId} />
         </Main>
       </div>
 
