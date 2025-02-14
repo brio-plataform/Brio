@@ -796,4 +796,39 @@ export type {
   CommentAuthor,
   CommentMetrics,
   CommentState
+}
+
+export interface MockProject {
+  id: string;
+  title: string;
+  description: string;
+  type?: string;
+  progress: number;
+  institutional: boolean;
+  institution: {
+    name: string;
+    avatar: string;
+  };
+  stats: {
+    views?: number;
+    stars: number;
+    forks?: number;
+    comments: number;
+    shares?: number;
+  };
+  status?: string;
+  tags?: string[];
+  collaborators?: Array<{
+    name: string;
+    avatar: string;
+  }>;
+}
+
+export interface ProjectsStore {
+  projects: MockProject[];
+  isLoading: boolean;
+  error: string | null;
+  fetchProjects: () => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
+  addProject: (project: MockProject) => void;
 } 

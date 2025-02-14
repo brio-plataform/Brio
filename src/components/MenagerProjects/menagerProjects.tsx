@@ -25,9 +25,10 @@ import {
 } from "@/components/ui/select"
 import { Modal } from "@/components/Modal/modal"
 import { Project } from "@/components/Project/Project"
-import { useGetProjectsAll } from '@/hooks/useGetProjectsAll'
+import { useGetAllProjects } from '@/store/useGetAllProjects'
 import type { Project as ProjectType } from '@/types/types'
 import axios from 'axios'
+import { MockProject } from '@/types/types'
 
 interface Collaborator {
   name: string;
@@ -45,26 +46,6 @@ interface ProjectStats {
   forks?: number;
   comments: number;
   shares?: number;
-}
-
-interface MockProject {
-  id: string;
-  title: string;
-  description: string;
-  type?: string;
-  progress: number;
-  institutional: boolean;
-  institution: {
-    name: string;
-    avatar: string;
-  };
-  stats: ProjectStats;
-  status?: string;
-  tags?: string[];
-  collaborators?: Array<{
-    name: string;
-    avatar: string;
-  }>;
 }
 
 const projectColors = [
@@ -151,64 +132,26 @@ export default function MenagerProjects() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [searchTerm, setSearchTerm] = useState("")
   const [filterType, setFilterType] = useState("all")
-  const [allProjects, setAllProjects] = useState<MockProject[]>([...MOCK_PROJECTS])
   
-  const { projects, isLoading, error, refetch } = useGetProjectsAll()
+  // Usar o store ao invés do hook
+  const { projects, isLoading, error, fetchProjects, deleteProject, addProject } = useGetAllProjects()
   const router = useRouter()
 
-  // Função para converter projeto da API para formato mock
-  const convertApiProjectToMock = (apiProject: any): MockProject => {
-    return {
-      id: apiProject.id.toString(),
-      title: apiProject.name,
-      description: apiProject.description || "",
-      type: apiProject.type || PROJECT_TYPES.RESEARCH_PROJECT,
-      progress: apiProject.progress || 0,
-      institutional: true,
-      institution: {
-        name: apiProject.institution?.name || "",
-        avatar: apiProject.institution?.logo || "/placeholder.svg"
-      },
-      stats: {
-        stars: apiProject.stats?.stars || 0,
-        comments: apiProject.stats?.comments || 0,
-        shares: apiProject.stats?.shares || 0,
-        views: apiProject.stats?.views || 0,
-        forks: apiProject.stats?.forks || 0
-      },
-      status: apiProject.status,
-      tags: apiProject.tags,
-      collaborators: apiProject.collaborators?.map((c: any) => ({
-        name: c.name,
-        avatar: c.avatar
-      })) || []
-    }
-  }
-
-  // Atualiza allProjects quando projects mudar
+  // Carregar projetos ao montar o componente
   useEffect(() => {
-    if (projects && projects.length > 0) {
-      setAllProjects(prev => {
-        const mockIds = MOCK_PROJECTS.map(p => p.id)
-        const convertedApiProjects = projects
-          .filter(p => !mockIds.includes(p.id.toString()))
-          .map(convertApiProjectToMock)
-        return [...MOCK_PROJECTS, ...convertedApiProjects]
-      })
-    }
-  }, [projects])
+    fetchProjects()
+  }, [])
 
   // Filtrar projetos
-  const filteredProjects = allProjects.filter((project) => {
-    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = filterType === "all" || project.type === filterType;
-    return matchesSearch && matchesType;
+  const filteredProjects = projects.filter((project) => {
+    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesType = filterType === "all" || project.type === filterType
+    return matchesSearch && matchesType
   })
 
-  // Função para criar novo projeto
+  // Atualizar função de criar projeto
   const handleCreateNewProject = async () => {
     try {
-      // Template para novo projeto
       const newProject = {
         userId: "1", // Idealmente, pegar do contexto de autenticação
         name: "Novo Projeto",
@@ -262,14 +205,38 @@ export default function MenagerProjects() {
         updatedAt: new Date().toISOString()
       }
 
-      // Fazer a requisição POST usando axios
       const response = await axios.post('http://localhost:3001/projects', newProject)
+      
+      // Adicionar ao store antes de redirecionar
+      addProject({
+        id: response.data.id,
+        title: response.data.name,
+        description: response.data.description || "",
+        type: response.data.type || PROJECT_TYPES.RESEARCH_PROJECT,
+        progress: response.data.progress || 0,
+        institutional: true,
+        institution: {
+          name: response.data.author?.institution || "",
+          avatar: response.data.logo || "/placeholder.svg"
+        },
+        stats: {
+          views: response.data.stats?.views || 0,
+          stars: response.data.stats?.stars || 0,
+          forks: response.data.stats?.forks || 0,
+          comments: response.data.stats?.comments || 0,
+          shares: response.data.stats?.shares || 0
+        },
+        status: response.data.status,
+        tags: response.data.tags,
+        collaborators: response.data.collaborators?.map((c: any) => ({
+          name: c.name,
+          avatar: c.avatar
+        })) || []
+      })
 
-      // Redirecionar para a página do novo projeto
       router.push(`/user/projects/${response.data.id}`)
     } catch (error) {
       console.error('Erro ao criar projeto:', error)
-      // Aqui você pode adicionar uma notificação de erro para o usuário
     }
   }
 
@@ -278,7 +245,7 @@ export default function MenagerProjects() {
   }
 
   if (error) {
-    return <div>Erro ao carregar projetos: {error.message}</div>
+    return <div>Erro ao carregar projetos: {error}</div>
   }
 
   return (
@@ -547,20 +514,19 @@ function DeleteProjectModal({
   )
 }
 
-// Atualizar o ProjectMenu para incluir o modal de confirmação
+// Atualizar o ProjectMenu para usar deleteProject do store
 function ProjectMenu({ project }: { project: MockProject }) {
   const router = useRouter()
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const { deleteProject } = useGetAllProjects()
 
   const handleDeleteProject = async () => {
     try {
-      await axios.delete(`http://localhost:3001/projects/${project.id}`)
-      // Recarregar a página ou atualizar a lista de projetos
-      window.location.reload()
+      await deleteProject(project.id)
+      setIsDeleteModalOpen(false)
     } catch (error) {
       console.error('Erro ao excluir projeto:', error)
-      // Aqui você pode adicionar uma notificação de erro para o usuário
     }
   }
 
