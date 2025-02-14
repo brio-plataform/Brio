@@ -1,0 +1,1595 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "123456"
+    }
+  ],
+  "projects": [
+    {
+      "id": "1",
+      "userId": "1",
+      "name": "Projeto Brio",
+      "description": "Descrição do Teste Brio",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_%28with_h-alpha%29.jpg",
+      "createdAt": "2025-01-31T23:47:47.093Z",
+      "banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_h-alpha%29.jpg",
+      "wordCount": 0,
+      "citations": [],
+      "model": "article",
+      "visibility": "public",
+      "progress": 40,
+      "status": "Em Andamento",
+      "tags": [],
+      "author": {
+        "name": "John Doe",
+        "avatar": "/path/to/avatar.jpg",
+        "institution": "Universidade de São Paulo"
+      },
+      "collaborators": [],
+      "stats": {
+        "views": 150,
+        "stars": 45,
+        "forks": 8,
+        "comments": 23,
+        "shares": 12
+      },
+      "version": [
+        {
+          "version": "1.0.0",
+          "updatedAt": "2025-01-31T23:47:47.093Z"
+        }
+      ],
+      "content": [
+        {
+          "id": "1e3436fa-0da9-407c-9b45-844b6b420dda",
+          "type": "heading",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left",
+            "level": 1
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "v 1.1.0 Período de Criação da UI e UX aaa",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "5be60b58-0862-47db-bc4a-0e34f48bdb7e",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "77206a05-de1b-4f0f-a73c-df3204d2ec7d",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "f24741da-f701-4ae5-ae4b-8325c30da7c3",
+          "type": "image",
+          "props": {
+            "backgroundColor": "default",
+            "textAlignment": "center",
+            "name": "1738450506164?e=1744243200&v=beta&t=vCchesOAEwGdaxJpeX6EK2FmuW6GbMYo75VaJwKTgMM",
+            "url": "https://media.licdn.com/dms/image/v2/D4D12AQFX7QJJeTaZYg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1738450506164?e=1744243200&v=beta&t=vCchesOAEwGdaxJpeX6EK2FmuW6GbMYo75VaJwKTgMM",
+            "caption": "",
+            "showPreview": true,
+            "previewWidth": 322
+          },
+          "children": []
+        },
+        {
+          "id": "a255c374-8ff1-4a0d-bd90-4e337286d3d6",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "108e4dae-023e-4cc8-a90f-72db8cf3e9ba",
+          "type": "bulletListItem",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "center"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Foco no Conhecimento:",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " Todas as discussões devem ser produtivas e voltadas para aprender, ensinar ou explorar ideias.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "cc5272c2-bbab-4897-8321-04b3ed0a412e",
+          "type": "bulletListItem",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "center"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Colaboração:",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " Incentivo à troca de ideias, co-criação de conteúdos e revisão colaborativa.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "1e801985-68ca-441a-bac1-92117a6d8965",
+          "type": "bulletListItem",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "center"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Transparência:",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " Sistemas abertos de revisão, histórico de versões e regras claras para discussões.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "a43eca33-d8c6-4102-8daa-c4f42cf88440",
+          "type": "bulletListItem",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "center"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Ética:",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " Um espaço livre de preconceitos, desinformação e distrações irrelevantes.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "280f08cb-980b-449e-a14e-e7e1d1fffddc",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "7040d3e5-aa50-485a-bff2-e0b2652793a0",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "fdhgdrfehtyiyuotoyu",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "1f1ffb43-febd-4c06-80bc-115fff5fed6d",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        }
+      ],
+      "updatedAt": "2025-02-14T16:27:01.171Z",
+      "title": "Projeto Brio"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "name": "Impacto da IA na Educação",
+      "description": "Pesquisa sobre como a Inteligência Artificial está transformando os métodos de ensino e aprendizagem no ensino superior.",
+      "logo": "",
+      "createdAt": "2025-01-15T10:30:00.000Z",
+      "banner": "",
+      "wordCount": 3500,
+      "citations": [],
+      "model": "research",
+      "visibility": "public",
+      "progress": 75,
+      "status": "Em Andamento",
+      "tags": [
+        "AI",
+        "Education",
+        "Research",
+        "Technology"
+      ],
+      "author": {
+        "name": "John Doe",
+        "avatar": "/path/to/avatar.jpg",
+        "institution": "MIT"
+      },
+      "collaborators": [
+        {
+          "name": "Sarah Johnson",
+          "avatar": "/avatars/sarah.jpg"
+        },
+        {
+          "name": "Michael Chen",
+          "avatar": "/avatars/michael.jpg"
+        }
+      ],
+      "stats": {
+        "views": 230,
+        "stars": 89,
+        "forks": 12,
+        "comments": 45,
+        "shares": 28
+      },
+      "version": [
+        {
+          "version": "2.1.0",
+          "updatedAt": "2025-02-10T15:30:00.000Z"
+        }
+      ],
+      "content": [
+        {
+          "id": "default-content-2",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Comece a escrever seu projeto aqui...",
+              "styles": {}
+            }
+          ],
+          "children": []
+        }
+      ],
+      "updatedAt": "2025-02-14T16:29:11.152Z"
+    },
+    {
+      "id": "3",
+      "userId": "1",
+      "name": "Sustentabilidade em Cidades Inteligentes",
+      "description": "Análise das práticas sustentáveis implementadas em smart cities e seu impacto ambiental a longo prazo.",
+      "logo": "",
+      "createdAt": "2025-02-01T08:15:00.000Z",
+      "banner": "",
+      "wordCount": 2800,
+      "citations": [],
+      "model": "thesis",
+      "visibility": "institutional",
+      "progress": 45,
+      "status": "Em Andamento",
+      "tags": [
+        "Sustainability",
+        "Smart Cities",
+        "Environment",
+        "Urban Planning"
+      ],
+      "author": {
+        "name": "John Doe",
+        "avatar": "/path/to/avatar.jpg",
+        "institution": "Stanford University"
+      },
+      "collaborators": [
+        {
+          "name": "Emma Wilson",
+          "avatar": "/avatars/emma.jpg"
+        }
+      ],
+      "stats": {
+        "views": 180,
+        "stars": 56,
+        "forks": 7,
+        "comments": 32,
+        "shares": 19
+      },
+      "version": [
+        {
+          "version": "1.5.0",
+          "updatedAt": "2025-02-12T09:45:00.000Z"
+        }
+      ],
+      "content": [
+        {
+          "id": "default-content-3",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Comece a escrever seu projeto aqui...",
+              "styles": {}
+            }
+          ],
+          "children": []
+        }
+      ],
+      "updatedAt": "2025-02-14T16:27:12.961Z"
+    },
+    {
+      "id": "4",
+      "userId": "1",
+      "name": "Literatura Brasileira Contemporânea",
+      "description": "Um estudo sobre as tendências e transformações na literatura brasileira do século XXI.",
+      "logo": "",
+      "createdAt": "2025-01-20T14:20:00.000Z",
+      "banner": "",
+      "wordCount": 5200,
+      "citations": [],
+      "model": "book",
+      "visibility": "private",
+      "progress": 90,
+      "status": "Em Andamento",
+      "tags": [],
+      "author": {
+        "name": "John Doe",
+        "avatar": "/path/to/avatar.jpg",
+        "institution": "Universidade de São Paulo"
+      },
+      "collaborators": [],
+      "stats": {
+        "views": 95,
+        "stars": 34,
+        "forks": 3,
+        "comments": 27,
+        "shares": 15
+      },
+      "version": [
+        {
+          "version": "3.0.0",
+          "updatedAt": "2025-02-13T16:20:00.000Z"
+        }
+      ],
+      "content": [
+        {
+          "id": "c1f8b021-c566-493d-976f-484ad5287d69",
+          "type": "heading",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left",
+            "level": 2
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Literatura Brasileira Contemporânea  ",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "24ccf40a-02cd-45af-aec2-54dfcdc31c26",
+          "type": "heading",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left",
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Um Estudo sobre as Tendências e Transformações no Século XXI",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "a3e635d4-b8a3-4236-ae7b-81ca20a7221e",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "8c964a10-7433-4f55-994f-605166fcd061",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "A literatura brasileira contemporânea tem se consolidado como um espaço dinâmico e plural, refletindo as mudanças sociais, políticas e tecnológicas do país. No século XXI, autores e autoras exploram novas formas de narrativa, rompendo com convenções e ressignificando a escrita literária. Este artigo apresenta uma análise das principais tendências e transformações que marcam esse período.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "e7ec1a4d-06f8-474a-b298-bfe3a0f930bc",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        },
+        {
+          "id": "3ce53097-5ea3-415a-ac66-de41359bb26a",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "## Introdução",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "1fd963c3-e99f-4f56-8f04-5597fb78f36a",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "A partir do início do novo milênio, o cenário literário brasileiro passou por transformações significativas. Influenciada por debates sociais, avanços tecnológicos e a globalização, a literatura nacional tem se reinventado, incorporando vozes diversas e explorando temáticas contemporâneas. Este estudo busca identificar os elementos que caracterizam essa renovação, destacando inovações estilísticas e narrativas.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "c0a72e8d-52c3-43fc-bc89-da5c4d928d9e",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "---",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "e0216799-a858-4eb2-b6ba-931a93e33ecf",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "## Contexto Histórico e Cultural",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "a36557bb-3cd1-4574-a787-396e3bf32d7c",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "O século XXI foi marcado por intensas transformações sociais e culturais. Entre os fatores que influenciaram a literatura brasileira contemporânea, destacam-se:",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "77ab9614-e3dc-4058-8f38-6fc1bd3f36c2",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Diversidade de vozes",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": A ampliação do acesso à educação e a maior representatividade de grupos historicamente marginalizados têm impulsionado a produção literária de minorias étnicas, de gênero e regionais.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "78ef71cc-21e9-4c85-8d55-fef2f47a32b2",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Cenário político e social",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Períodos de instabilidade política e debates sobre direitos civis e igualdade social influenciaram diretamente os temas abordados na literatura.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "d4604e9b-8a90-4741-a56e-713013cc182e",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Globalização",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": A interconexão com o mundo ampliou horizontes temáticos e estilísticos, promovendo diálogos interculturais e a hibridização de linguagens.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "a5021e1c-a68f-4abc-85a4-4dc2b8447e9a",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "---",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "e418a2e3-a8ec-472f-9485-5342ce2440a1",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "## Principais Tendências",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4152be33-c463-4eb3-b08b-c8b665fdb4ad",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "A literatura do século XXI no Brasil tem se caracterizado por diversas tendências inovadoras:",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "ef612e79-36b3-4f30-8d54-5715f942b912",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "### 1. Experimentalismo Narrativo",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "fc5a4f78-cf0b-4db6-bf68-21a8a308910c",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Autores contemporâneos vêm desafiando as estruturas tradicionais da narrativa, explorando:",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "b30581b3-7414-4ca6-b33a-a54b871ee2d4",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Fragmentação temporal e espacial",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Histórias contadas de forma não linear, refletindo a complexidade da memória e da experiência individual.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "d9a339a0-1816-4702-9d75-564212017ab1",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Intertextualidade e metanarrativas",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Reflexões sobre o próprio ato de escrever e a construção do sentido.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "70bfce73-b4b8-467e-8051-85729f95b54b",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "### 2. Pluralidade de Temas",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4852f294-fac6-46fb-957f-acc61027730a",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "A abordagem de temas variados e muitas vezes controversos é uma marca da literatura atual:",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "b78e9bd4-6028-4482-bef2-83f85cfbe62f",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Identidade e diversidade",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Exploração das múltiplas facetas da identidade brasileira, com ênfase na pluralidade cultural.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "77ad1605-4ec2-45b8-b4bf-08eb54748e0e",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Tecnologia e sociedade",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Reflexões sobre o impacto das novas mídias e da internet na comunicação e na própria escrita.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "ea17fb85-dee0-44cc-84f5-20b23dd6ca01",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "### 3. Hibridismo entre Gêneros",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "39238699-4099-4611-955e-a9732ea3911d",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "A quebra de barreiras entre os gêneros literários tem enriquecido a produção contemporânea:",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "8c8b7a05-ad17-46b7-8916-0094a451e9ae",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Mistura de literatura e outras mídias",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Incorporação de elementos visuais e digitais, criando obras multimodais.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "414dfba3-1608-4529-9c17-031cb2fb0e21",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Fusão entre ficção e não-ficção",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Narrativas que combinam elementos autobiográficos, jornalísticos e ficcionais.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "8467a9f8-d57e-4b7d-896a-95d395cd07da",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "---",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "381d7988-3577-4c40-9ff5-7b7089564b8e",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "## Transformações na Narrativa",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "5e22f540-eccf-4c54-9fb9-bccabc931c27",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "A transformação na forma de contar histórias é um dos pontos mais evidentes na literatura contemporânea. Essa nova abordagem inclui:",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "ab5b6c6a-5d57-4af1-94b8-b9d0413c0636",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Narrativas fragmentadas",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": A desconstrução da linearidade clássica permite uma aproximação mais complexa com a memória e a subjetividade dos personagens.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "734fe5d2-b689-446c-a80a-d13c3c95591e",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Linguagem coloquial e experimental",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": A utilização de uma linguagem mais acessível e a experimentação com novos recursos estilísticos enriquecem a experiência do leitor.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "5533996f-fb8d-4ad7-8f1c-56065c0fe5ce",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Participação ativa do leitor",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Obras que convidam o público a interpretar, refletir e, muitas vezes, co-criar a narrativa.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "e5c70bfc-ce86-4e0f-bf16-a12d16a2fd6c",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "---",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "28748a9a-8c0a-43d0-a431-f13f4e8cd79a",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "## Impacto da Tecnologia",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "277faa21-b557-4659-b155-181c794897ee",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "A revolução digital transformou não apenas a forma de produzir, mas também de consumir literatura:",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "78fe3a4e-04ac-418c-b463-fd3d58600202",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Publicação e distribuição digital",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": O surgimento de plataformas online democratizou o acesso à publicação, permitindo que novos autores se façam ouvir.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "6dfa0bf9-0a77-4211-b5b3-1eee66de1dda",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Interação e feedback instantâneo",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Redes sociais e blogs possibilitam uma interação imediata entre escritores e leitores, fomentando uma literatura mais colaborativa.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "a6ecf4a4-ed8c-4289-9196-31bdd5d32d83",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Novos formatos de leitura",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": E-books, audiobooks e conteúdos multimídia expandiram os horizontes da narrativa tradicional.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "2a52dbf8-87d6-4470-818e-b7c4d4960589",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "---",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "150ff594-3b59-4946-88c5-c1f65eb59e84",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "## Desafios e Perspectivas Futuras",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "e2d4abfc-a937-4699-a319-7a5432fe6c0d",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Apesar dos avanços, a literatura brasileira contemporânea enfrenta desafios significativos:",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "0dc5018a-ef95-4244-9ba1-7cfb8f033a53",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Sustentabilidade da produção literária",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Em um cenário marcado por mudanças rápidas, garantir condições de apoio e financiamento para autores é essencial.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "c6f0e377-8bf2-4540-9be2-b4f140bc4ebd",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Preservação da identidade cultural",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Equilibrar a influência da globalização com a valorização das raízes culturais brasileiras permanece como um desafio.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "76547375-e95b-4563-8f54-f366a273bb79",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- ",
+              "styles": {}
+            },
+            {
+              "type": "text",
+              "text": "Inclusão e representatividade",
+              "styles": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": Continuar ampliando a diversidade de vozes e temas é fundamental para uma literatura que verdadeiramente reflita a sociedade brasileira.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "9c03da8c-3a5d-435b-ba37-8b413ac5d3f9",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "O futuro da literatura brasileira parece promissor, com uma tendência crescente de inovação e inclusão, ampliando o diálogo entre o tradicional e o contemporâneo.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "dde80040-5261-4a97-a733-4fe45bf6e849",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "---",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "04309e50-3180-4b3e-b566-f3d0ff6a3e97",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "## Conclusão",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "6a87b817-49a6-42b0-8665-d497b663feaa",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "A literatura brasileira do século XXI é um campo em constante evolução, onde a experimentação narrativa, a pluralidade de vozes e a influência da tecnologia se unem para formar um panorama vibrante e multifacetado. Ao desafiar as convenções e abraçar a diversidade, os escritores contemporâneos não apenas reinventam a narrativa, mas também constroem uma ponte entre o passado e o futuro da cultura literária do Brasil.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "d4029cea-83f4-4d73-bf9d-04c2a7f6ce91",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "---",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "cf473097-6a9d-4313-92a2-5c9e4f4badf7",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "## Referências",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "e58a1528-7e96-4c2f-8084-eadd457d470f",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- Autores e obras representativas da literatura contemporânea brasileira.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "0b336c86-0e43-48cd-a27f-8f68241f77ac",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- Artigos acadêmicos e ensaios críticos sobre as transformações na narrativa do século XXI.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "0f9e639f-4724-4dd6-a60a-537342a4bc48",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "- Estudos sobre o impacto da tecnologia e das novas mídias na produção literária.",
+              "styles": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "d27420c3-06e6-4120-80c7-194283a517ed",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Este artigo busca oferecer uma visão panorâmica sobre as tendências e transformações da literatura brasileira contemporânea, incentivando o leitor a explorar as diversas facetas desse campo tão rico e dinâmico.",
+              "styles": {
+                "italic": true
+              }
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "419f3c24-1ead-4972-a5de-650df6a8d52b",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
+          "children": []
+        }
+      ],
+      "updatedAt": "2025-02-14T16:36:33.026Z",
+      "title": "Literatura Brasileira Contemporânea"
+    }
+  ]
+}
