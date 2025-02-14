@@ -4,7 +4,7 @@
 
 **Visão:** Criar uma plataforma aberta onde o conhecimento é central, acessível e democrático, promovendo o aprendizado colaborativo e debates construtivos.
 
-**Propósito:** Ser a "Ágora" moderna para pensadores, cientistas, curiosos e aprendizes, onde qualquer interação deve contribuir para a construção ou compartilhamento de conhecimento.
+**Propósito:** Ser a  Ágora e Biblioteca de Alexandria moderna para pensadores, polimatas, cientistas, curiosos e aprendizes, onde qualquer interação deve contribuir para a construção ou compartilhamento de conhecimento.
 
 ## 2. Princípios Fundamentais
 
