@@ -272,8 +272,3 @@ Serão criados pela equipe do Brio e incluem temas amplos, tradicionais e fundam
 - **MVP Previsto:** Até o final do ano.  
 - **Open-Source:** Colabore no [GitHub]([https://github.com](https://github.com/ompo-dev/Brio)).  
 - **Nome Placeholder:** "Brio" pode ser alterado.  
-
----
-
-**Slogan:**  
-*"Conhecimento, do povo, para o povo, pelo povo."*
