@@ -77,7 +77,10 @@ interface Project {
   progress: number
   type: ProjectType
   status?: string
-  collaborators: Array<{ name: string; avatar: string }> | number
+  collaborators: { 
+    name: string;
+    avatar: string;
+  }[];
   tags?: string[]
   author: {
     name: string
@@ -811,6 +814,8 @@ export type {
 export interface MockProject {
   id: string;
   title: string;
+  banner: string;
+  logo: string;
   description: string;
   model: 'article' | 'thesis' | 'book' | 'research';
   visibility: 'private' | 'public' | 'institutional';

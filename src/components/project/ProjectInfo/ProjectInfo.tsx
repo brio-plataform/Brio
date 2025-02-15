@@ -4,7 +4,7 @@ import { ImagePlus } from "lucide-react";
 import { useGetProject } from '@/hooks/useGetProjectByID';
 import { useUpdateProject } from '@/hooks/useUpdateProject';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -17,9 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import { useProjectStore } from '@/store/useProjectStore';
 import { ProjectInfoProps, ProjectInfoState, ProjectInfoHandlers } from './types';
 
-export function ProjectInfo({ editable = true }: ProjectInfoProps) {
-  const params = useParams();
-  const projectId = params.id as string;
+export function ProjectInfo({ editable = true, projectId, initialData }: ProjectInfoProps) {
   const { logo } = useGetProject(projectId);
   const { updateLogo, updateName, updateDescription } = useUpdateProject(projectId);
   
@@ -28,12 +26,19 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
     imageError: false,
     isUploading: false,
     showImageDialog: false,
-    imageUrl: ""
+    imageUrl: "",
+    logoImage: initialData?.logo || logo || ""
   });
+
+  useEffect(() => {
+    if (logo) {
+      setState(prev => ({ ...prev, logoImage: logo, imageError: false }));
+    }
+  }, [logo]);
 
   const handlers: ProjectInfoHandlers = {
     handleImageError: () => {
-      setState(prev => ({ ...prev, imageError: true }));
+      setState(prev => ({ ...prev, imageError: true, logoImage: "" }));
       updateLogo("");
     },
     handleImageUpload: async (event) => {
@@ -41,10 +46,15 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
       if (file) {
         setState(prev => ({ ...prev, isUploading: true }));
         try {
-          const imageUrl = URL.createObjectURL(file);
-          await updateLogo(imageUrl);
-          setState(prev => ({ ...prev, imageUrl }));
-          setState(prev => ({ ...prev, imageError: false }));
+          const base64 = await convertToBase64(file);
+          await updateLogo(base64);
+          setState(prev => ({ 
+            ...prev, 
+            logoImage: base64,
+            imageError: false,
+            showImageDialog: false 
+          }));
+          updateProjectField('logo', base64);
         } catch (error) {
           console.error('Error uploading logo:', error);
           handlers.handleImageError();
@@ -60,7 +70,14 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
       setState(prev => ({ ...prev, isUploading: true }));
       try {
         await updateLogo(state.imageUrl);
-        setState(prev => ({ ...prev, imageUrl: "" }));
+        setState(prev => ({ 
+          ...prev, 
+          logoImage: state.imageUrl,
+          imageError: false,
+          showImageDialog: false,
+          imageUrl: "" 
+        }));
+        updateProjectField('logo', state.imageUrl);
       } catch (error) {
         console.error('Error setting logo URL:', error);
         handlers.handleImageError();
@@ -78,6 +95,16 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
     }
   };
 
+  // Função auxiliar para converter File para base64
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
   return (
     <>
       <div className="flex items-center gap-4 mb-4 mt-4">
@@ -85,9 +112,9 @@ export function ProjectInfo({ editable = true }: ProjectInfoProps) {
           className={`relative w-16 h-16 rounded-lg overflow-hidden ${editable ? 'group cursor-pointer' : ''}`}
           onClick={() => editable && setState(prev => ({ ...prev, showImageDialog: true }))}
         >
-          {logo && !state.imageError ? (
+          {state.logoImage && !state.imageError ? (
             <img 
-              src={logo} 
+              src={state.logoImage} 
               alt="Project" 
               className="w-full h-full object-cover"
               onError={handlers.handleImageError}

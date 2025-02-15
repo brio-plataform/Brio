@@ -33,7 +33,11 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
     isLoading, 
     error,
     content,
-    project 
+    project, // Dados completos do projeto
+    banner,
+    logo,
+    name,
+    description
   } = useGetProject(projectId);
 
   // Verificação de autorização
@@ -41,12 +45,17 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
     return <UnauthorizedPage />;
   }
 
+  // Não renderizar nada até que os dados estejam carregados
   if (isLoading) {
     return <LoadingEditor />;
   }
 
   if (error) {
     return <div>Erro ao carregar projeto: {error.message}</div>;
+  }
+
+  if (!project) {
+    return <div>Projeto não encontrado</div>;
   }
 
   // Garantir que sempre temos um conteúdo válido
@@ -72,10 +81,22 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
 
   return (
     <div className="p-6 w-full">
-      <ProjectBanner editable={editable} />
+      <ProjectBanner 
+        editable={editable} 
+        projectId={projectId}
+        initialBanner={project.banner}
+      />
 
       <div className="mb-6">
-        <ProjectInfo editable={editable} />
+        <ProjectInfo 
+          editable={editable}
+          projectId={projectId}
+          initialData={{
+            logo: project.logo,
+            name: project.name,
+            description: project.description
+          }}
+        />
       </div>
 
       <div className="flex justify-center items-center pb-5 w-full">

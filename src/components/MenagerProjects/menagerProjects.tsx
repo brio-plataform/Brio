@@ -197,6 +197,8 @@ export default function MenagerProjects() {
       addProject({
         id: response.data.id,
         title: response.data.name,
+        banner: response.data.banner,
+        logo: response.data.logo,
         description: response.data.description || "",
         model: response.data.model || PROJECT_MODELS.ARTICLE,
         visibility: response.data.visibility || PROJECT_VISIBILITY.PRIVATE,
@@ -646,8 +648,8 @@ function ProjectMenu({ project }: { project: MockProject }) {
             <X className="h-4 w-4" />
           </Button>
           
-          {/* Componente Project em modo somente leitura */}
-          <Project editable={false}  projectId="1"/>
+          {/* Componente Project com projectId dinâmico */}
+          <Project editable={false} projectId={project.id}/>
         </div>
       </Modal>
 

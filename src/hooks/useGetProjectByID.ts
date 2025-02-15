@@ -100,6 +100,11 @@ interface APIProject {
   }[];
   updatedAt: string;
   createdAt: string;
+  collaborators?: {
+    name: string;
+    avatar: string;
+  }[];
+  tags?: string[];
 }
 
 export function useGetProject(projectId: string): ProjectHookReturn {
@@ -115,12 +120,15 @@ export function useGetProject(projectId: string): ProjectHookReturn {
         const response = await axios.get<APIProject>(`http://localhost:3001/projects/${projectId}`);
         const apiProject = response.data;
         
+        // Preservar os dados existentes
         const convertedProject: ImportedProject = {
           ...apiProject,
-          title: apiProject.name, // Usar name como title se não existir
+          title: apiProject.name,
           type: apiProject.type as ProjectType,
-          collaborators: [], // Valor padrão para collaborators
-          tags: [], // Valor padrão para tags
+          collaborators: apiProject.collaborators || [],
+          tags: apiProject.tags || [],
+          logo: apiProject.logo || "",
+          banner: apiProject.banner || "",
           content: apiProject.content.map(item => ({
             ...item,
             type: item.type as "heading" | "paragraph" | "image" | "bulletListItem"
