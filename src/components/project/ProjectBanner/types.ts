@@ -10,4 +10,6 @@ export interface ProjectBannerState {
 
 export interface ProjectBannerProps {
   editable?: boolean
+  projectId: string
+  initialBanner?: string
 } 

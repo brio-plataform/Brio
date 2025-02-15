@@ -16,14 +16,12 @@ import { Input } from "../../ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import { ProjectBannerProps, ProjectBannerState } from './types';
 
-export function ProjectBanner({ editable = true }: ProjectBannerProps) {
-  const params = useParams();
-  const projectId = params.id as string;
+export function ProjectBanner({ editable = true, projectId, initialBanner }: ProjectBannerProps) {
   const { banner } = useGetProject(projectId);
   const { updateBanner } = useUpdateProject(projectId);
 
   const [state, setState] = useState<ProjectBannerState>({
-    bannerImage: "",
+    bannerImage: initialBanner || "",
     bannerPosition: "50",
     isRepositioning: false,
     imageError: false,
