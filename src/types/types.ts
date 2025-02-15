@@ -811,6 +811,8 @@ export type {
 export interface MockProject {
   id: string;
   title: string;
+  banner: string;
+  logo: string;
   description: string;
   model: 'article' | 'thesis' | 'book' | 'research';
   visibility: 'private' | 'public' | 'institutional';

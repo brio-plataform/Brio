@@ -3,10 +3,17 @@ export interface ProjectInfoState {
   isUploading: boolean
   showImageDialog: boolean
   imageUrl: string
+  logoImage: string
 }
 
 export interface ProjectInfoProps {
   editable?: boolean
+  projectId: string
+  initialData?: {
+    logo?: string
+    name?: string
+    description?: string
+  }
 }
 
 export interface ProjectInfoHandlers {

@@ -13,7 +13,7 @@
       "userId": "1",
       "name": "Projeto Brio",
       "description": "Descrição do Teste Brio",
-      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_%28with_h-alpha%29.jpg",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_h-alpha%29.jpg",
       "createdAt": "2025-01-31T23:47:47.093Z",
       "banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1920px-Andromeda_Galaxy_h-alpha%29.jpg",
       "wordCount": 0,
@@ -244,7 +244,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-14T16:27:01.171Z",
+      "updatedAt": "2025-02-15T00:10:45.184Z",
       "title": "Projeto Brio"
     },
     {
@@ -386,9 +386,9 @@
       "userId": "1",
       "name": "Literatura Brasileira Contemporânea",
       "description": "Um estudo sobre as tendências e transformações na literatura brasileira do século XXI.",
-      "logo": "",
+      "logo": "blob:http://localhost:3000/f5ca6538-9678-48b9-be82-90b91b034a02",
       "createdAt": "2025-01-20T14:20:00.000Z",
-      "banner": "",
+      "banner": "blob:http://localhost:3000/21578508-7e9e-4256-bada-a4792af7063d",
       "wordCount": 5200,
       "citations": [],
       "model": "book",
@@ -481,7 +481,7 @@
           "children": []
         },
         {
-          "id": "e7ec1a4d-06f8-474a-b298-bfe3a0f930bc",
+          "id": "b61c0178-56fa-4652-b0aa-449ce6b3da8b",
           "type": "paragraph",
           "props": {
             "textColor": "default",
@@ -493,16 +493,17 @@
         },
         {
           "id": "3ce53097-5ea3-415a-ac66-de41359bb26a",
-          "type": "paragraph",
+          "type": "heading",
           "props": {
             "textColor": "default",
             "backgroundColor": "default",
-            "textAlignment": "left"
+            "textAlignment": "left",
+            "level": 2
           },
           "content": [
             {
               "type": "text",
-              "text": "## Introdução",
+              "text": "Introdução",
               "styles": {}
             }
           ],
@@ -526,34 +527,29 @@
           "children": []
         },
         {
-          "id": "c0a72e8d-52c3-43fc-bc89-da5c4d928d9e",
+          "id": "48be4a33-1b2e-4cc5-87e6-26effed663d6",
           "type": "paragraph",
           "props": {
             "textColor": "default",
             "backgroundColor": "default",
             "textAlignment": "left"
           },
-          "content": [
-            {
-              "type": "text",
-              "text": "---",
-              "styles": {}
-            }
-          ],
+          "content": [],
           "children": []
         },
         {
           "id": "e0216799-a858-4eb2-b6ba-931a93e33ecf",
-          "type": "paragraph",
+          "type": "heading",
           "props": {
             "textColor": "default",
             "backgroundColor": "default",
-            "textAlignment": "left"
+            "textAlignment": "left",
+            "level": 3
           },
           "content": [
             {
               "type": "text",
-              "text": "## Contexto Histórico e Cultural",
+              "text": "Contexto Histórico e Cultural",
               "styles": {}
             }
           ],
@@ -1588,7 +1584,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-14T16:36:33.026Z",
+      "updatedAt": "2025-02-15T00:33:41.047Z",
       "title": "Literatura Brasileira Contemporânea"
     }
   ]
