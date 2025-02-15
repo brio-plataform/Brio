@@ -38,10 +38,13 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   },
 
   saveProject: async (projectData) => {
+    const currentProject = get().currentProject;
     set((state) => ({
-      currentProject: state.currentProject ? {
-        ...state.currentProject,
+      currentProject: currentProject ? {
+        ...currentProject,
         ...projectData,
+        logo: projectData.logo || currentProject.logo,
+        banner: projectData.banner || currentProject.banner,
       } : null,
     }));
   },

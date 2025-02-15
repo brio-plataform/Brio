@@ -45,12 +45,17 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
     return <UnauthorizedPage />;
   }
 
+  // Não renderizar nada até que os dados estejam carregados
   if (isLoading) {
     return <LoadingEditor />;
   }
 
   if (error) {
     return <div>Erro ao carregar projeto: {error.message}</div>;
+  }
+
+  if (!project) {
+    return <div>Projeto não encontrado</div>;
   }
 
   // Garantir que sempre temos um conteúdo válido
@@ -79,7 +84,7 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
       <ProjectBanner 
         editable={editable} 
         projectId={projectId}
-        initialBanner={banner}
+        initialBanner={project.banner}
       />
 
       <div className="mb-6">
@@ -87,9 +92,9 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
           editable={editable}
           projectId={projectId}
           initialData={{
-            logo,
-            name,
-            description
+            logo: project.logo,
+            name: project.name,
+            description: project.description
           }}
         />
       </div>

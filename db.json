@@ -386,12 +386,12 @@
       "userId": "1",
       "name": "Literatura Brasileira Contemporânea",
       "description": "Um estudo sobre as tendências e transformações na literatura brasileira do século XXI.",
-      "logo": "blob:http://localhost:3000/f5ca6538-9678-48b9-be82-90b91b034a02",
+      "logo": "blob:http://localhost:3000/57beaaec-1573-4f0d-b9a6-b7c2a04c5a9f",
       "createdAt": "2025-01-20T14:20:00.000Z",
-      "banner": "blob:http://localhost:3000/21578508-7e9e-4256-bada-a4792af7063d",
+      "banner": "blob:http://localhost:3000/a39b37d4-f4ce-48a7-9cd3-9ac5eb571ce4",
       "wordCount": 5200,
       "citations": [],
-      "model": "book",
+      "model": "research",
       "visibility": "private",
       "progress": 90,
       "status": "Em Andamento",
@@ -432,6 +432,17 @@
               "styles": {}
             }
           ],
+          "children": []
+        },
+        {
+          "id": "69f4d115-d267-4026-8b4d-fec9b0b814e1",
+          "type": "paragraph",
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left"
+          },
+          "content": [],
           "children": []
         },
         {
@@ -1584,7 +1595,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-15T00:33:41.047Z",
+      "updatedAt": "2025-02-15T02:28:52.660Z",
       "title": "Literatura Brasileira Contemporânea"
     }
   ]

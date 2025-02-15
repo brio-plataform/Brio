@@ -23,10 +23,17 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
     setError(null);
 
     try {
-      const response = await axios.patch(`http://localhost:3001/projects/${projectId}`, {
+      // Primeiro, buscar o projeto atual
+      const currentProject = await axios.get(`http://localhost:3001/projects/${projectId}`);
+      
+      // Mesclar os dados existentes com as atualizações
+      const updatedData = {
+        ...currentProject.data,
         ...data,
         updatedAt: new Date().toISOString()
-      });
+      };
+
+      const response = await axios.patch(`http://localhost:3001/projects/${projectId}`, updatedData);
       return response.data;
     } catch (err) {
       setError(err as Error);
