@@ -46,15 +46,15 @@ export function ProjectInfo({ editable = true, projectId, initialData }: Project
       if (file) {
         setState(prev => ({ ...prev, isUploading: true }));
         try {
-          const imageUrl = URL.createObjectURL(file);
-          await updateLogo(imageUrl);
+          const base64 = await convertToBase64(file);
+          await updateLogo(base64);
           setState(prev => ({ 
             ...prev, 
-            logoImage: imageUrl,
+            logoImage: base64,
             imageError: false,
             showImageDialog: false 
           }));
-          updateProjectField('logo', imageUrl);
+          updateProjectField('logo', base64);
         } catch (error) {
           console.error('Error uploading logo:', error);
           handlers.handleImageError();
@@ -93,6 +93,16 @@ export function ProjectInfo({ editable = true, projectId, initialData }: Project
       updateProjectField('description', value);
       await updateDescription(value);
     }
+  };
+
+  // Função auxiliar para converter File para base64
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
   };
 
   return (

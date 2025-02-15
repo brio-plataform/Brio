@@ -77,7 +77,10 @@ interface Project {
   progress: number
   type: ProjectType
   status?: string
-  collaborators: Array<{ name: string; avatar: string }> | number
+  collaborators: { 
+    name: string;
+    avatar: string;
+  }[];
   tags?: string[]
   author: {
     name: string

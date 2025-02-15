@@ -5,7 +5,6 @@ import { ImagePlus, Move, Link } from "lucide-react";
 import { Button } from "../../ui/button";
 import { useGetProject } from '@/hooks/useGetProjectByID';
 import { useUpdateProject } from '@/hooks/useUpdateProject';
-import { useParams } from 'next/navigation';
 import {
   Dialog,
   DialogContent,
@@ -15,10 +14,12 @@ import {
 import { Input } from "../../ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import { ProjectBannerProps, ProjectBannerState } from './types';
+import { useProjectStore } from '@/store/useProjectStore';
 
 export function ProjectBanner({ editable = true, projectId, initialBanner }: ProjectBannerProps) {
   const { banner } = useGetProject(projectId);
   const { updateBanner } = useUpdateProject(projectId);
+  const { updateProjectField } = useProjectStore();
 
   const [state, setState] = useState<ProjectBannerState>({
     bannerImage: initialBanner || "",
@@ -42,14 +43,16 @@ export function ProjectBanner({ editable = true, projectId, initialBanner }: Pro
     if (file) {
       setState(prev => ({ ...prev, isUploading: true }));
       try {
-        // 1. Criar URL temporária
-        const imageUrl = URL.createObjectURL(file);
-        
-        // 2. Atualizar no banco
-        await updateBanner(imageUrl);
-        
-        // 3. Atualizar estado local
-        setState(prev => ({ ...prev, bannerImage: imageUrl, imageError: false }));
+        // Em vez de usar URL.createObjectURL, vamos converter para base64
+        const base64 = await convertToBase64(file);
+        await updateBanner(base64);
+        setState(prev => ({ 
+          ...prev, 
+          bannerImage: base64, 
+          imageError: false,
+          showImageDialog: false 
+        }));
+        updateProjectField('banner', base64);
       } catch (error) {
         console.error('Error uploading banner:', error);
         handleImageError();
@@ -66,7 +69,14 @@ export function ProjectBanner({ editable = true, projectId, initialBanner }: Pro
     setState(prev => ({ ...prev, isUploading: true }));
     try {
       await updateBanner(state.imageUrl);
-      setState(prev => ({ ...prev, bannerImage: state.imageUrl, imageError: false, showImageDialog: false, imageUrl: "" }));
+      setState(prev => ({ 
+        ...prev, 
+        bannerImage: state.imageUrl, 
+        imageError: false, 
+        showImageDialog: false, 
+        imageUrl: "" 
+      }));
+      updateProjectField('banner', state.imageUrl);
     } catch (error) {
       console.error('Error setting banner URL:', error);
       handleImageError();
@@ -104,6 +114,16 @@ export function ProjectBanner({ editable = true, projectId, initialBanner }: Pro
   const handleImageError = () => {
     setState(prev => ({ ...prev, imageError: true, bannerImage: "" }));
     updateBanner(""); // Limpa a URL no banco
+  };
+
+  // Função auxiliar para converter File para base64
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
   };
 
   return (
