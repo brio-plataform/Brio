@@ -1,8 +1,8 @@
 "use client"
 
-import { ProjectViewerHeaderTop } from './project-viewer-header-top'
-import { ProjectViewerHeaderCore } from './project-viewer-header-core'
-import { ProjectViewerHeaderBottom } from './project-viewer-header-bottom'
+import { ProjectViewerHeaderTop } from './HeaderTopViewer/project-viewer-header-top'
+import { ProjectViewerHeaderCore } from './HeaderCoreViewer/project-viewer-header-core'
+import { ProjectViewerHeaderBottom } from './HeaderBottomViewer/project-viewer-header-bottom'
 import { useGetProject } from '@/hooks/useGetProjectByID'
 import { useProjectStore } from '@/store/useProjectStore'
 import { useEffect } from 'react'
