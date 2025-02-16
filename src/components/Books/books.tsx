@@ -23,6 +23,7 @@ import {
   SelectTrigger, SelectValue 
 } from "@/components/ui/select"
 import { Modal } from "@/components/Modal/modal"
+import Link from "next/link"
 
 // Types
 type BookType = "ebook" | "audiobook" | "academic" | "community";
@@ -394,9 +395,11 @@ function BookCard({ book, viewMode }: BookCardProps) {
                 {/* Content */}
                 <div>
                     <div className="flex items-start justify-between gap-2 mb-1.5">
-                        <h3 className="font-semibold text-base leading-tight group-hover:text-primary transition-colors line-clamp-1">
-                            {book.title}
-                        </h3>
+                        <Link href={`/library/${book.id}`}>
+                            <h3 className="font-semibold text-base leading-tight group-hover:text-primary transition-colors line-clamp-1">
+                                {book.title}
+                            </h3>
+                        </Link>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon" className="h-8 w-8">

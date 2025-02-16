@@ -45,10 +45,18 @@ export function BookReader({ bookId }: { bookId: string }) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0)
   const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0)
   const audioRef = useRef<HTMLAudioElement>(null)
+  const currentParagraphRef = useRef<HTMLParagraphElement>(null)
 
   // Simula carregamento do livro - substituir por chamada API real
   useEffect(() => {
-    // Mock data
+    const generateParagraphs = (count: number, prefix: string) => {
+      return Array.from({ length: count }, (_, i) => 
+        `${prefix} - Parágrafo ${i + 1}. ${Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => 
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        ).join(" ")}`
+      );
+    };
+
     const mockBook: BookData = {
       id: "1",
       title: "Os Segredos de Vila das Sombras",
@@ -65,24 +73,15 @@ export function BookReader({ bookId }: { bookId: string }) {
           pages: [
             {
               number: 1,
-              content: [
-                "O sótão da antiga casa colonial permanecia intocado há décadas, seus segredos trancados sob camadas de poeira e memórias esquecidas. Helena Mendes estava parada na entrada, o feixe de sua lanterna cortando a escuridão empoeirada, iluminando partículas que dançavam no ar.",
-                "A morte de sua avó havia deixado mais do que apenas esta casa ancestral; deixara também perguntas que assombravam sua família por gerações. O assoalho de madeira rangia sob seus pés enquanto ela se aproximava de um baú desgastado no canto do cômodo."
-              ]
+              content: generateParagraphs(18, "Cap1-Pag1")
             },
             {
               number: 2,
-              content: [
-                "Dentro dele, encontrou maços de cartas amareladas pelo tempo, amarradas com fitas desbotadas. As datas nas cartas iam de 1892 a 1895, cada envelope endereçado à sua tataravó, Dona Amélia Mendes.",
-                "Suas mãos tremiam ao abrir a primeira carta, o papel crepitando suavemente no silêncio. A caligrafia era elegante mas apressada, como se o escritor estivesse em estado de urgência. 'Minha querida Amélia,' começava, 'preciso alertá-la sobre o que descobri em Vila das Sombras.'"
-              ]
+              content: generateParagraphs(15, "Cap1-Pag2")
             },
             {
               number: 3,
-              content: [
-                "Enquanto lia, Helena sentiu o coração acelerar. A carta falava de acontecimentos estranhos na pequena cidade litorânea, de mulheres que podiam comandar os elementos da natureza, e de uma sociedade secreta que as observava há séculos.",
-                "Uma súbita rajada de vento sacudiu a janela do sótão, fazendo Helena sobressaltar-se. Ela ergueu os olhos, quase esperando ver alguém a observando, mas havia apenas escuridão além do vidro. A carta em suas mãos parecia pulsar com uma energia própria."
-              ]
+              content: generateParagraphs(20, "Cap1-Pag3")
             }
           ]
         },
@@ -92,17 +91,19 @@ export function BookReader({ bookId }: { bookId: string }) {
           pages: [
             {
               number: 1,
-              content: [
-                "Na manhã seguinte, Helena acordou com o som da chuva batendo suavemente contra sua janela. O medalhão que encontrara repousava sobre sua mesa de cabeceira, brilhando tenuemente na luz difusa do amanhecer.",
-                "Decidida a descobrir mais sobre o mistério das sete famílias, ela começou a pesquisar nos antigos registros da cidade."
-              ]
+              content: generateParagraphs(16, "Cap2-Pag1")
             },
             {
               number: 2,
-              content: [
-                "A biblioteca municipal de Vila das Sombras era um prédio imponente de pedra, com arquivos que remontavam à fundação da cidade.",
-                "Os arquivos revelavam segredos antigos da cidade..."
-              ]
+              content: generateParagraphs(19, "Cap2-Pag2")
+            },
+            {
+              number: 3,
+              content: generateParagraphs(17, "Cap2-Pag3")
+            },
+            {
+              number: 4,
+              content: generateParagraphs(21, "Cap2-Pag4")
             }
           ]
         },
@@ -112,89 +113,15 @@ export function BookReader({ bookId }: { bookId: string }) {
           pages: [
             {
               number: 1,
-              content: [
-                "A escuridão da biblioteca durou apenas alguns segundos antes que velas se acendessem espontaneamente ao redor delas. Helena olhou espantada para as chamas que dançavam sem que ninguém as tivesse acendido.",
-                "'Mariana Oliveira', explicou Dona Clara com um sorriso, apontando para uma jovem que emergiu das sombras entre as estantes."
-              ]
+              content: generateParagraphs(14, "Cap3-Pag1")
             },
             {
               number: 2,
-              content: [
-                "Mariana, uma moça de cabelos vermelhos e olhos dourados, se aproximou da mesa onde estavam. As chamas das velas pareciam se inclinar em sua direção, como se a reconhecessem como sua mestra.",
-                "Helena observou fascinada enquanto mais quatro mulheres surgiam das sombras da biblioteca."
-              ]
+              content: generateParagraphs(22, "Cap3-Pag2")
             },
             {
               number: 3,
-              content: [
-                "'Falta apenas uma', disse Dona Clara, contando as presentes. 'A herdeira dos Ribeiro ainda não despertou para seu dom. Mas o círculo já está quase completo.'"
-              ]
-            },
-            {
-              number: 4,
-              content: [
-                "Uma das mulheres, que se apresentou como Beatriz Santos, tocou uma planta murcha que decorava a mesa. Sob seus dedos, a planta reviveu instantaneamente, suas folhas se tornando verdes e viçosas novamente."
-              ]
-            },
-            {
-              number: 5,
-              content: [
-                "'Os dons estão ficando mais fortes', observou Beatriz. 'É como se a própria Vila das Sombras estivesse despertando de um longo sono. Podemos sentir nas raízes da terra, no sussurro do vento, no calor do fogo...'"
-              ]
-            },
-            {
-              number: 6,
-              content: [
-                "Helena olhou para suas próprias mãos, lembrando-se de todas as vezes que a chuva pareceu atender seus desejos inconscientes. 'Por que agora?', perguntou. 'Por que os dons estão retornando depois de tanto tempo?'"
-              ]
-            },
-            {
-              number: 7,
-              content: [
-                "Dona Clara abriu o livro em uma página específica, revelando uma antiga profecia escrita em uma caligrafia delicada. 'Quando as sombras antigas ameaçarem retornar, as Sete deverão despertar. O equilíbrio dos elementos dependerá da união das linhagens.'"
-              ]
-            },
-            {
-              number: 8,
-              content: [
-                "'Algo está vindo', disse Mariana, suas palavras fazendo as chamas das velas tremularem. 'Algo que nossos antepassados selaram há muito tempo está tentando voltar. Podemos sentir sua presença crescendo nas sombras da cidade.'"
-              ]
-            },
-            {
-              number: 9,
-              content: [
-                "Um vento frio soprou através da biblioteca, fazendo as páginas do livro virarem rapidamente. Helena sentiu o medalhão em seu pescoço aquecer, e a tempestade lá fora respondeu com um trovão ensurdecedor."
-              ]
-            },
-            {
-              number: 10,
-              content: [
-                "'Agora você entende por que sua avó deixou as cartas para você encontrar?', perguntou Dona Clara. 'O destino de Vila das Sombras sempre esteve nas mãos das Sete. E agora, mais do que nunca, precisamos estar unidas.'"
-              ]
-            },
-            {
-              number: 11,
-              content: [
-                "O círculo de mulheres se fechou ao redor da mesa central..."
-              ]
-            },
-            {
-              number: 12,
-              content: [
-                "Cada medalhão começou a brilhar com uma cor diferente, criando um espetáculo de luzes..."
-              ]
-            },
-            {
-              number: 13,
-              content: [
-                "As palavras da profecia ecoavam nas paredes antigas da biblioteca..."
-              ]
-            },
-            {
-              number: 14,
-              content: [
-                "Helena sentiu o poder crescer dentro dela, como uma tempestade prestes a ser libertada..."
-              ]
+              content: generateParagraphs(18, "Cap3-Pag3")
             }
           ]
         },
@@ -204,27 +131,23 @@ export function BookReader({ bookId }: { bookId: string }) {
           pages: [
             {
               number: 1,
-              content: [
-                "A noite caiu sobre Vila das Sombras como um manto de mistério..."
-              ]
+              content: generateParagraphs(20, "Cap4-Pag1")
             },
             {
               number: 2,
-              content: [
-                "As ruas antigas guardavam mais segredos do que Helena imaginava..."
-              ]
+              content: generateParagraphs(16, "Cap4-Pag2")
             },
             {
               number: 3,
-              content: [
-                "Em cada esquina, símbolos antigos brilhavam tenuemente sob a luz da lua..."
-              ]
+              content: generateParagraphs(19, "Cap4-Pag3")
             },
             {
               number: 4,
-              content: [
-                "O medalhão a guiava como uma bússola mágica através da cidade adormecida..."
-              ]
+              content: generateParagraphs(17, "Cap4-Pag4")
+            },
+            {
+              number: 5,
+              content: generateParagraphs(21, "Cap4-Pag5")
             }
           ]
         },
@@ -234,69 +157,19 @@ export function BookReader({ bookId }: { bookId: string }) {
           pages: [
             {
               number: 1,
-              content: [
-                "A busca pela última herdeira dos Ribeiro se intensificava..."
-              ]
+              content: generateParagraphs(15, "Cap5-Pag1")
             },
             {
               number: 2,
-              content: [
-                "Os ventos da cidade sopravam com mais força, ansiosos por sua mestra..."
-              ]
+              content: generateParagraphs(18, "Cap5-Pag2")
             },
             {
               number: 3,
-              content: [
-                "Antigas profecias começavam a fazer sentido sob a nova luz dos acontecimentos..."
-              ]
+              content: generateParagraphs(20, "Cap5-Pag3")
             },
             {
               number: 4,
-              content: [
-                "O tempo estava se esgotando, e as sombras cresciam mais a cada dia..."
-              ]
-            }
-          ]
-        },
-        {
-          number: 6,
-          title: "O Ritual das Sete",
-          pages: [
-            {
-              number: 1,
-              content: [
-                "A lua cheia iluminava o círculo de pedras..."
-              ]
-            },
-            {
-              number: 2,
-              content: [
-                "As sete mulheres se posicionaram em seus lugares..."
-              ]
-            },
-            {
-              number: 3,
-              content: [
-                "Os elementos respondiam ao chamado de suas mestras..."
-              ]
-            },
-            {
-              number: 4,
-              content: [
-                "A terra tremeu sob seus pés quando o ritual começou..."
-              ]
-            },
-            {
-              number: 5,
-              content: [
-                "As sombras antigas tentavam resistir ao poder das sete..."
-              ]
-            },
-            {
-              number: 6,
-              content: [
-                "Helena sentiu o poder ancestral fluir através dela..."
-              ]
+              content: generateParagraphs(16, "Cap5-Pag4")
             }
           ]
         }
@@ -304,12 +177,22 @@ export function BookReader({ bookId }: { bookId: string }) {
       audioUrl: "/audio/book-1.mp3",
       progress: {
         currentChapter: 0,
-        currentPage: 1
+        currentPage: 0
       }
     }
 
     setBook(mockBook)
   }, [bookId])
+
+  // Efeito para scrollar para o parágrafo atual quando ele mudar
+  useEffect(() => {
+    if (currentParagraphRef.current) {
+      currentParagraphRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      })
+    }
+  }, [currentParagraphIndex, currentPageIndex, book?.progress.currentChapter])
 
   if (!book) return null
 
@@ -541,38 +424,7 @@ export function BookReader({ bookId }: { bookId: string }) {
         </div>
 
         {/* Controles de Áudio e Navegação */}
-        <div className="flex flex-col gap-4 mb-8">
-          {/* Controles de Página */}
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => handlePageChange('prev')}
-              disabled={currentPageIndex === 0 && book.progress.currentChapter === 0}
-              className="flex items-center gap-2"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Página Anterior
-            </Button>
-
-            <span className="text-sm text-muted-foreground">
-              Página {currentPage.number} de {totalPages}
-            </span>
-
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => handlePageChange('next')}
-              disabled={
-                currentPageIndex === currentChapter.pages.length - 1 && 
-                book.progress.currentChapter === book.chapters.length - 1
-              }
-              className="flex items-center gap-2"
-            >
-              Próxima Página
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="flex justify-between gap-4 my-4">
 
           {/* Controles de Áudio e Parágrafos */}
           <div className="flex items-center justify-center gap-4">
@@ -628,6 +480,38 @@ export function BookReader({ bookId }: { bookId: string }) {
               <TooltipContent>Próximo Parágrafo</TooltipContent>
             </Tooltip>
           </div>
+
+          {/* Controles de Página */}
+          <div className="flex items-center justify-center gap-4">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => handlePageChange('prev')}
+              disabled={currentPageIndex === 0 && book.progress.currentChapter === 0}
+              className="flex items-center gap-2"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Página Anterior
+            </Button>
+
+            <span className="text-sm text-muted-foreground">
+              Página {currentPage.number} de {totalPages}
+            </span>
+
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => handlePageChange('next')}
+              disabled={
+                currentPageIndex === currentChapter.pages.length - 1 && 
+                book.progress.currentChapter === book.chapters.length - 1
+              }
+              className="flex items-center gap-2"
+            >
+              Próxima Página
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Área de Leitura */}
@@ -640,9 +524,10 @@ export function BookReader({ bookId }: { bookId: string }) {
             {getCurrentPageParagraphs().map((paragraph: string, index: number) => (
               <p 
                 key={`${currentPage.number}-${index}`}
+                ref={index === currentParagraphIndex ? currentParagraphRef : null}
                 className={index === currentParagraphIndex 
-                  ? "bg-accent/20 p-2 rounded transition-colors" 
-                  : "transition-colors"
+                  ? "bg-accent/20 p-2 rounded transition-colors mb-4" 
+                  : "transition-colors mb-4"
                 }
               >
                 {paragraph}
