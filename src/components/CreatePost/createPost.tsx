@@ -57,14 +57,12 @@ import {
   Template,
   MAX_TITLE_LENGTH,
   MAX_TAGS,
-} from "@/types/types"
-import { 
-  DialogState, 
-  Reference, 
-  ReferenceType, 
   CreatePostProps,
   CreatePostState,
-  PostType
+  CreatePostDialogState,
+  PostType,
+  ReferenceType,
+  Reference
 } from './types'
 import { cn } from "@/lib/utils"
 
@@ -116,21 +114,6 @@ function UserTooltip({ user }: UserTooltipProps) {
   )
 }
 
-const initialState: CreatePostState = {
-  postType: 'text',
-  title: '',
-  content: '',
-  tags: [],
-  currentTag: '',
-  references: [],
-  currentReference: '',
-  referenceType: 'profile',
-  isSubmitting: false,
-  isUploadingMedia: false,
-  isUploadingFile: false,
-  showLinkModal: false,
-  linkUrl: '',
-}
 export function CreatePost({
   user,
   placeholder = "O que você está pensando?",
@@ -142,10 +125,26 @@ export function CreatePost({
   onSubmit,
   img = "/images/placeholder.svg"
 }: CreatePostProps) {
+  const initialState: CreatePostState = {
+    postType: 'text',
+    title: '',
+    content: '',
+    tags: [],
+    currentTag: '',
+    references: [],
+    currentReference: '',
+    referenceType: 'profile',
+    isSubmitting: false,
+    isUploadingMedia: false,
+    isUploadingFile: false,
+    showLinkModal: false,
+    linkUrl: ''
+  }
+
   const [state, setState] = useState<CreatePostState>(initialState)
-  const [dialogState, setDialogState] = useState<DialogState>({
+  const [dialogState, setDialogState] = useState<CreatePostDialogState>({
     isOpen: false,
-    loading: false
+    isSubmitting: false
   })
   
   const [postType, setPostType] = useState<PostType>('text')
