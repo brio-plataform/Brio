@@ -7,7 +7,7 @@ export default function BookPage({ params }: { params: { id: string[] } }) {
   return (
     <div className="flex-1 transition-all duration-300 overflow-auto scrollbar-none">
       <Main>
-        <BookReader bookId={bookId} readerId={readerId} />
+        <BookReader bookId={bookId} />
       </Main>
     </div>
   )
