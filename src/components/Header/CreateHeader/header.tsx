@@ -8,11 +8,17 @@ import { HeaderTop } from './HeaderTop/header-top'
 import { HeaderCore } from './HeaderCore/header-core'
 import { HeaderBottom } from './HeaderBottom/header-bottom'
 import { useProjectStore } from '@/store/useProjectStore'
-import type { HeaderCollaborator, ProjectModel, ProjectVisibility } from '@/types/types'
+import type { 
+  HeaderProps, 
+  HeaderState, 
+  ProjectModel, 
+  ProjectVisibility,
+  HeaderCollaborator 
+} from './types'
 
 export function Header() {
   const params = useParams();
-  const projectId = params.id as string;
+  const id = params.id as string;
   
   const { currentProject } = useProjectStore();
   
@@ -28,7 +34,7 @@ export function Header() {
     progress: initialProgress,
     type: initialType,
     project
-  } = useGetProject(projectId);
+  } = useGetProject(id);
 
   const { 
     updateName, 
@@ -40,7 +46,7 @@ export function Header() {
     updateProgress,
     updateType,
     isLoading: isSaving 
-  } = useUpdateProject(projectId);
+  } = useUpdateProject(id);
 
   const [documentType, setDocumentType] = useState<ProjectModel>(initialModel || 'article');
   const [visibility, setVisibility] = useState<ProjectVisibility>(initialVisibility || 'private');

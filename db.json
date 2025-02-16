@@ -392,7 +392,7 @@
       "wordCount": 5200,
       "citations": [],
       "model": "research",
-      "visibility": "private",
+      "visibility": "public",
       "progress": 90,
       "status": "Em Andamento",
       "tags": [],
@@ -1595,7 +1595,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-16T16:06:26.501Z",
+      "updatedAt": "2025-02-16T23:36:37.612Z",
       "title": "Literatura Brasileira Contemporânea"
     }
   ]
