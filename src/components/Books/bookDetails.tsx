@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Comment } from "@/components/Comment/comment"
 import { MOCK_COMMENTS } from "@/components/Comment/mockData"
-import { Bookmark, Share2, Download, ArrowRight, MoreHorizontal, ThumbsUp, MessageSquare, Book } from "lucide-react"
+import { Bookmark, Share2, Download, ArrowRight, MoreHorizontal, ThumbsUp, MessageSquare, Book, ChevronLeft } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
@@ -36,6 +36,7 @@ interface BookDetails {
 
 export function BookDetails() {
   const { id } = useParams()
+  const router = useRouter()
   const [isClient, setIsClient] = useState(false)
 
   // Efeito para marcar quando estamos no cliente
@@ -77,6 +78,18 @@ export function BookDetails() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8">
+      {/* Header com botão de voltar */}
+      <div className="mb-8">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={() => router.back()}
+          className="hover:bg-accent/50"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </Button>
+      </div>
+
       {/* Book Details Section */}
       <div className="flex gap-16 w-full mb-16">
         {/* Left Column - Book Cover */}
@@ -107,7 +120,7 @@ export function BookDetails() {
 
           <div className="flex items-center gap-4">
             <Button asChild>
-              <Link href={`/books/${book.id}/read?id=${book.id}`}>
+              <Link href={`/library/${book.id}/read?id=${book.id}`}>
                 Read Book
               </Link>
             </Button>
