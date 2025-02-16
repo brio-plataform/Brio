@@ -431,6 +431,38 @@ export function BookReader({ bookId }: { bookId: string }) {
     }
   }
 
+  const calculateProgress = () => {
+    // Conta total de parágrafos até o capítulo atual
+    let totalParagraphsUntilCurrentChapter = 0
+    let currentProgress = 0
+
+    // Soma parágrafos dos capítulos anteriores
+    for (let i = 0; i < book.progress.currentChapter; i++) {
+      const chapter = book.chapters[i]
+      chapter.pages.forEach(page => {
+        totalParagraphsUntilCurrentChapter += page.content.length
+      })
+    }
+
+    // Soma parágrafos das páginas anteriores do capítulo atual
+    for (let i = 0; i < currentPageIndex; i++) {
+      totalParagraphsUntilCurrentChapter += currentChapter.pages[i].content.length
+    }
+
+    // Adiciona parágrafos da página atual
+    currentProgress = totalParagraphsUntilCurrentChapter + currentParagraphIndex + 1
+
+    // Calcula total de parágrafos do livro
+    let totalParagraphs = 0
+    book.chapters.forEach(chapter => {
+      chapter.pages.forEach(page => {
+        totalParagraphs += page.content.length
+      })
+    })
+
+    return (currentProgress / totalParagraphs) * 100
+  }
+
   return (
     <TooltipProvider>
       <div className="w-full max-w-7xl mx-auto px-4 py-6">
@@ -462,11 +494,15 @@ export function BookReader({ bookId }: { bookId: string }) {
             </div>
 
             <Progress 
-              value={(currentPageIndex / totalPages) * 100} 
+              value={calculateProgress()} 
               className="mb-2"
             />
             <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Page {currentPage.number} of {totalPages}</span>
+              <span>
+                Página {currentPage.number} de {totalPages} • 
+                Parágrafo {currentParagraphIndex + 1} de {currentPage.content.length}
+              </span>
+              <span>{Math.round(calculateProgress())}% concluído</span>
             </div>
           </div>
 
