@@ -1,4 +1,4 @@
-import { BookDetails } from "@/components/Books/bookDetails"
+import { BookDetails } from "@/components/Books/BookDetatails/bookDetails"
 import { Main } from "@/components/Main"
 
 export default function BookPage() {

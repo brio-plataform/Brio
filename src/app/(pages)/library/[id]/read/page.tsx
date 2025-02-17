@@ -1,4 +1,4 @@
-import { BookReader } from "@/components/Books/BookReader"
+import { BookReader } from "@/components/Books/BookReader/BookReader"
 import { Main } from "@/components/Main"
 
 export default function BookPage({ params }: { params: { id: string[] } }) {

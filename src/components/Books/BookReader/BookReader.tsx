@@ -38,6 +38,210 @@ interface BookData {
   }
 }
 
+const BookHeader = ({ 
+  book, 
+  currentChapter, 
+  currentPage, 
+  totalPages,
+  currentParagraphIndex,
+  calculateProgress,
+  onBack 
+}: { 
+  book: BookData
+  currentChapter: { number: number; title: string }
+  currentPage: { number: number; content: string[] }
+  totalPages: number
+  currentParagraphIndex: number
+  calculateProgress: () => number
+  onBack: () => void
+}) => (
+  <div className="flex items-start gap-6 mb-8">
+    <Button variant="ghost" size="icon" onClick={onBack}>
+      <ChevronLeft className="h-6 w-6" />
+    </Button>
+
+    <Avatar className="w-24 h-36 rounded-lg">
+      <AvatarImage src={book.coverUrl} alt={book.title} className="object-cover" />
+      <AvatarFallback className="rounded-lg">
+        <Book className="w-8 h-8 text-muted-foreground" />
+      </AvatarFallback>
+    </Avatar>
+
+    <div className="flex-1">
+      <h1 className="text-2xl font-bold mb-2">{book.title}</h1>
+      <p className="text-muted-foreground mb-2">{book.author.name}</p>
+      
+      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+        <span>{book.duration}</span>
+        <span>•</span>
+        <span>Chapter {currentChapter.number}</span>
+      </div>
+
+      <Progress value={calculateProgress()} className="mb-2" />
+      <div className="flex justify-between text-sm text-muted-foreground">
+        <span>
+          Página {currentPage.number} de {totalPages} • 
+          Parágrafo {currentParagraphIndex + 1} de {currentPage.content.length}
+        </span>
+        <span>{Math.round(calculateProgress())}% concluído</span>
+      </div>
+    </div>
+  </div>
+)
+
+const AudioControls = ({
+  isPlaying,
+  onPrevParagraph,
+  onTogglePlay,
+  onNextParagraph,
+  disablePrev,
+  disableNext
+}: {
+  isPlaying: boolean
+  onPrevParagraph: () => void
+  onTogglePlay: () => void
+  onNextParagraph: () => void
+  disablePrev: boolean
+  disableNext: boolean
+}) => (
+  <div className="flex items-center justify-center gap-4">
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={onPrevParagraph}
+          disabled={disablePrev}
+        >
+          <SkipBack className="h-6 w-6" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>Parágrafo Anterior</TooltipContent>
+    </Tooltip>
+
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-12 w-12"
+          onClick={onTogglePlay}
+        >
+          {isPlaying ? (
+            <Pause className="h-8 w-8" />
+          ) : (
+            <PlayCircle className="h-8 w-8" />
+          )}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        {isPlaying ? 'Pausar' : 'Reproduzir'}
+      </TooltipContent>
+    </Tooltip>
+
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={onNextParagraph}
+          disabled={disableNext}
+        >
+          <SkipForward className="h-6 w-6" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>Próximo Parágrafo</TooltipContent>
+    </Tooltip>
+  </div>
+)
+
+const PageControls = ({
+  currentPage,
+  totalPages,
+  onPrevPage,
+  onNextPage,
+  disablePrev,
+  disableNext
+}: {
+  currentPage: { number: number; content: string[] }
+  totalPages: number
+  onPrevPage: () => void
+  onNextPage: () => void
+  disablePrev: boolean
+  disableNext: boolean
+}) => (
+  <div className="flex items-center justify-center gap-4">
+    <Button 
+      variant="outline" 
+      size="sm"
+      onClick={onPrevPage}
+      disabled={disablePrev}
+      className="flex items-center gap-2"
+    >
+      <ChevronLeft className="h-4 w-4" />
+      Página Anterior
+    </Button>
+
+    <span className="text-sm text-muted-foreground">
+      Página {currentPage.number} de {totalPages}
+    </span>
+
+    <Button 
+      variant="outline" 
+      size="sm"
+      onClick={onNextPage}
+      disabled={disableNext}
+      className="flex items-center gap-2"
+    >
+      Próxima Página
+      <ChevronRight className="h-4 w-4" />
+    </Button>
+  </div>
+)
+
+const ChapterList = ({
+  book,
+  currentChapterIndex,
+  onChapterChange
+}: {
+  book: BookData
+  currentChapterIndex: number
+  onChapterChange: (index: number) => void
+}) => (
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="ghost" size="icon">
+        <ListMusic className="h-6 w-6" />
+      </Button>
+    </SheetTrigger>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Chapters</SheetTitle>
+      </SheetHeader>
+      <div className="mt-4 space-y-2">
+        {book.chapters.map((chapter, index) => (
+          <Button
+            key={chapter.number}
+            variant={index === currentChapterIndex ? "secondary" : "ghost"}
+            className="w-full justify-start"
+            onClick={() => onChapterChange(index)}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">
+                Chapter {chapter.number}
+              </span>
+              <span className="text-muted-foreground">•</span>
+              <span className="text-sm text-muted-foreground">
+                {chapter.title}
+              </span>
+            </div>
+          </Button>
+        ))}
+      </div>
+    </SheetContent>
+  </Sheet>
+)
+
 export function BookReader({ bookId }: { bookId: string }) {
   const router = useRouter()
   const [book, setBook] = useState<BookData | null>(null)
@@ -349,172 +553,43 @@ export function BookReader({ bookId }: { bookId: string }) {
   return (
     <TooltipProvider>
       <div className="w-full max-w-7xl mx-auto px-4 py-6">
-        {/* Header */}
-        <div className="flex items-start gap-6 mb-8">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => router.back()}
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </Button>
+        <BookHeader 
+          book={book}
+          currentChapter={currentChapter}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          currentParagraphIndex={currentParagraphIndex}
+          calculateProgress={calculateProgress}
+          onBack={() => router.back()}
+        />
 
-          <Avatar className="w-24 h-36 rounded-lg">
-            <AvatarImage src={book.coverUrl} alt={book.title} className="object-cover" />
-            <AvatarFallback className="rounded-lg">
-              <Book className="w-8 h-8 text-muted-foreground" />
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold mb-2">{book.title}</h1>
-            <p className="text-muted-foreground mb-2">{book.author.name}</p>
-            
-            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-              <span>{book.duration}</span>
-              <span>•</span>
-              <span>Chapter {currentChapter.number}</span>
-            </div>
-
-            <Progress 
-              value={calculateProgress()} 
-              className="mb-2"
-            />
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>
-                Página {currentPage.number} de {totalPages} • 
-                Parágrafo {currentParagraphIndex + 1} de {currentPage.content.length}
-              </span>
-              <span>{Math.round(calculateProgress())}% concluído</span>
-            </div>
-          </div>
-
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <ListMusic className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>Chapters</SheetTitle>
-              </SheetHeader>
-              <div className="mt-4 space-y-2">
-                {book.chapters.map((chapter, index) => (
-                  <Button
-                    key={chapter.number}
-                    variant={index === book.progress.currentChapter ? "secondary" : "ghost"}
-                    className="w-full justify-start"
-                    onClick={() => handleChapterChange(index)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">
-                        Chapter {chapter.number}
-                      </span>
-                      <span className="text-muted-foreground">•</span>
-                      <span className="text-sm text-muted-foreground">
-                        {chapter.title}
-                      </span>
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-
-        {/* Controles de Áudio e Navegação */}
         <div className="flex justify-between gap-4 my-4">
+          <AudioControls 
+            isPlaying={isPlaying}
+            onPrevParagraph={() => handleParagraphNavigation('prev')}
+            onTogglePlay={togglePlay}
+            onNextParagraph={() => handleParagraphNavigation('next')}
+            disablePrev={currentParagraphIndex === 0 && currentPageIndex === 0 && book.progress.currentChapter === 0}
+            disableNext={
+              currentParagraphIndex === currentPage.content.length - 1 && 
+              currentPageIndex === currentChapter.pages.length - 1 && 
+              book.progress.currentChapter === book.chapters.length - 1
+            }
+          />
 
-          {/* Controles de Áudio e Parágrafos */}
-          <div className="flex items-center justify-center gap-4">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => handleParagraphNavigation('prev')}
-                  disabled={currentParagraphIndex === 0 && currentPageIndex === 0 && book.progress.currentChapter === 0}
-                >
-                  <SkipBack className="h-6 w-6" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Parágrafo Anterior</TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-12 w-12"
-                  onClick={togglePlay}
-                >
-                  {isPlaying ? (
-                    <Pause className="h-8 w-8" />
-                  ) : (
-                    <PlayCircle className="h-8 w-8" />
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {isPlaying ? 'Pausar' : 'Reproduzir'}
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => handleParagraphNavigation('next')}
-                  disabled={
-                    currentParagraphIndex === currentPage.content.length - 1 && 
-                    currentPageIndex === currentChapter.pages.length - 1 && 
-                    book.progress.currentChapter === book.chapters.length - 1
-                  }
-                >
-                  <SkipForward className="h-6 w-6" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Próximo Parágrafo</TooltipContent>
-            </Tooltip>
-          </div>
-
-          {/* Controles de Página */}
-          <div className="flex items-center justify-center gap-4">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => handlePageChange('prev')}
-              disabled={currentPageIndex === 0 && book.progress.currentChapter === 0}
-              className="flex items-center gap-2"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Página Anterior
-            </Button>
-
-            <span className="text-sm text-muted-foreground">
-              Página {currentPage.number} de {totalPages}
-            </span>
-
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => handlePageChange('next')}
-              disabled={
-                currentPageIndex === currentChapter.pages.length - 1 && 
-                book.progress.currentChapter === book.chapters.length - 1
-              }
-              className="flex items-center gap-2"
-            >
-              Próxima Página
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+          <PageControls 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPrevPage={() => handlePageChange('prev')}
+            onNextPage={() => handlePageChange('next')}
+            disablePrev={currentPageIndex === 0 && book.progress.currentChapter === 0}
+            disableNext={
+              currentPageIndex === currentChapter.pages.length - 1 && 
+              book.progress.currentChapter === book.chapters.length - 1
+            }
+          />
         </div>
 
-        {/* Área de Leitura */}
         <ScrollArea className="h-[calc(100vh-400px)] rounded-lg border p-8 bg-card">
           <div className="max-w-2xl mx-auto prose dark:prose-invert">
             <h2 className="text-xl font-semibold mb-6">
@@ -540,14 +615,12 @@ export function BookReader({ bookId }: { bookId: string }) {
           </div>
         </ScrollArea>
 
-        {/* Audio Element */}
         <audio 
           ref={audioRef} 
           src={book.audioUrl}
           onEnded={() => setIsPlaying(false)}
         />
 
-        {/* Adicionar navegação entre capítulos */}
         <div className="flex items-center justify-between mt-4">
           <Button
             variant="outline"
