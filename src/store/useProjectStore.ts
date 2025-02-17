@@ -1,30 +1,6 @@
 import { create } from 'zustand'
 import type { ProjectState } from '@/types/types'
 
-interface Version {
-  version: string;
-  updatedAt: string;
-}
-
-interface Project {
-  id: string;
-  userId: string;
-  name: string;
-  description: string;
-  logo: string;
-  banner: string;
-  wordCount: number;
-  citations: string[];
-  model: 'article' | 'thesis' | 'book' | 'research';
-  visibility: 'private' | 'public' | 'institutional';
-  progress: number;
-  type: string;
-  version: Version[];
-  content: any;
-  updatedAt: string;
-  createdAt: string;
-}
-
 export const useProjectStore = create<ProjectState>((set, get) => ({
   currentProject: null,
   projects: [],

@@ -11,60 +11,6 @@ import type {
   Project as ImportedProject
 } from '@/types/types';
 
-interface Version {
-  version: string;
-  updatedAt: string;
-}
-
-interface Author {
-  name: string;
-  avatar: string;
-  institution: string;
-}
-
-interface Stats {
-  views: number;
-  stars: number;
-  forks: number;
-  comments: number;
-}
-
-interface ContentProps {
-  textColor: string;
-  backgroundColor: string;
-  textAlignment: string;
-  level?: number;
-}
-
-interface Content {
-  id: string;
-  type: string;
-  props: ContentProps;
-  content: any[];
-  children: any[];
-}
-
-interface Project {
-  id: string;
-  userId: string;
-  name: string;
-  description: string;
-  logo: string;
-  banner: string;
-  wordCount: number;
-  citations: string[];
-  model: ProjectModel;
-  visibility: ProjectVisibility;
-  progress: number;
-  type: string;
-  author: Author;
-  stats: ProjectStats;
-  version: ProjectVersion[];
-  content: ContentBlock[];
-  updatedAt: string;
-  createdAt: string;
-}
-
 // Interface temporária para mapear a resposta da API
 interface APIProject {
   id: string;

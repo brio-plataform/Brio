@@ -1,16 +1,39 @@
 "use client";
 import "@blocknote/core/fonts/inter.css";
 import { useCreateBlockNote } from "@blocknote/react";
-import { BlockNoteView, Theme } from "@blocknote/mantine";
+import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
-import { PartialBlock } from "@blocknote/core";
 import { useEffect, useState } from "react";
 import { useProjectStore } from '@/store/useProjectStore';
-import type { EditorProps, EditorTheme } from '@/types/types';
+import type { 
+  EditorProps, 
+  EditorTheme, 
+  EditorBlock, 
+  EditorState 
+} from './types';
 
 export default function Editor({ initialContent, editable = true }: EditorProps) {
   const { setEditorContent, saveEditorContent } = useProjectStore();
-  const [hasChanges, setHasChanges] = useState(false);
+  const [state, setState] = useState<EditorState>({
+    hasChanges: false,
+    defaultContent: [{
+      id: crypto.randomUUID(),
+      type: "paragraph",
+      props: {
+        textColor: "default",
+        backgroundColor: "default",
+        textAlignment: "left"
+      },
+      content: [
+        {
+          type: "text",
+          text: "Comece a escrever seu projeto aqui...",
+          styles: {}
+        }
+      ],
+      children: []
+    }]
+  });
   
   const customTheme: EditorTheme = {
     colors: {
@@ -27,30 +50,12 @@ export default function Editor({ initialContent, editable = true }: EditorProps)
     fontFamily: "Inter, sans-serif",
   };
 
-  const defaultContent = [{
-    id: crypto.randomUUID(),
-    type: "paragraph",
-    props: {
-      textColor: "default",
-      backgroundColor: "default",
-      textAlignment: "left"
-    },
-    content: [
-      {
-        type: "text",
-        text: "Comece a escrever seu projeto aqui...",
-        styles: {}
-      }
-    ],
-    children: []
-  }];
-
   const editor = useCreateBlockNote({
     initialContent: initialContent 
       ? (typeof initialContent === 'string' && initialContent.trim() 
           ? JSON.parse(initialContent)
-          : defaultContent)
-      : defaultContent
+          : state.defaultContent)
+      : state.defaultContent
   });
 
   useEffect(() => {
@@ -59,23 +64,23 @@ export default function Editor({ initialContent, editable = true }: EditorProps)
     const unsubscribe = editor.onEditorContentChange(() => {
       const content = JSON.stringify(editor.topLevelBlocks, null, 2);
       setEditorContent(content);
-      setHasChanges(true);
+      setState(prev => ({ ...prev, hasChanges: true }));
     });
 
     return () => unsubscribe;
-  }, [editor]);
+  }, [editor, setEditorContent]);
 
   // Auto-save otimizado
   useEffect(() => {
     const interval = setInterval(() => {
-      if (hasChanges) {
+      if (state.hasChanges) {
         saveEditorContent();
-        setHasChanges(false);
+        setState(prev => ({ ...prev, hasChanges: false }));
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [hasChanges, saveEditorContent]);
+  }, [state.hasChanges, saveEditorContent]);
 
   return <BlockNoteView editor={editor} editable={editable} theme={customTheme} />;
 }

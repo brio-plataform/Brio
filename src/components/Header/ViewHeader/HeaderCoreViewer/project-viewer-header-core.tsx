@@ -1,4 +1,6 @@
-import { Star, Share2, GitFork, BookOpen, FileEdit, History, GitBranch, ChevronDown, Bookmark } from "lucide-react"
+"use client"
+
+import { Star, Share2, GitFork, FileEdit, History, GitBranch, ChevronDown, Bookmark } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -8,21 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import type { ProjectViewerHeaderCoreProps, ProjectModel } from '@/types/types'
+import type { ProjectViewerHeaderCoreProps } from './types'
+import { PROJECT_TYPE_LABELS } from './types'
 
-export function ProjectViewerHeaderCore({
-  project,
-}: ProjectViewerHeaderCoreProps) {
-  const getTypeLabel = (type: ProjectModel) => {
-    const types = {
-      article: 'Artigo',
-      thesis: 'TCC/Tese',
-      book: 'Livro',
-      research: 'Pesquisa'
-    } as const;
-    return types[type];
-  }
-
+export function ProjectViewerHeaderCore({ project }: ProjectViewerHeaderCoreProps) {
   return (
     <div className="flex flex-col gap-4 px-6 py-4">
       {/* Project Info Section */}
@@ -31,7 +22,7 @@ export function ProjectViewerHeaderCore({
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-bold">{project.title}</h1>
             <Badge variant="secondary">
-              {getTypeLabel(project.type)}
+              {PROJECT_TYPE_LABELS[project.type]}
             </Badge>
           </div>
           
@@ -54,22 +45,22 @@ export function ProjectViewerHeaderCore({
               </>
             )}
             <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-2">
-                <GitBranch className="h-4 w-4" />
-                v{project.currentVersion}
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>
-                <History className="h-4 w-4 mr-2" /> Ver histórico
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <GitFork className="h-4 w-4 mr-2" /> Criar nova versão
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <GitBranch className="h-4 w-4" />
+                  v{project.currentVersion}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <History className="h-4 w-4 mr-2" /> Ver histórico
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <GitFork className="h-4 w-4 mr-2" /> Criar nova versão
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 

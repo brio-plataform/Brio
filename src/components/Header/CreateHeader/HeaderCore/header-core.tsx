@@ -9,7 +9,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import type { HeaderCoreProps } from '@/types/types'
+import type { 
+  HeaderCoreProps, 
+  VisibilityOption,
+  ProjectVisibility 
+} from './types'
 
 export function HeaderCore({
   projectName,
@@ -19,6 +23,30 @@ export function HeaderCore({
   handleButtonSelectChange,
   handleVisibilityChange,
 }: HeaderCoreProps) {
+  
+  const visibilityOptions: VisibilityOption[] = [
+    {
+      value: 'private',
+      label: 'Privado',
+      icon: <Lock className="h-4 w-4 mr-2" />
+    },
+    {
+      value: 'public',
+      label: 'Público',
+      icon: <Globe className="h-4 w-4 mr-2" />
+    },
+    {
+      value: 'institutional',
+      label: 'Institucional',
+      icon: <Building className="h-4 w-4 mr-2" />
+    }
+  ]
+
+  const getVisibilityIcon = (visibility: ProjectVisibility) => {
+    const option = visibilityOptions.find(opt => opt.value === visibility)
+    return option?.icon
+  }
+
   return (
     <div className="flex items-center justify-between px-6">
       <div className="flex flex-col gap-2 flex-1">
@@ -41,21 +69,17 @@ export function HeaderCore({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-2">
-              {visibility === 'private' ? <Lock className="h-4 w-4" /> : visibility === 'public' ? <Globe className="h-4 w-4" /> : <Building className="h-4 w-4" />}
+              {getVisibilityIcon(visibility)}
               {visibility === 'private' ? 'Privado' : visibility === 'public' ? 'Público' : 'Institucional'}
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => handleVisibilityChange('private')}>
-              <Lock className="h-4 w-4 mr-2" /> Privado
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleVisibilityChange('public')}>
-              <Globe className="h-4 w-4 mr-2" /> Público
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleVisibilityChange('institutional')}>
-              <Building className="h-4 w-4 mr-2" /> Institucional
-            </DropdownMenuItem>
+            {visibilityOptions.map((option) => (
+              <DropdownMenuItem key={option.value} onClick={() => handleVisibilityChange(option.value as ProjectVisibility)}>
+                {option.icon} {option.label}
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
 

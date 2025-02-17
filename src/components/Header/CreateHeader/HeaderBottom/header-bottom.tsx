@@ -10,20 +10,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import type { HeaderBottomProps, HeaderCollaborator } from '@/types/types'
-
-interface Collaborator {
-  id: string
-  name: string
-  avatar: string
-  role: string
-  status: 'online' | 'offline' | 'away'
-}
+import type { 
+  HeaderBottomProps, 
+  Collaborator, 
+  HeaderBottomState 
+} from './types'
+import { useState } from 'react'
 
 export function HeaderBottom({
   currentVersion,
   collaborators
 }: HeaderBottomProps) {
+  const [state, setState] = useState<HeaderBottomState>({
+    isSearching: false,
+    searchQuery: '',
+    showVersionHistory: false,
+    showCollaborators: false
+  })
+
   return (
     <>
       <div className="flex items-center justify-between px-6 gap-4">
