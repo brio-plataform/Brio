@@ -9,11 +9,6 @@ import type {
   ProjectVersion 
 } from '@/types/types';
 
-interface Version {
-  version: string;
-  updatedAt: string;
-}
-
 export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -55,7 +50,7 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
     return updateProject({ content });
   };
 
-  const addVersion = async (newVersion: Version) => {
+  const addVersion = async (newVersion: ProjectVersion) => {
     const response = await axios.get(`http://localhost:3001/projects/${projectId}`);
     const currentVersions = response.data.version || [];
     
