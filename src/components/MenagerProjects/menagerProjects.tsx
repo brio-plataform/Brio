@@ -26,62 +26,19 @@ import { Modal } from "@/components/Modal/modal"
 import { Project } from "@/components/Project/Project"
 import { useGetAllProjects } from '@/store/useGetAllProjects'
 import axios from 'axios'
-import { MockProject } from '@/types/types'
+import {
+  type ProjectStats,
+  type ProjectStatus,
+  colorPairs,
+  PROJECT_MODELS,
+  PROJECT_VISIBILITY,
+  MODEL_BADGE_STYLES,
+  PROJECT_COLORS,
+  MockProject,
+  VISIBILITY_BADGE_STYLES,
+  STATUS_BADGE_STYLES
+} from './types'
 
-interface ProjectStats {
-  views?: number;
-  stars: number;
-  forks?: number;
-  comments: number;
-  shares?: number;
-}
-
-const projectColors = [
-  "from-pink-500 to-rose-500",
-  "from-blue-500 to-cyan-500",
-  "from-green-500 to-emerald-500",
-  "from-yellow-500 to-amber-500",
-  "from-purple-500 to-indigo-500",
-]
-
-// Primeiro, vamos definir os tipos possíveis como uma constante
-const PROJECT_MODELS = {
-  ARTICLE: "article",
-  THESIS: "thesis",
-  BOOK: "book",
-  RESEARCH: "research"
-} as const
-
-// Adicionar constante para visibilidade
-const PROJECT_VISIBILITY = {
-  PRIVATE: "private",
-  PUBLIC: "public",
-  INSTITUTIONAL: "institutional"
-} as const
-
-// Adicionar constantes para as cores dos badges
-const MODEL_BADGE_STYLES = {
-  article: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  thesis: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
-  book: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-  research: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
-}
-
-const VISIBILITY_BADGE_STYLES = {
-  private: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
-  public: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300",
-  institutional: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300"
-}
-
-// Definir tipo para status
-type ProjectStatus = "Em Andamento" | "Concluído" | string;
-
-// Atualizar a constante com tipo
-const STATUS_BADGE_STYLES: Record<ProjectStatus, string> = {
-  "Em Andamento": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
-  "Concluído": "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300",
-  default: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300"
-} as const;
 
 // Remover o TAG_BADGE_STYLES fixo e adicionar função para gerar cores
 function generateTagColor(tag: string) {
@@ -95,20 +52,6 @@ function generateTagColor(tag: string) {
     }
     return Math.abs(hash);
   };
-
-  // Array de combinações de cores predefinidas (mais suaves e adequadas para badges)
-  const colorPairs = [
-    { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-700 dark:text-blue-300" },
-    { bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-700 dark:text-purple-300" },
-    { bg: "bg-pink-100 dark:bg-pink-900/30", text: "text-pink-700 dark:text-pink-300" },
-    { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-700 dark:text-emerald-300" },
-    { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-700 dark:text-amber-300" },
-    { bg: "bg-indigo-100 dark:bg-indigo-900/30", text: "text-indigo-700 dark:text-indigo-300" },
-    { bg: "bg-rose-100 dark:bg-rose-900/30", text: "text-rose-700 dark:text-rose-300" },
-    { bg: "bg-teal-100 dark:bg-teal-900/30", text: "text-teal-700 dark:text-teal-300" },
-    { bg: "bg-cyan-100 dark:bg-cyan-900/30", text: "text-cyan-700 dark:text-cyan-300" },
-    { bg: "bg-violet-100 dark:bg-violet-900/30", text: "text-violet-700 dark:text-violet-300" }
-  ];
 
   // Selecionar cor baseada no hash da tag
   const colorIndex = hashString(tag) % colorPairs.length;
@@ -307,7 +250,7 @@ export default function MenagerProjects() {
           <ProjectCard
             key={project.id}
             project={project}
-            colorClass={projectColors[index % projectColors.length]}
+            colorClass={PROJECT_COLORS[index % PROJECT_COLORS.length]}
             viewMode={viewMode}
           />
         ))}
