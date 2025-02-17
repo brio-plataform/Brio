@@ -2,24 +2,6 @@
 export default function LoadingProject() {
     return (
         <div className="flex w-full h-full min-h-screen relative">
-          {/* Left Sidebar Skeleton */}
-          <div className="sticky top-0 h-screen w-[250px] border-r animate-pulse">
-            <div className="p-4 space-y-6">
-              {/* Logo Area */}
-              <div className="h-8 w-32 bg-gray-200 dark:bg-gray-800 rounded" />
-              
-              {/* Menu Items */}
-              <div className="space-y-4">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="h-5 w-5 rounded bg-gray-200 dark:bg-gray-800" />
-                    <div className="h-4 w-24 bg-gray-200 dark:bg-gray-800 rounded" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          
           {/* Main Content Skeleton */}
           <div className="flex-1 transition-all duration-300">
             {/* Header Skeleton */}

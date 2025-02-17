@@ -65,6 +65,11 @@ import {
   Reference
 } from './types'
 import { cn } from "@/lib/utils"
+import {
+  MOCK_REFERENCES,
+  MOCK_STUDY_TABS,
+  MOCK_DEBATE_CONFIG 
+} from './mockData'
 
 interface UserTooltipProps {
   user: {
@@ -123,6 +128,9 @@ export function CreatePost({
   customActions,
   className,
   onSubmit,
+  onMediaAdd,
+  onFileAdd,
+  onLinkAdd,
   img = "/images/placeholder.svg"
 }: CreatePostProps) {
   const initialState: CreatePostState = {
@@ -199,17 +207,17 @@ export function CreatePost({
     fileInputRef.current?.click()
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files) {
-      const newAttachments: Attachment[] = Array.from(files).map((file) => ({
-        id: Math.random().toString(36).substr(2, 9),
-        name: file.name,
-        size: `${(file.size / (1024 * 1024)).toFixed(2)}mb`,
-        type: file.type,
-        icon: file.type.startsWith("image/") ? "image" : "file",
-      }))
-      setAttachments([...attachments, ...newAttachments])
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file && onFileAdd) {
+      setState(prev => ({ ...prev, isUploadingFile: true }))
+      try {
+        await onFileAdd(file)
+      } catch (error) {
+        console.error('Error uploading file:', error)
+      } finally {
+        setState(prev => ({ ...prev, isUploadingFile: false }))
+      }
     }
   }
 
@@ -295,17 +303,19 @@ export function CreatePost({
         return (
           <div className="flex items-center gap-3 p-2 rounded-md bg-muted/50">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={typeof img === 'string' ? img : img.src} />
-              <AvatarFallback>{ref.content[1]}</AvatarFallback>
+              <AvatarImage src={ref.avatar || ''} />
+              <AvatarFallback>{ref.username[0]}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <p className="font-medium">{ref.content}</p>
+              <p className="font-medium">@{ref.username}</p>
             </div>
             <Button
               variant="ghost"
               size="icon"
               className="h-8 w-8"
-              onClick={() => removeReference(ref.id)}
+              onClick={() => {
+                setReferences(references.filter(r => r.id !== ref.id))
+              }}
             >
               <X className="h-4 w-4" />
             </Button>
