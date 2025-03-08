@@ -386,13 +386,13 @@
       "userId": "1",
       "name": "Literatura Brasileira Contemporânea",
       "description": "Um estudo sobre as tendências e transformações na literatura brasileira do século XXI.",
-      "logo": "blob:http://localhost:3000/57beaaec-1573-4f0d-b9a6-b7c2a04c5a9f",
+      "logo": "https://i0.wp.com/leiasemprebrasil.com.br/wp-content/uploads/2024/08/p.3-A-literatura-brasileira-um-tesouro-cultural-e-historico.jpg?w=720&ssl=1",
       "createdAt": "2025-01-20T14:20:00.000Z",
-      "banner": "blob:http://localhost:3000/a39b37d4-f4ce-48a7-9cd3-9ac5eb571ce4",
+      "banner": "https://fly.metroimg.com/upload/q_85,w_700/https://uploads.metroimg.com/wp-content/uploads/2021/04/26190615/Dia_Da_Literatura_Brasileira.jpg",
       "wordCount": 5200,
       "citations": [],
       "model": "research",
-      "visibility": "private",
+      "visibility": "public",
       "progress": 90,
       "status": "Em Andamento",
       "tags": [],
@@ -428,7 +428,7 @@
           "content": [
             {
               "type": "text",
-              "text": "Literatura Brasileira Contemporânea  ",
+              "text": "Literatura Brasileira Contemporânea",
               "styles": {}
             }
           ],
@@ -1595,7 +1595,7 @@
           "children": []
         }
       ],
-      "updatedAt": "2025-02-15T02:28:52.660Z",
+      "updatedAt": "2025-02-18T15:51:14.825Z",
       "title": "Literatura Brasileira Contemporânea"
     }
   ]

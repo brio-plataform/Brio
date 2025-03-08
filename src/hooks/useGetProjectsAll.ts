@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '@/utils/axios';
 import { useState, useEffect } from 'react';
 import type { 
   ProjectType,
@@ -53,7 +53,7 @@ export function useGetProjectsAll(): ProjectsHookReturn {
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get<APIProject[]>('http://localhost:3001/projects');
+      const response = await api.get<APIProject[]>('/projects');
       
       const convertedProjects = response.data.map(apiProject => ({
         ...apiProject,
@@ -87,4 +87,4 @@ export function useGetProjectsAll(): ProjectsHookReturn {
     error,
     refetch: fetchProjects
   };
-} 
+}

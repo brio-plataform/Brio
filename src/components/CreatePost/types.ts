@@ -95,6 +95,48 @@ export interface DialogState {
   error?: string
 }
 
+export type QuestionType = 'question' | 'poll' | 'debate'
+
+export interface PollOption {
+  id: string
+  text: string
+  votes?: number
+}
+
+export interface Mention {
+  id: string
+  name: string
+  username: string
+  email: string
+  avatar: string
+  bio: string
+  institution: string
+  mutualConnections?: {
+    name: string
+    avatar: string
+  }[]
+}
+
+export interface Attachment {
+  id: string
+  name: string
+  size: string
+  type: string
+  icon: string
+}
+
+export interface Template {
+  id: string
+  name: string
+  description: string
+}
+
+// Constantes
+export const MAX_TITLE_LENGTH = 100
+export const MAX_TAGS = 5
+export const MAX_POLL_OPTIONS = 10
+export const MIN_POLL_OPTIONS = 2
+
 export interface CreatePostState {
   /** Tipo do post */
   postType: PostType
@@ -122,6 +164,11 @@ export interface CreatePostState {
   showLinkModal: boolean
   /** URL do link sendo adicionado */
   linkUrl: string
+  questionType?: QuestionType
+  pollOptions?: PollOption[]
+  attachments?: Attachment[]
+  mentions?: Mention[]
+  template?: Template
 }
 
 export interface CreatePostDialogState {

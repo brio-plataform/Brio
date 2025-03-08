@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '@/utils/axios';
 import { useState } from 'react';
 import type { 
   UpdateProjectData, 
@@ -8,11 +8,6 @@ import type {
   ProjectType,
   ProjectVersion 
 } from '@/types/types';
-
-interface Version {
-  version: string;
-  updatedAt: string;
-}
 
 export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +19,7 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
 
     try {
       // Primeiro, buscar o projeto atual
-      const currentProject = await axios.get(`http://localhost:3001/projects/${projectId}`);
+      const currentProject = await api.get(`/projects/${projectId}`);
       
       // Mesclar os dados existentes com as atualizações
       const updatedData = {
@@ -33,7 +28,7 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
         updatedAt: new Date().toISOString()
       };
 
-      const response = await axios.patch(`http://localhost:3001/projects/${projectId}`, updatedData);
+      const response = await api.patch(`/projects/${projectId}`, updatedData);
       return response.data;
     } catch (err) {
       setError(err as Error);
@@ -55,8 +50,8 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
     return updateProject({ content });
   };
 
-  const addVersion = async (newVersion: Version) => {
-    const response = await axios.get(`http://localhost:3001/projects/${projectId}`);
+  const addVersion = async (newVersion: ProjectVersion) => {
+    const response = await api.get(`/projects/${projectId}`);
     const currentVersions = response.data.version || [];
     
     return updateProject({
@@ -113,4 +108,4 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
     isLoading,
     error
   };
-} 
+}

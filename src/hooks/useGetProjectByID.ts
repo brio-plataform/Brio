@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '@/utils/axios';
 import { useState, useEffect } from 'react';
 import type { 
   ProjectHookReturn, 
@@ -10,60 +10,6 @@ import type {
   ProjectType,
   Project as ImportedProject
 } from '@/types/types';
-
-interface Version {
-  version: string;
-  updatedAt: string;
-}
-
-interface Author {
-  name: string;
-  avatar: string;
-  institution: string;
-}
-
-interface Stats {
-  views: number;
-  stars: number;
-  forks: number;
-  comments: number;
-}
-
-interface ContentProps {
-  textColor: string;
-  backgroundColor: string;
-  textAlignment: string;
-  level?: number;
-}
-
-interface Content {
-  id: string;
-  type: string;
-  props: ContentProps;
-  content: any[];
-  children: any[];
-}
-
-interface Project {
-  id: string;
-  userId: string;
-  name: string;
-  description: string;
-  logo: string;
-  banner: string;
-  wordCount: number;
-  citations: string[];
-  model: ProjectModel;
-  visibility: ProjectVisibility;
-  progress: number;
-  type: string;
-  author: Author;
-  stats: ProjectStats;
-  version: ProjectVersion[];
-  content: ContentBlock[];
-  updatedAt: string;
-  createdAt: string;
-}
 
 // Interface temporária para mapear a resposta da API
 interface APIProject {
@@ -117,7 +63,7 @@ export function useGetProject(projectId: string): ProjectHookReturn {
       if (!projectId) return;
       
       try {
-        const response = await axios.get<APIProject>(`http://localhost:3001/projects/${projectId}`);
+        const response = await api.get<APIProject>(`/projects/${projectId}`);
         const apiProject = response.data;
         
         // Preservar os dados existentes
@@ -180,4 +126,4 @@ export function useGetProject(projectId: string): ProjectHookReturn {
   };
 
   return projectData;
-} 
+}
