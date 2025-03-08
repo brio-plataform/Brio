@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '@/utils/axios';
 import { useState, useEffect } from 'react';
 import type { 
   ProjectHookReturn, 
@@ -63,7 +63,7 @@ export function useGetProject(projectId: string): ProjectHookReturn {
       if (!projectId) return;
       
       try {
-        const response = await axios.get<APIProject>(`http://localhost:3001/projects/${projectId}`);
+        const response = await api.get<APIProject>(`/projects/${projectId}`);
         const apiProject = response.data;
         
         // Preservar os dados existentes
@@ -126,4 +126,4 @@ export function useGetProject(projectId: string): ProjectHookReturn {
   };
 
   return projectData;
-} 
+}

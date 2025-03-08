@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import axios from 'axios'
+import api from '@/utils/axios'
 import { MockProject, ProjectsStore } from '@/types/types'
 
 export const useGetAllProjects = create<ProjectsStore>((set, get) => ({
@@ -10,7 +10,7 @@ export const useGetAllProjects = create<ProjectsStore>((set, get) => ({
   fetchProjects: async () => {
     set({ isLoading: true })
     try {
-      const response = await axios.get('http://localhost:3001/projects')
+      const response = await api.get('/projects')
       const apiProjects = response.data.map((project: any) => ({
         id: project.id.toString(),
         title: project.name,
@@ -52,7 +52,7 @@ export const useGetAllProjects = create<ProjectsStore>((set, get) => ({
       }))
 
       // Depois faz a requisição para a API
-      await axios.delete(`http://localhost:3001/projects/${id}`)
+      await api.delete(`/projects/${id}`)
     } catch (error) {
       // Se houver erro, reverte a deleção local
       await get().fetchProjects()
@@ -65,4 +65,4 @@ export const useGetAllProjects = create<ProjectsStore>((set, get) => ({
       projects: [...state.projects, project]
     }))
   }
-})) 
+}))
