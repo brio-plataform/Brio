@@ -7,9 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "server": "json-server --watch db.json --port 3001"
+    "server": "json-server --watch db.json --port 3002"
   },
   "dependencies": {
+    "@auth/core": "^0.34.2",
     "@blocknote/core": "^0.23.1",
     "@blocknote/mantine": "^0.23.1",
     "@blocknote/react": "^0.23.1",
@@ -43,11 +44,13 @@
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.7",
     "axios": "^1.8.2",
+    "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.474.0",
     "next": "14.2.23",
+    "next-auth": "^4.24.11",
     "nuqs": "^2.3.1",
     "react": "^18",
     "react-day-picker": "^8.10.1",

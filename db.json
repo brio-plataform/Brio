@@ -4,7 +4,7 @@
       "id": "1",
       "name": "John Doe",
       "email": "john.doe@example.com",
-      "password": "123456"
+      "password": "$2b$10$NZRFPp2vQ9mv0p2aablhN.4OjXApCMXlzZmgRBjv6nmkm5EX8Xi5."
     }
   ],
   "projects": [

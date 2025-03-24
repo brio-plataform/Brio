@@ -1,16 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
+import "./../globals.css";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { AuthProvider } from "@/providers/auth";
+import { LeftSidebar } from "@/components/Left-SideBar/left-sidebar";
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+  src: "./../fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+  src: "./../fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
 });
@@ -129,7 +130,12 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <NuqsAdapter>
-            {children}
+            <div className="flex w-full h-full min-h-screen relative">
+              <div className="sticky top-0 h-screen">
+                <LeftSidebar />
+              </div>
+              {children}
+            </div>
           </NuqsAdapter>
         </AuthProvider>
       </body>
