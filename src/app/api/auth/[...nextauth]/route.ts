@@ -1,141 +1,108 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import axios, { AxiosError } from "axios";
-import { Session } from "next-auth";
-import { JWT } from "next-auth/jwt";
-import bcrypt from "bcryptjs";
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { NextAuthOptions } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { prisma } from '@/lib/prisma';
+import { compare } from 'bcryptjs';
+import NextAuth from 'next-auth/next';
 
-// Estendendo os tipos para incluir o ID
-interface ExtendedUser {
-  id: string;
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
+  }
 }
 
-interface ExtendedSession extends Session {
-  user: ExtendedUser;
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string;
+    email: string;
+    name?: string | null;
+  }
 }
 
-interface ExtendedToken extends JWT {
-  id?: string;
-}
-
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: 'jwt',
+  },
+  pages: {
+    signIn: '/login',
+  },
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: 'credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          console.log("Credenciais recebidas:", credentials);
           return null;
         }
 
-        try {
-          console.log("Tentando autenticar com:", {
+        const user = await prisma.user.findUnique({
+          where: {
             email: credentials.email,
-            passwordLength: credentials.password.length
-          });
+          },
+        });
 
-          // Buscar usuário no json-server
-          const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/users?email=${credentials.email}`;
-          console.log("Fazendo requisição para:", apiUrl);
-
-          const response = await axios.get(apiUrl);
-          console.log("Resposta do servidor:", response.data);
-
-          const users = response.data;
-
-          if (users.length === 0) {
-            console.log("Usuário não encontrado para o email:", credentials.email);
-            return null;
-          }
-
-          const user = users[0];
-          console.log("Dados do usuário encontrado:", {
-            id: user.id,
-            email: user.email,
-            hasPassword: !!user.password
-          });
-
-          // Verificar se a senha existe no banco
-          if (!user.password) {
-            console.log("Senha não encontrada para o usuário:", user.email);
-            return null;
-          }
-
-          // Comparação segura da senha usando bcrypt
-          const isValidPassword = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
-
-          console.log("Resultado da validação de senha:", {
-            isValid: isValidPassword,
-            providedPasswordLength: credentials.password.length,
-            storedPasswordLength: user.password.length
-          });
-
-          if (isValidPassword) {
-            return {
-              id: user.id,
-              name: user.name,
-              email: user.email
-            };
-          }
-
-          console.log("Senha inválida para o usuário:", user.email);
-          return null;
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            console.error("Erro na requisição:", {
-              message: error.message,
-              status: error.response?.status,
-              data: error.response?.data
-            });
-          } else if (error instanceof Error) {
-            console.error("Erro na autenticação:", {
-              message: error.message,
-              stack: error.stack
-            });
-          } else {
-            console.error("Erro desconhecido:", error);
-          }
+        if (!user || !user.password) {
           return null;
         }
-      }
-    })
+
+        const isPasswordValid = await compare(credentials.password, user.password);
+
+        if (!isPasswordValid) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        };
+      },
+    }),
   ],
-  pages: {
-    signIn: "/login",
-  },
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 dias
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-  debug: true, // Ativando logs de debug do NextAuth
   callbacks: {
-    async jwt({ token, user }): Promise<ExtendedToken> {
-      if (user) {
-        token.id = user.id;
+    async session({ token, session }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.name = token.name;
       }
-      return token;
+      return session;
     },
-    async session({ session, token }): Promise<ExtendedSession> {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id as string
-        }
-      };
-    }
-  }
-});
+    async jwt({ token, user }) {
+      if (!token.email) {
+        return token;
+      }
 
+      const dbUser = await prisma.user.findFirst({
+        where: {
+          email: token.email,
+        },
+      });
+
+      if (!dbUser) {
+        if (user) {
+          token.id = user.id;
+        }
+        return token;
+      }
+
+      return {
+        id: dbUser.id,
+        name: dbUser.name,
+        email: dbUser.email,
+      };
+    },
+  },
+};
+
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST }; 
