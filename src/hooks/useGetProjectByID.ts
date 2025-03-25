@@ -1,5 +1,4 @@
-import api from '@/utils/axios';
-import { useState, useEffect } from 'react';
+import { trpc } from '@/utils/trpc';
 import type { 
   ProjectHookReturn, 
   ContentBlock,
@@ -54,75 +53,75 @@ interface APIProject {
 }
 
 export function useGetProject(projectId: string): ProjectHookReturn {
-  const [project, setProject] = useState<ImportedProject | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    const fetchProject = async () => {
-      if (!projectId) return;
-      
-      try {
-        const response = await api.get<APIProject>(`/projects/${projectId}`);
-        const apiProject = response.data;
-        
-        // Preservar os dados existentes
-        const convertedProject: ImportedProject = {
-          ...apiProject,
-          title: apiProject.name,
-          type: apiProject.type as ProjectType,
-          collaborators: apiProject.collaborators || [],
-          tags: apiProject.tags || [],
-          logo: apiProject.logo || "",
-          banner: apiProject.banner || "",
-          content: apiProject.content.map(item => ({
-            ...item,
-            type: item.type as "heading" | "paragraph" | "image" | "bulletListItem"
-          })) as ContentBlock[]
-        };
-        
-        setProject(convertedProject);
-      } catch (err) {
-        console.error('Error fetching project:', err);
-        setError(err as Error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProject();
-  }, [projectId]);
+  const { data: project, isLoading, error } = trpc.project.getById.useQuery(projectId);
 
   // Create a memoized object with the project data
   const projectData: ProjectHookReturn = {
-    project,
+    project: project ? {
+      ...project,
+      title: project.name,
+      type: project.model as ProjectType,
+      model: project.model as ProjectModel,
+      visibility: project.visibility as ProjectVisibility,
+      description: project.description || '',
+      logo: project.logo || '',
+      banner: project.banner || '',
+      createdAt: project.createdAt.toISOString(),
+      updatedAt: project.updatedAt.toISOString(),
+      citations: [],
+      collaborators: [],
+      author: {
+        name: '',
+        avatar: '',
+        institution: ''
+      },
+      stats: {
+        views: 0,
+        stars: 0,
+        forks: 0,
+        citations: 0,
+        comments: 0
+      },
+      version: [],
+      content: []
+    } : null,
     isLoading,
-    error,
+    error: error as Error | null,
     // Basic project info
     name: project?.name,
-    description: project?.description,
-    type: project?.type,
+    description: project?.description || undefined,
+    type: project?.model as ProjectType,
     // Content and versions
-    content: project?.content,
-    versions: project?.version,
-    lastVersion: project?.version?.[project?.version?.length - 1],
+    content: [],
+    versions: [],
+    lastVersion: undefined,
     // Metadata
-    updatedAt: project?.updatedAt,
-    createdAt: project?.createdAt,
+    updatedAt: project?.updatedAt?.toISOString(),
+    createdAt: project?.createdAt?.toISOString(),
     userId: project?.userId,
     // Media
-    logo: project?.logo,
-    banner: project?.banner,
+    logo: project?.logo || undefined,
+    banner: project?.banner || undefined,
     // Stats and metrics
-    wordCount: project?.wordCount,
-    citations: project?.citations,
-    progress: project?.progress,
+    wordCount: project?.wordCount || 0,
+    citations: [],
+    progress: project?.progress || 0,
     // Settings
-    model: project?.model,
-    visibility: project?.visibility,
+    model: project?.model as ProjectModel,
+    visibility: project?.visibility as ProjectVisibility,
     // Author and stats
-    author: project?.author,
-    stats: project?.stats
+    author: {
+      name: '',
+      avatar: '',
+      institution: ''
+    },
+    stats: {
+      views: 0,
+      stars: 0,
+      forks: 0,
+      citations: 0,
+      comments: 0
+    }
   };
 
   return projectData;

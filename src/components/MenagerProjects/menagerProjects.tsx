@@ -25,10 +25,12 @@ import {
 import { Modal } from "@/components/Modal/modal"
 import { Project } from "@/components/Project/Project"
 import { useGetAllProjects } from '@/store/useGetAllProjects'
-import axios from 'axios'
+import { trpc } from '@/utils/trpc'
 import {
   type ProjectStats,
   type ProjectStatus,
+  type ProjectModel,
+  type ProjectVisibility,
   colorPairs,
   PROJECT_MODELS,
   PROJECT_VISIBILITY,
@@ -38,7 +40,36 @@ import {
   VISIBILITY_BADGE_STYLES,
   STATUS_BADGE_STYLES
 } from './types'
+import { Project as PrismaProject } from '@prisma/client'
 
+// Função para mapear o projeto do Prisma para o formato MockProject
+function mapPrismaToMockProject(prismaProject: PrismaProject): MockProject {
+  return {
+    id: prismaProject.id,
+    title: prismaProject.name,
+    description: prismaProject.description || "",
+    banner: prismaProject.banner || "/placeholder.svg",
+    logo: prismaProject.logo || "/placeholder.svg",
+    model: prismaProject.model as ProjectModel,
+    visibility: prismaProject.visibility as ProjectVisibility,
+    progress: prismaProject.progress,
+    institutional: false,
+    institution: {
+      name: "Institution Name",
+      avatar: prismaProject.logo || "/placeholder.svg"
+    },
+    stats: {
+      views: 0,
+      stars: 0,
+      forks: 0,
+      comments: 0,
+      shares: 0
+    },
+    status: prismaProject.status,
+    tags: prismaProject.tags,
+    collaborators: []
+  }
+}
 
 // Remover o TAG_BADGE_STYLES fixo e adicionar função para gerar cores
 function generateTagColor(tag: string) {
@@ -62,8 +93,12 @@ export default function MenagerProjects() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [searchTerm, setSearchTerm] = useState("")
   const [filterType, setFilterType] = useState("all")
+  const [filters, setFilters] = useState<{
+    model?: ProjectModel;
+    visibility?: ProjectVisibility;
+    search?: string;
+  }>({})
   
-  // Usar o store ao invés do hook
   const { projects, isLoading, error, fetchProjects, deleteProject, addProject } = useGetAllProjects()
   const router = useRouter()
 
@@ -72,104 +107,93 @@ export default function MenagerProjects() {
     fetchProjects()
   }, [])
 
-  // Filtrar projetos
-  const filteredProjects = projects.filter((project) => {
-    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesType = filterType === "all" || project.model === filterType
-    return matchesSearch && matchesType
-  })
-
   // Atualizar função de criar projeto
   const handleCreateNewProject = async () => {
     try {
       const newProject = {
-        userId: "1", // Idealmente, pegar do contexto de autenticação
         name: "Novo Projeto",
         description: "Descrição do novo projeto",
         logo: "/placeholder.svg",
-        createdAt: new Date().toISOString(),
         banner: "/placeholder.svg",
-        wordCount: 0,
-        citations: [],
-        model: PROJECT_MODELS.ARTICLE,
-        visibility: "private",
+        model: "article" as const,
+        visibility: "private" as const,
         progress: 0,
-        author: {
-          name: "John Doe", // Idealmente, pegar do contexto de autenticação
-          avatar: "/path/to/avatar.jpg",
-          institution: "Institution Name"
-        },
-        stats: {
-          views: 0,
-          stars: 0,
-          forks: 0,
-          comments: 0
-        },
-        version: [
-          {
-            version: "1.0.0",
-            updatedAt: new Date().toISOString()
-          }
-        ],
-        content: [
-          {
-            id: crypto.randomUUID(),
-            type: "heading",
-            props: {
-              textColor: "default",
-              backgroundColor: "default",
-              textAlignment: "left",
-              level: 1
-            },
-            content: [
-              {
-                type: "text",
-                text: "Novo Projeto",
-                styles: {}
-              }
-            ],
-            children: []
-          }
-        ],
-        updatedAt: new Date().toISOString()
+        status: "Em Andamento",
+        tags: []
       }
 
-      const response = await axios.post('http://localhost:3001/projects', newProject)
+      const response = await trpc.project.create.useMutation().mutateAsync(newProject)
       
       // Adicionar ao store antes de redirecionar
-      addProject({
-        id: response.data.id,
-        title: response.data.name,
-        banner: response.data.banner,
-        logo: response.data.logo,
-        description: response.data.description || "",
-        model: response.data.model || PROJECT_MODELS.ARTICLE,
-        visibility: response.data.visibility || PROJECT_VISIBILITY.PRIVATE,
-        progress: response.data.progress || 0,
-        institutional: true,
-        institution: {
-          name: response.data.author?.institution || "",
-          avatar: response.data.logo || "/placeholder.svg"
-        },
-        stats: {
-          views: response.data.stats?.views || 0,
-          stars: response.data.stats?.stars || 0,
-          forks: response.data.stats?.forks || 0,
-          comments: response.data.stats?.comments || 0,
-          shares: response.data.stats?.shares || 0
-        },
-        status: response.data.status,
-        tags: response.data.tags,
-        collaborators: response.data.collaborators?.map((c: any) => ({
-          name: c.name,
-          avatar: c.avatar
-        })) || []
-      })
+      addProject(response)
 
-      router.push(`/user/projects/${response.data.id}`)
+      router.push(`/user/projects/${response.id}`)
     } catch (error) {
       console.error('Erro ao criar projeto:', error)
     }
+  }
+
+  // Atualizar função de filtrar por modelo
+  const filterByModel = (model: ProjectModel) => {
+    setFilters(prev => ({
+      ...prev,
+      model: prev.model === model ? undefined : model
+    }))
+  }
+
+  // Atualizar função de filtrar por visibilidade
+  const filterByVisibility = (visibility: ProjectVisibility) => {
+    setFilters(prev => ({
+      ...prev,
+      visibility: prev.visibility === visibility ? undefined : visibility
+    }))
+  }
+
+  // Atualizar função de filtrar projetos
+  const filteredProjects = projects.filter(project => {
+    if (filters.model && project.model !== filters.model) return false
+    if (filters.visibility && project.visibility !== filters.visibility) return false
+    if (filters.search && !project.name.toLowerCase().includes(filters.search.toLowerCase())) return false
+    return true
+  })
+
+  // Atualizar função de renderizar projetos
+  const renderProjects = () => {
+    if (viewMode === 'grid') {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProjects.map(project => {
+            const mappedProject = mapPrismaToMockProject(project);
+            const colorClass = PROJECT_COLORS[mappedProject.model] || PROJECT_COLORS.default;
+            return (
+              <ProjectCard
+                key={project.id}
+                project={mappedProject}
+                colorClass={colorClass}
+                viewMode={viewMode}
+              />
+            );
+          })}
+        </div>
+      )
+    }
+
+    return (
+      <div className="space-y-4">
+        {filteredProjects.map(project => {
+          const mappedProject = mapPrismaToMockProject(project);
+          const colorClass = PROJECT_COLORS[mappedProject.model] || PROJECT_COLORS.default;
+          return (
+            <ProjectCard
+              key={project.id}
+              project={mappedProject}
+              colorClass={colorClass}
+              viewMode={viewMode}
+            />
+          );
+        })}
+      </div>
+    )
   }
 
   if (isLoading) {
@@ -177,7 +201,7 @@ export default function MenagerProjects() {
   }
 
   if (error) {
-    return <div>Erro ao carregar projetos: {error}</div>
+    return <div>Erro ao carregar projetos: {error.message}</div>
   }
 
   return (
@@ -246,14 +270,7 @@ export default function MenagerProjects() {
           ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
           : "grid-cols-1"
       }`}>
-        {filteredProjects.map((project, index) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            colorClass={PROJECT_COLORS[index % PROJECT_COLORS.length]}
-            viewMode={viewMode}
-          />
-        ))}
+        {renderProjects()}
       </div>
     </div>
   )
@@ -288,7 +305,7 @@ function ProjectCard({
                 <div className="flex-shrink-0">
                   <Avatar className="w-12 h-12">
                     <AvatarImage src={project.institution.avatar} alt={project.institution.name} />
-                    <AvatarFallback>{project.institution.name.slice(0, 2)}</AvatarFallback>
+                    <AvatarFallback>{project.title.slice(0, 2)}</AvatarFallback>
                   </Avatar>
                 </div>
 
@@ -297,28 +314,28 @@ function ProjectCard({
                   <div className="flex items-center gap-2 mb-1">
                     <Badge variant="secondary" 
                            className={`${MODEL_BADGE_STYLES[project.model]} border-0`}>
-                      {project.model === PROJECT_MODELS.ARTICLE && 'Artigo'}
-                      {project.model === PROJECT_MODELS.THESIS && 'Tese'}
-                      {project.model === PROJECT_MODELS.BOOK && 'Livro'}
-                      {project.model === PROJECT_MODELS.RESEARCH && 'Pesquisa'}
+                      {project.model === "article" && 'Artigo'}
+                      {project.model === "thesis" && 'Tese'}
+                      {project.model === "book" && 'Livro'}
+                      {project.model === "research" && 'Pesquisa'}
                     </Badge>
                     
                     <Badge variant="secondary" 
                            className={`text-xs flex items-center gap-1 border-0
                                       ${VISIBILITY_BADGE_STYLES[project.visibility]}`}>
-                      {project.visibility === PROJECT_VISIBILITY.PRIVATE && (
+                      {project.visibility === "private" && (
                         <>
                           <Lock className="w-3 h-3" />
                           <span>Privado</span>
                         </>
                       )}
-                      {project.visibility === PROJECT_VISIBILITY.PUBLIC && (
+                      {project.visibility === "public" && (
                         <>
                           <Globe className="w-3 h-3" />
                           <span>Público</span>
                         </>
                       )}
-                      {project.visibility === PROJECT_VISIBILITY.INSTITUTIONAL && (
+                      {project.visibility === "institutional" && (
                         <>
                           <Building2 className="w-3 h-3" />
                           <span>Institucional</span>
@@ -378,28 +395,28 @@ function ProjectCard({
                 <div className="flex gap-3 flex-wrap">
                   <Badge variant="secondary" 
                          className={`${MODEL_BADGE_STYLES[project.model]} border-0`}>
-                    {project.model === PROJECT_MODELS.ARTICLE && 'Artigo'}
-                    {project.model === PROJECT_MODELS.THESIS && 'Tese'}
-                    {project.model === PROJECT_MODELS.BOOK && 'Livro'}
-                    {project.model === PROJECT_MODELS.RESEARCH && 'Pesquisa'}
+                    {project.model === "article" && 'Artigo'}
+                    {project.model === "thesis" && 'Tese'}
+                    {project.model === "book" && 'Livro'}
+                    {project.model === "research" && 'Pesquisa'}
                   </Badge>
                   
                   <Badge variant="secondary" 
                          className={`text-xs flex items-center gap-1 border-0
                                     ${VISIBILITY_BADGE_STYLES[project.visibility]}`}>
-                    {project.visibility === PROJECT_VISIBILITY.PRIVATE && (
+                    {project.visibility === "private" && (
                       <>
                         <Lock className="w-3 h-3" />
                         <span>Privado</span>
                       </>
                     )}
-                    {project.visibility === PROJECT_VISIBILITY.PUBLIC && (
+                    {project.visibility === "public" && (
                       <>
                         <Globe className="w-3 h-3" />
                         <span>Público</span>
                       </>
                     )}
-                    {project.visibility === PROJECT_VISIBILITY.INSTITUTIONAL && (
+                    {project.visibility === "institutional" && (
                       <>
                         <Building2 className="w-3 h-3" />
                         <span>Institucional</span>

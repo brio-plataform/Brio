@@ -1,17 +1,17 @@
 // Enums e constantes
 export const PROJECT_MODELS = {
-  ARTICLE: "article",
-  THESIS: "thesis",
-  BOOK: "book",
-  RESEARCH: "research"
+  article: "article",
+  thesis: "thesis",
+  book: "book",
+  research: "research"
 } as const
 
 export type ProjectModel = typeof PROJECT_MODELS[keyof typeof PROJECT_MODELS]
 
 export const PROJECT_VISIBILITY = {
-  PRIVATE: "private",
-  PUBLIC: "public",
-  INSTITUTIONAL: "institutional"
+  private: "private",
+  public: "public",
+  institutional: "institutional"
 } as const
 
 export type ProjectVisibility = typeof PROJECT_VISIBILITY[keyof typeof PROJECT_VISIBILITY]
@@ -113,13 +113,13 @@ export const MODEL_BADGE_STYLES: Record<ProjectModel, string> = {
   research: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
 } as const
 
-export const PROJECT_COLORS = [
-  "from-pink-500 to-rose-500",
-  "from-blue-500 to-cyan-500",
-  "from-green-500 to-emerald-500",
-  "from-yellow-500 to-amber-500",
-  "from-purple-500 to-indigo-500",
-] as const
+export const PROJECT_COLORS = {
+  article: "from-blue-500 to-cyan-500",
+  thesis: "from-purple-500 to-indigo-500",
+  book: "from-yellow-500 to-amber-500",
+  research: "from-green-500 to-emerald-500",
+  default: "from-pink-500 to-rose-500"
+} as const
 
 export const colorPairs = [
   { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-700 dark:text-blue-300" },

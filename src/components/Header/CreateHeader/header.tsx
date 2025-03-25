@@ -61,10 +61,10 @@ export function Header() {
   const { setCurrentProject, saveProject } = useProjectStore();
 
   useEffect(() => {
-    if (project) {
+    if (project && (!currentProject || project.id !== currentProject.id || project.updatedAt !== currentProject.updatedAt)) {
       setCurrentProject(project);
     }
-  }, [project, setCurrentProject]);
+  }, [project, currentProject, setCurrentProject]);
 
   useEffect(() => {
     if (initialModel) setDocumentType(initialModel);

@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import { AuthProvider } from "@/providers/auth";
+import { Providers } from "@/providers/providers";
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -127,11 +127,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <AuthProvider>
-          <NuqsAdapter>
+        <NuqsAdapter>
+          <Providers>
             {children}
-          </NuqsAdapter>
-        </AuthProvider>
+          </Providers>
+        </NuqsAdapter>
       </body>
     </html>
   );

@@ -1,68 +1,45 @@
 import { create } from 'zustand'
-import api from '@/utils/axios'
-import { MockProject, ProjectsStore } from '@/types/types'
+import { trpc } from '@/utils/trpc'
+import { Project } from '@prisma/client'
 
-export const useGetAllProjects = create<ProjectsStore>((set, get) => ({
+interface ProjectStore {
+  projects: Project[]
+  isLoading: boolean
+  error: Error | null
+  fetchProjects: () => Promise<void>
+  deleteProject: (id: string) => Promise<void>
+  addProject: (project: Project) => void
+}
+
+export const useGetAllProjects = create<ProjectStore>((set, get) => ({
   projects: [],
   isLoading: false,
   error: null,
 
   fetchProjects: async () => {
-    set({ isLoading: true })
     try {
-      const response = await api.get('/projects')
-      const apiProjects = response.data.map((project: any) => ({
-        id: project.id.toString(),
-        title: project.name,
-        description: project.description || "",
-        model: project.model || "article",
-        visibility: project.visibility || "private",
-        progress: project.progress || 0,
-        institutional: true,
-        institution: {
-          name: project.author?.institution || "",
-          avatar: project.logo || "/placeholder.svg"
-        },
-        stats: {
-          views: project.stats?.views || 0,
-          stars: project.stats?.stars || 0,
-          forks: project.stats?.forks || 0,
-          comments: project.stats?.comments || 0,
-          shares: project.stats?.shares || 0
-        },
-        status: project.status,
-        tags: project.tags,
-        collaborators: project.collaborators?.map((c: any) => ({
-          name: c.name,
-          avatar: c.avatar
-        })) || []
-      }))
-
-      set({ projects: apiProjects, isLoading: false })
+      set({ isLoading: true, error: null })
+      const { data: projects } = await trpc.project.getAll.useQuery()
+      set({ projects: projects || [], isLoading: false })
     } catch (error) {
-      set({ error: 'Erro ao carregar projetos', isLoading: false })
+      set({ error: error as Error, isLoading: false })
     }
   },
 
   deleteProject: async (id: string) => {
     try {
-      // Primeiro atualiza o estado local
-      set(state => ({
-        projects: state.projects.filter(p => p.id !== id)
+      await trpc.project.delete.useMutation().mutateAsync(id)
+      set((state) => ({
+        projects: state.projects.filter((project) => project.id !== id),
       }))
-
-      // Depois faz a requisição para a API
-      await api.delete(`/projects/${id}`)
     } catch (error) {
-      // Se houver erro, reverte a deleção local
-      await get().fetchProjects()
-      set({ error: 'Erro ao deletar projeto' })
+      set({ error: error as Error })
     }
   },
 
-  addProject: (project: MockProject) => {
-    set(state => ({
-      projects: [...state.projects, project]
+  addProject: (project: Project) => {
+    set((state) => ({
+      projects: [...state.projects, project],
     }))
   }
 }))

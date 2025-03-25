@@ -1,5 +1,4 @@
-import api from '@/utils/axios';
-import { useState, useEffect } from 'react';
+import { trpc } from '@/utils/trpc';
 import type { 
   ProjectType,
   ProjectModel,
@@ -16,75 +15,45 @@ interface ProjectsHookReturn {
   refetch: () => Promise<void>;
 }
 
-// Interface para mapear a resposta da API
-interface APIProject {
-  id: string;
-  userId: string;
-  name: string;
-  description: string;
-  logo: string;
-  createdAt: string;
-  updatedAt: string;
-  banner: string;
-  wordCount: number;
-  citations: string[];
-  model: ProjectModel;
-  visibility: ProjectVisibility;
-  progress: number;
-  type: string;
-  author: {
-    name: string;
-    avatar: string;
-    institution: string;
-  };
-  stats: ProjectStats;
-  version: {
-    version: string;
-    updatedAt: string;
-  }[];
-  content: ContentBlock[];
-}
-
 export function useGetProjectsAll(): ProjectsHookReturn {
-  const [projects, setProjects] = useState<ImportedProject[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { data: projects, isLoading, error, refetch } = trpc.project.getAll.useQuery();
 
-  const fetchProjects = async () => {
-    try {
-      setIsLoading(true);
-      const response = await api.get<APIProject[]>('/projects');
-      
-      const convertedProjects = response.data.map(apiProject => ({
-        ...apiProject,
-        title: apiProject.name,
-        type: apiProject.type as ProjectType,
-        collaborators: [],
-        tags: [],
-        content: apiProject.content.map(item => ({
-          ...item,
-          type: item.type as "heading" | "paragraph" | "image" | "bulletListItem"
-        }))
-      }));
-      
-      setProjects(convertedProjects);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching projects:', err);
-      setError(err as Error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+  const convertedProjects = projects?.map(project => ({
+    ...project,
+    title: project.name,
+    type: project.model as ProjectType,
+    model: project.model as ProjectModel,
+    visibility: project.visibility as ProjectVisibility,
+    description: project.description || '',
+    logo: project.logo || '',
+    banner: project.banner || '',
+    createdAt: project.createdAt.toISOString(),
+    updatedAt: project.updatedAt.toISOString(),
+    citations: [],
+    collaborators: [],
+    author: {
+      name: '',
+      avatar: '',
+      institution: ''
+    },
+    stats: {
+      views: 0,
+      stars: 0,
+      forks: 0,
+      citations: 0,
+      comments: 0
+    },
+    version: [],
+    content: [],
+    tags: project.tags || []
+  })) || [];
 
   return {
-    projects,
+    projects: convertedProjects,
     isLoading,
-    error,
-    refetch: fetchProjects
+    error: error as Error | null,
+    refetch: async () => {
+      await refetch();
+    }
   };
 }

@@ -1,93 +1,106 @@
-import api from '@/utils/axios';
-import { useState } from 'react';
+import { trpc } from '@/utils/trpc';
 import type { 
   UpdateProjectData, 
   UpdateProjectHookReturn, 
-  ProjectModel,
+  Project,
   ProjectVisibility,
   ProjectType,
-  ProjectVersion 
+  ProjectVersion,
+  ProjectModel,
+  ContentBlock
 } from '@/types/types';
 
 export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const updateProject = async (data: UpdateProjectData) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Primeiro, buscar o projeto atual
-      const currentProject = await api.get(`/projects/${projectId}`);
-      
-      // Mesclar os dados existentes com as atualizações
-      const updatedData = {
-        ...currentProject.data,
-        ...data,
-        updatedAt: new Date().toISOString()
-      };
-
-      const response = await api.patch(`/projects/${projectId}`, updatedData);
-      return response.data;
-    } catch (err) {
-      setError(err as Error);
-      throw err;
-    } finally {
-      setIsLoading(false);
+  const utils = trpc.useUtils();
+  const { mutateAsync: updateProjectMutation, isPending, error } = trpc.project.update.useMutation({
+    onSuccess: () => {
+      utils.project.getById.invalidate(projectId);
+      utils.project.getAll.invalidate();
     }
+  });
+
+  const updateProject = async (data: UpdateProjectData): Promise<Project> => {
+    const project = await updateProjectMutation({ id: projectId, ...data });
+    return {
+      ...project,
+      title: project.name,
+      type: project.model as ProjectType,
+      model: project.model as ProjectModel,
+      visibility: project.visibility as ProjectVisibility,
+      description: project.description || '',
+      logo: project.logo || '',
+      banner: project.banner || '',
+      createdAt: project.createdAt.toISOString(),
+      updatedAt: project.updatedAt.toISOString(),
+      citations: [],
+      collaborators: [],
+      author: {
+        name: '',
+        avatar: '',
+        institution: ''
+      },
+      stats: {
+        views: 0,
+        stars: 0,
+        forks: 0,
+        citations: 0,
+        comments: 0
+      },
+      version: [],
+      content: []
+    };
   };
 
-  const updateName = async (name: string) => {
+  const updateName = async (name: string): Promise<Project> => {
     return updateProject({ name });
   };
 
-  const updateDescription = async (description: string) => {
+  const updateDescription = async (description: string): Promise<Project> => {
     return updateProject({ description });
   };
 
-  const updateContent = async (content: any) => {
+  const updateContent = async (content: ContentBlock[]): Promise<Project> => {
     return updateProject({ content });
   };
 
-  const addVersion = async (newVersion: ProjectVersion) => {
-    const response = await api.get(`/projects/${projectId}`);
-    const currentVersions = response.data.version || [];
+  const addVersion = async (newVersion: ProjectVersion): Promise<Project> => {
+    const currentProject = await utils.project.getById.fetch(projectId);
+    const currentVersions = (currentProject as any)?.version || [];
     
     return updateProject({
       version: [...currentVersions, newVersion]
     });
   };
 
-  const updateLogo = async (logo: string) => {
+  const updateLogo = async (logo: string): Promise<Project> => {
     return updateProject({ logo });
   };
 
-  const updateBanner = async (banner: string) => {
+  const updateBanner = async (banner: string): Promise<Project> => {
     return updateProject({ banner });
   };
 
-  const updateWordCount = async (wordCount: number) => {
+  const updateWordCount = async (wordCount: number): Promise<Project> => {
     return updateProject({ wordCount });
   };
 
-  const updateCitations = async (citations: string[]) => {
+  const updateCitations = async (citations: string[]): Promise<Project> => {
     return updateProject({ citations });
   };
 
-  const updateModel = async (model: ProjectModel) => {
+  const updateModel = async (model: ProjectModel): Promise<Project> => {
     return updateProject({ model });
   };
 
-  const updateVisibility = async (visibility: ProjectVisibility) => {
+  const updateVisibility = async (visibility: ProjectVisibility): Promise<Project> => {
     return updateProject({ visibility });
   };
 
-  const updateProgress = async (progress: number) => {
+  const updateProgress = async (progress: number): Promise<Project> => {
     return updateProject({ progress });
   };
 
-  const updateType = async (type: ProjectType) => {
+  const updateType = async (type: ProjectType): Promise<Project> => {
     return updateProject({ type });
   };
 
@@ -105,7 +118,7 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
     updateVisibility,
     updateProgress,
     updateType,
-    isLoading,
-    error
+    isLoading: isPending,
+    error: error as Error | null
   };
 }
