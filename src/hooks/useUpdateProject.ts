@@ -1,94 +1,119 @@
-import api from '@/utils/axios';
-import { useState } from 'react';
+import { useProjectStore } from '../store/useProjectStore';
 import type { 
-  UpdateProjectData, 
-  UpdateProjectHookReturn, 
+  Project,
+  ProjectUpdate,
+  ProjectVersion,
   ProjectModel,
   ProjectVisibility,
-  ProjectType,
-  ProjectVersion 
-} from '@/types/types';
+  ProjectType
+} from '../types/project';
 
-export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+interface UpdateProjectHookReturn {
+  updateProject: ((data: ProjectUpdate) => Promise<Project>) | null;
+  updateName: ((name: string) => Promise<Project>) | null;
+  updateDescription: ((description: string) => Promise<Project>) | null;
+  updateContent: ((content: any) => Promise<Project>) | null;
+  addVersion: ((version: ProjectVersion) => Promise<Project>) | null;
+  updateLogo: ((logo: string) => Promise<Project>) | null;
+  updateBanner: ((banner: string) => Promise<Project>) | null;
+  updateWordCount: ((wordCount: number) => Promise<Project>) | null;
+  updateCitations: ((citations: string[]) => Promise<Project>) | null;
+  updateModel: ((model: ProjectModel) => Promise<Project>) | null;
+  updateVisibility: ((visibility: ProjectVisibility) => Promise<Project>) | null;
+  updateProgress: ((progress: number) => Promise<Project>) | null;
+  updateType: ((type: ProjectType) => Promise<Project>) | null;
+  isLoading: boolean;
+  error: string | null;
+  hasProject: boolean;
+}
 
-  const updateProject = async (data: UpdateProjectData) => {
-    setIsLoading(true);
-    setError(null);
+/**
+ * Hook to update project data
+ * Uses the project store for state management
+ */
+export function useUpdateProject(): UpdateProjectHookReturn {
+  const { 
+    currentProject,
+    loading,
+    error,
+    updateProject: storeUpdateProject,
+    updateProjectField
+  } = useProjectStore();
 
-    try {
-      // Primeiro, buscar o projeto atual
-      const currentProject = await api.get(`/projects/${projectId}`);
-      
-      // Mesclar os dados existentes com as atualizações
-      const updatedData = {
-        ...currentProject.data,
-        ...data,
-        updatedAt: new Date().toISOString()
-      };
+  const hasProject = !!currentProject;
 
-      const response = await api.patch(`/projects/${projectId}`, updatedData);
-      return response.data;
-    } catch (err) {
-      setError(err as Error);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
+  if (!hasProject) {
+    return {
+      updateProject: null,
+      updateName: null,
+      updateDescription: null,
+      updateContent: null,
+      addVersion: null,
+      updateLogo: null,
+      updateBanner: null,
+      updateWordCount: null,
+      updateCitations: null,
+      updateModel: null,
+      updateVisibility: null,
+      updateProgress: null,
+      updateType: null,
+      isLoading: loading,
+      error: 'No project selected',
+      hasProject: false
+    };
+  }
+
+  const updateProject = async (data: ProjectUpdate) => {
+    return storeUpdateProject(data);
   };
 
   const updateName = async (name: string) => {
-    return updateProject({ name });
+    return updateProjectField('name', name);
   };
 
   const updateDescription = async (description: string) => {
-    return updateProject({ description });
+    return updateProjectField('description', description);
   };
 
   const updateContent = async (content: any) => {
-    return updateProject({ content });
+    return updateProjectField('content', content);
   };
 
-  const addVersion = async (newVersion: ProjectVersion) => {
-    const response = await api.get(`/projects/${projectId}`);
-    const currentVersions = response.data.version || [];
-    
-    return updateProject({
-      version: [...currentVersions, newVersion]
-    });
+  const addVersion = async (version: ProjectVersion) => {
+    const currentVersions = currentProject.version || [];
+    return updateProjectField('version', [...currentVersions, version]);
   };
 
   const updateLogo = async (logo: string) => {
-    return updateProject({ logo });
+    return updateProjectField('logo', logo);
   };
 
   const updateBanner = async (banner: string) => {
-    return updateProject({ banner });
+    return updateProjectField('banner', banner);
   };
 
   const updateWordCount = async (wordCount: number) => {
-    return updateProject({ wordCount });
+    return updateProjectField('wordCount', wordCount);
   };
 
   const updateCitations = async (citations: string[]) => {
-    return updateProject({ citations });
+    return updateProjectField('citations', citations);
   };
 
   const updateModel = async (model: ProjectModel) => {
-    return updateProject({ model });
+    return updateProjectField('model', model);
   };
 
   const updateVisibility = async (visibility: ProjectVisibility) => {
-    return updateProject({ visibility });
+    return updateProjectField('visibility', visibility);
   };
 
   const updateProgress = async (progress: number) => {
-    return updateProject({ progress });
+    return updateProjectField('progress', progress);
   };
 
   const updateType = async (type: ProjectType) => {
-    return updateProject({ type });
+    return updateProjectField('type', type);
   };
 
   return {
@@ -105,7 +130,8 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
     updateVisibility,
     updateProgress,
     updateType,
-    isLoading,
-    error
+    isLoading: loading,
+    error,
+    hasProject: true
   };
 }

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import type { ProjectState } from '@/types/types'
+import { projectApi } from '../services/api'
+import type { Project, ProjectState, ProjectCreate, ProjectUpdate } from '../types/project'
 
 export const useProjectStore = create<ProjectState>((set, get) => ({
   currentProject: null,
@@ -8,55 +9,78 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   error: null,
   editorContent: null,
 
-  setCurrentProject: (project) => {
-    console.log('Setting current project:', project);
-    set({ currentProject: project });
+  /**
+   * Set the current project
+   */
+  setCurrentProject: (project: Project | null) => {
+    set({ currentProject: project })
   },
 
-  saveProject: async (projectData) => {
-    const currentProject = get().currentProject;
-    set((state) => ({
-      currentProject: currentProject ? {
-        ...currentProject,
-        ...projectData,
-        logo: projectData.logo || currentProject.logo,
-        banner: projectData.banner || currentProject.banner,
-      } : null,
-    }));
-  },
-
-  updateProjectContent: async (content) => {
-    const currentProject = get().currentProject
-    if (!currentProject) return
-
-    try {
-      await get().saveProject({
-        ...currentProject,
-        content,
-        updatedAt: new Date().toISOString()
-      })
-    } catch (error) {
-      set({ error: 'Failed to update project content' })
-    }
-  },
-
+  /**
+   * Fetch all projects
+   */
   fetchProjects: async () => {
-    set({ loading: true })
+    set({ loading: true, error: null })
     try {
-      const response = await fetch('http://localhost:3001/projects')
-      const projects = await response.json()
+      const projects = await projectApi.getAll()
       set({ projects, loading: false })
     } catch (error) {
       set({ error: 'Failed to fetch projects', loading: false })
     }
   },
 
-  deleteProject: async (id) => {
-    set({ loading: true })
+  /**
+   * Create a new project
+   */
+  createProject: async (data: ProjectCreate): Promise<Project> => {
+    set({ loading: true, error: null })
     try {
-      await fetch(`http://localhost:3001/projects/${id}`, {
-        method: 'DELETE'
-      })
+      const newProject = await projectApi.create(data)
+      set((state) => ({
+        projects: [...state.projects, newProject],
+        currentProject: newProject,
+        loading: false
+      }))
+      return newProject
+    } catch (error) {
+      set({ error: 'Failed to create project', loading: false })
+      throw error
+    }
+  },
+
+  /**
+   * Update the current project
+   */
+  updateProject: async (data: ProjectUpdate): Promise<Project> => {
+    const currentProject = get().currentProject
+    if (!currentProject) {
+      throw new Error('No project selected')
+    }
+
+    set({ loading: true, error: null })
+    try {
+      const updatedProject = await projectApi.update(currentProject.id, data)
+      set((state) => ({
+        currentProject: updatedProject,
+        projects: state.projects.map(p => 
+          p.id === updatedProject.id ? updatedProject : p
+        ),
+        loading: false
+      }))
+      return updatedProject
+    } catch (error) {
+      set({ error: 'Failed to update project', loading: false })
+      throw error
+    }
+  },
+
+  /**
+   * Delete a project
+   */
+  deleteProject: async (id: string): Promise<void> => {
+    set({ loading: true, error: null })
+    try {
+      await projectApi.delete(id)
       set((state) => ({
         projects: state.projects.filter(p => p.id !== id),
         currentProject: state.currentProject?.id === id ? null : state.currentProject,
@@ -64,52 +88,104 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       }))
     } catch (error) {
       set({ error: 'Failed to delete project', loading: false })
+      throw error
     }
   },
 
-  setEditorContent: (content) => {
-    set({ editorContent: content });
-    // Opcionalmente, podemos implementar um debounce aqui para auto-save
-  },
+  /**
+   * Update project content
+   */
+  updateProjectContent: async (content: any): Promise<Project> => {
+    const currentProject = get().currentProject
+    if (!currentProject) {
+      throw new Error('No project selected')
+    }
 
-  saveEditorContent: async () => {
-    const { currentProject, editorContent } = get();
-    if (!currentProject || !editorContent) return;
-
+    set({ loading: true, error: null })
     try {
-      set({ loading: true });
-      
-      const updatedProject = {
-        ...currentProject,
-        content: JSON.parse(editorContent),
-        updatedAt: new Date().toISOString(),
-        version: currentProject.version || []
-      };
-
-      const response = await fetch(`http://localhost:3001/projects/${currentProject.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedProject)
-      });
-
-      const savedProject = await response.json();
-      
+      const updatedProject = await projectApi.updateContent(currentProject.id, content)
       set((state) => ({
-        currentProject: savedProject,
+        currentProject: updatedProject,
         projects: state.projects.map(p => 
-          p.id === savedProject.id ? savedProject : p
+          p.id === updatedProject.id ? updatedProject : p
         ),
         loading: false
-      }));
+      }))
+      return updatedProject
     } catch (error) {
-      set({ error: 'Failed to save editor content', loading: false });
+      set({ error: 'Failed to update project content', loading: false })
+      throw error
     }
   },
 
-  updateProjectField: (field, value) => set((state) => ({
-    currentProject: state.currentProject ? {
-      ...state.currentProject,
-      [field]: value
-    } : null
-  })),
+  /**
+   * Set editor content
+   */
+  setEditorContent: (content: string | null) => {
+    set({ editorContent: content })
+  },
+
+  /**
+   * Save editor content
+   */
+  saveEditorContent: async (): Promise<Project> => {
+    const { currentProject, editorContent } = get()
+    if (!currentProject || !editorContent) {
+      throw new Error('No project or content selected')
+    }
+
+    set({ loading: true, error: null })
+    try {
+      const updatedProject = await projectApi.updateContent(
+        currentProject.id,
+        JSON.parse(editorContent)
+      )
+      
+      set((state) => ({
+        currentProject: updatedProject,
+        projects: state.projects.map(p => 
+          p.id === updatedProject.id ? updatedProject : p
+        ),
+        loading: false
+      }))
+      return updatedProject
+    } catch (error) {
+      set({ error: 'Failed to save editor content', loading: false })
+      throw error
+    }
+  },
+
+  /**
+   * Update a specific project field
+   */
+  updateProjectField: async <T extends keyof Project>(
+    field: T,
+    value: Project[T]
+  ): Promise<Project> => {
+    const currentProject = get().currentProject
+    if (!currentProject) {
+      throw new Error('No project selected')
+    }
+
+    set({ loading: true, error: null })
+    try {
+      const updatedProject = await projectApi.updateField(
+        currentProject.id,
+        field,
+        value
+      )
+      
+      set((state) => ({
+        currentProject: updatedProject,
+        projects: state.projects.map(p => 
+          p.id === updatedProject.id ? updatedProject : p
+        ),
+        loading: false
+      }))
+      return updatedProject
+    } catch (error) {
+      set({ error: `Failed to update project ${field}`, loading: false })
+      throw error
+    }
+  }
 })) 

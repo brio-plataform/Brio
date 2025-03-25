@@ -1,89 +1,28 @@
-import api from '@/utils/axios';
-import { useState, useEffect } from 'react';
-import type { 
-  ProjectType,
-  ProjectModel,
-  ProjectVisibility,
-  ProjectStats,
-  ContentBlock,
-  Project as ImportedProject
-} from '@/types/types';
+import { useEffect } from 'react';
+import { useProjectStore } from '../store/useProjectStore';
+import type { Project } from '../types/project';
 
 interface ProjectsHookReturn {
-  projects: ImportedProject[];
+  projects: Project[];
   isLoading: boolean;
-  error: Error | null;
+  error: string | null;
   refetch: () => Promise<void>;
 }
 
-// Interface para mapear a resposta da API
-interface APIProject {
-  id: string;
-  userId: string;
-  name: string;
-  description: string;
-  logo: string;
-  createdAt: string;
-  updatedAt: string;
-  banner: string;
-  wordCount: number;
-  citations: string[];
-  model: ProjectModel;
-  visibility: ProjectVisibility;
-  progress: number;
-  type: string;
-  author: {
-    name: string;
-    avatar: string;
-    institution: string;
-  };
-  stats: ProjectStats;
-  version: {
-    version: string;
-    updatedAt: string;
-  }[];
-  content: ContentBlock[];
-}
-
+/**
+ * Hook to fetch and manage all projects
+ * Uses the project store for state management
+ */
 export function useGetProjectsAll(): ProjectsHookReturn {
-  const [projects, setProjects] = useState<ImportedProject[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const fetchProjects = async () => {
-    try {
-      setIsLoading(true);
-      const response = await api.get<APIProject[]>('/projects');
-      
-      const convertedProjects = response.data.map(apiProject => ({
-        ...apiProject,
-        title: apiProject.name,
-        type: apiProject.type as ProjectType,
-        collaborators: [],
-        tags: [],
-        content: apiProject.content.map(item => ({
-          ...item,
-          type: item.type as "heading" | "paragraph" | "image" | "bulletListItem"
-        }))
-      }));
-      
-      setProjects(convertedProjects);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching projects:', err);
-      setError(err as Error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { projects, loading, error, fetchProjects } = useProjectStore();
 
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [fetchProjects]);
 
   return {
     projects,
-    isLoading,
+    isLoading: loading,
     error,
     refetch: fetchProjects
   };
