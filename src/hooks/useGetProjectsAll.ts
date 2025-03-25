@@ -16,11 +16,15 @@ interface ProjectsHookReturn {
 }
 
 export function useGetProjectsAll(): ProjectsHookReturn {
-  const { data: projects, isLoading, error, refetch } = trpc.project.getAll.useQuery();
+  const { data: projects, isLoading, error, refetch } = trpc.project.getAll.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    retry: 1
+  });
 
   const convertedProjects = projects?.map(project => ({
-    ...project,
+    id: project.id,
     title: project.name,
+    name: project.name,
     type: project.model as ProjectType,
     model: project.model as ProjectModel,
     visibility: project.visibility as ProjectVisibility,
@@ -45,7 +49,11 @@ export function useGetProjectsAll(): ProjectsHookReturn {
     },
     version: [],
     content: [],
-    tags: project.tags || []
+    tags: project.tags || [],
+    status: project.status || 'Em Andamento',
+    progress: project.progress || 0,
+    wordCount: project.wordCount || 0,
+    userId: project.userId
   })) || [];
 
   return {

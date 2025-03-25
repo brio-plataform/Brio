@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select"
 import { Modal } from "@/components/Modal/modal"
 import { Project } from "@/components/Project/Project"
-import { useGetAllProjects } from '@/store/useGetAllProjects'
+import { useGetProjectsAll } from '@/hooks/useGetProjectsAll'
 import { trpc } from '@/utils/trpc'
 import {
   type ProjectStats,
@@ -40,10 +40,32 @@ import {
   VISIBILITY_BADGE_STYLES,
   STATUS_BADGE_STYLES
 } from './types'
-import { Project as PrismaProject } from '@prisma/client'
 
 // Função para mapear o projeto do Prisma para o formato MockProject
-function mapPrismaToMockProject(prismaProject: PrismaProject): MockProject {
+function mapPrismaToMockProject(prismaProject: {
+  id: string;
+  name: string;
+  description: string | null;
+  logo: string | null;
+  banner: string | null;
+  model: string;
+  visibility: string;
+  progress: number | null;
+  status?: string;
+  tags?: string[];
+  wordCount: number;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+  userId: string;
+}): MockProject {
+  // Convert string dates to Date objects if they're strings
+  const createdAt = typeof prismaProject.createdAt === 'string' 
+    ? new Date(prismaProject.createdAt) 
+    : prismaProject.createdAt;
+  const updatedAt = typeof prismaProject.updatedAt === 'string'
+    ? new Date(prismaProject.updatedAt)
+    : prismaProject.updatedAt;
+
   return {
     id: prismaProject.id,
     title: prismaProject.name,
@@ -52,7 +74,7 @@ function mapPrismaToMockProject(prismaProject: PrismaProject): MockProject {
     logo: prismaProject.logo || "/placeholder.svg",
     model: prismaProject.model as ProjectModel,
     visibility: prismaProject.visibility as ProjectVisibility,
-    progress: prismaProject.progress,
+    progress: prismaProject.progress || 0,
     institutional: false,
     institution: {
       name: "Institution Name",
@@ -65,9 +87,39 @@ function mapPrismaToMockProject(prismaProject: PrismaProject): MockProject {
       comments: 0,
       shares: 0
     },
-    status: prismaProject.status,
-    tags: prismaProject.tags,
-    collaborators: []
+    status: prismaProject.status || 'Em Andamento',
+    tags: prismaProject.tags || [],
+    collaborators: [],
+    author: {
+      name: "John Doe",
+      avatar: "/path/to/avatar.jpg",
+      institution: "Universidade de São Paulo"
+    },
+    version: [
+      {
+        version: "1.0.0",
+        updatedAt: updatedAt.toISOString()
+      }
+    ],
+    content: [
+      {
+        id: "default-content",
+        type: "paragraph",
+        props: {
+          textColor: "default",
+          backgroundColor: "default",
+          textAlignment: "left"
+        },
+        content: [
+          {
+            type: "text",
+            text: "Comece a escrever seu projeto aqui...",
+            styles: {}
+          }
+        ],
+        children: []
+      }
+    ]
   }
 }
 
@@ -99,13 +151,15 @@ export default function MenagerProjects() {
     search?: string;
   }>({})
   
-  const { projects, isLoading, error, fetchProjects, deleteProject, addProject } = useGetAllProjects()
+  const { projects, isLoading, error, refetch } = useGetProjectsAll()
+  const createProjectMutation = trpc.project.create.useMutation()
   const router = useRouter()
 
-  // Carregar projetos ao montar o componente
+  // Carregar projetos apenas na montagem do componente
   useEffect(() => {
-    fetchProjects()
-  }, [])
+    // Primeira busca ao montar o componente
+    void refetch()
+  }, []) // Removido refetch das dependências
 
   // Atualizar função de criar projeto
   const handleCreateNewProject = async () => {
@@ -122,11 +176,8 @@ export default function MenagerProjects() {
         tags: []
       }
 
-      const response = await trpc.project.create.useMutation().mutateAsync(newProject)
-      
-      // Adicionar ao store antes de redirecionar
-      addProject(response)
-
+      const response = await createProjectMutation.mutateAsync(newProject)
+      await refetch() // Refresh the projects list
       router.push(`/user/projects/${response.id}`)
     } catch (error) {
       console.error('Erro ao criar projeto:', error)
@@ -536,12 +587,17 @@ function ProjectMenu({ project }: { project: MockProject }) {
   const router = useRouter()
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const { deleteProject } = useGetAllProjects()
+  const { refetch } = useGetProjectsAll()
+  const deleteProjectMutation = trpc.project.delete.useMutation({
+    onSuccess: () => {
+      refetch()
+      setIsDeleteModalOpen(false)
+    }
+  })
 
   const handleDeleteProject = async () => {
     try {
-      await deleteProject(project.id)
-      setIsDeleteModalOpen(false)
+      await deleteProjectMutation.mutateAsync(project.id)
     } catch (error) {
       console.error('Erro ao excluir projeto:', error)
     }

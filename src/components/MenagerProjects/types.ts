@@ -35,6 +35,34 @@ export interface ProjectStats {
   shares?: number
 }
 
+export interface ProjectAuthor {
+  name: string
+  avatar: string
+  institution: string
+}
+
+export interface ProjectVersion {
+  version: string
+  updatedAt: string
+}
+
+export interface ProjectContent {
+  id: string
+  type: string
+  props: {
+    textColor: string
+    backgroundColor: string
+    textAlignment: string
+    level?: number
+  }
+  content: Array<{
+    type: string
+    text: string
+    styles: Record<string, any>
+  }>
+  children: any[]
+}
+
 // Interface principal do projeto
 export interface MockProject {
   id: string
@@ -51,6 +79,9 @@ export interface MockProject {
   status?: ProjectStatus
   tags?: string[]
   collaborators?: Collaborator[]
+  author: ProjectAuthor
+  version: ProjectVersion[]
+  content: ProjectContent[]
 }
 
 // Types auxiliares

@@ -63,19 +63,25 @@ model VerificationToken {
 }
 
 model Project {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  logo        String?
-  banner      String?
-  wordCount   Int      @default(0)
-  model       String   @default("article")
-  visibility  String   @default("public")
-  progress    Int      @default(0)
-  status      String   @default("Em Andamento")
-  tags        String[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  name          String
+  description   String?
+  logo          String?
+  banner        String?
+  wordCount     Int      @default(0)
+  model         String   @default("article")
+  visibility    String   @default("public")
+  progress      Int      @default(0)
+  status        String   @default("Em Andamento")
+  tags          String[]
+  citations     String[] @default([])
+  author        Json     @default("{\"name\":\"\",\"avatar\":\"\",\"institution\":\"\"}")
+  collaborators Json[]   @default([])
+  stats         Json     @default("{\"views\":0,\"stars\":0,\"forks\":0,\"comments\":0,\"shares\":0}")
+  version       Json[]   @default([])
+  content       Json[]   @default([])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
