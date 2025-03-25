@@ -34,7 +34,7 @@ export const projectApi = {
   /**
    * Get a single project by ID
    */
-  getById: async (id: string): Promise<Project> => {
+  getProjectById: async (id: string): Promise<Project> => {
     const response = await api.get<Project>(`/projects/${id}`);
     return response.data;
   },
@@ -74,7 +74,7 @@ export const projectApi = {
    * Add a new version to a project
    */
   addVersion: async (id: string, version: ProjectVersion): Promise<Project> => {
-    const project = await projectApi.getById(id);
+    const project = await projectApi.getProjectById(id);
     const currentVersions = project.version || [];
     const response = await api.patch<Project>(`/projects/${id}`, {
       version: [...currentVersions, version]

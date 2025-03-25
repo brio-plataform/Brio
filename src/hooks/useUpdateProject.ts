@@ -1,4 +1,4 @@
-import { useProjectStore } from '../store/useProjectStore';
+import { useProjectStore } from '@/store/useProjectStore';
 import type { 
   Project,
   ProjectUpdate,
@@ -63,8 +63,14 @@ export function useUpdateProject(): UpdateProjectHookReturn {
     };
   }
 
-  const updateProject = async (data: ProjectUpdate) => {
-    return storeUpdateProject(data);
+  const handleUpdate = async (data: ProjectUpdate) => {
+    try {
+      const updatedProject = await storeUpdateProject(data);
+      return updatedProject;
+    } catch (error) {
+      console.error('Erro ao atualizar projeto:', error);
+      throw error;
+    }
   };
 
   const updateName = async (name: string) => {
@@ -117,7 +123,7 @@ export function useUpdateProject(): UpdateProjectHookReturn {
   };
 
   return {
-    updateProject,
+    updateProject: handleUpdate,
     updateName,
     updateDescription,
     updateContent,

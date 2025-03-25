@@ -30,8 +30,52 @@ async function main() {
         visibility: project.visibility,
         progress: project.progress,
         status: project.status,
-        tags: project.tags,
+        citations: project.citations || [],
+        tags: project.tags || [],
         userId: user.id,
+        // Criar autor
+        author: {
+          create: {
+            name: project.author.name,
+            avatar: project.author.avatar,
+            institution: project.author.institution,
+          }
+        },
+        // Criar estatísticas
+        stats: {
+          create: {
+            views: project.stats.views,
+            stars: project.stats.stars,
+            forks: project.stats.forks,
+            comments: project.stats.comments,
+            shares: project.stats.shares,
+          }
+        },
+        // Criar versões
+        versions: {
+          create: project.version.map(v => ({
+            version: v.version,
+            updatedAt: new Date(v.updatedAt),
+          }))
+        },
+        // Criar colaboradores
+        collaborators: {
+          createMany: {
+            data: (project.collaborators || []).map(c => ({
+              name: c.name,
+              avatar: c.avatar,
+            }))
+          }
+        },
+        // Criar blocos de conteúdo
+        content: {
+          create: (project.content || []).map(c => ({
+            type: c.type,
+            props: c.props,
+            content: c.content || [],
+            children: c.children || [],
+          }))
+        }
       },
     });
 

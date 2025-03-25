@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useProjectStore } from '../store/useProjectStore';
+import { useProjectStore } from '@/store/useProjectStore';
 import type { Project } from '../types/project';
 
 interface ProjectsHookReturn {

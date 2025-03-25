@@ -1,5 +1,6 @@
-import api from '@/utils/axios';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useProjectStore } from '@/store/useProjectStore';
+import { projectApi } from '@/services/api';
 import type { 
   ProjectHookReturn, 
   ContentBlock,
@@ -9,7 +10,7 @@ import type {
   ProjectVisibility,
   ProjectType,
   Project as ImportedProject
-} from '@/types/types';
+} from '@/types/project';
 
 // Interface temporária para mapear a resposta da API
 interface APIProject {
@@ -24,7 +25,7 @@ interface APIProject {
   model: ProjectModel;
   visibility: ProjectVisibility;
   progress: number;
-  type: string; // API retorna string, precisamos converter para ProjectType
+  type: string;
   author: {
     name: string;
     avatar: string;
@@ -32,18 +33,7 @@ interface APIProject {
   };
   stats: ProjectStats;
   version: ProjectVersion[];
-  content: {
-    id: string;
-    type: string;
-    props: {
-      textColor: string;
-      backgroundColor: string;
-      textAlignment: string;
-      level?: number;
-    };
-    content: any[];
-    children: any[];
-  }[];
+  content: ContentBlock[];
   updatedAt: string;
   createdAt: string;
   collaborators?: {
@@ -51,6 +41,31 @@ interface APIProject {
     avatar: string;
   }[];
   tags?: string[];
+}
+
+export function useGetProjectByID(id: string) {
+  const { currentProject, setCurrentProject, loading, error } = useProjectStore();
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const project = await projectApi.getProjectById(id);
+        setCurrentProject(project);
+      } catch (error) {
+        console.error('Erro ao buscar projeto:', error);
+      }
+    };
+
+    if (id) {
+      fetchProject();
+    }
+  }, [id, setCurrentProject]);
+
+  return {
+    project: currentProject,
+    loading,
+    error,
+  };
 }
 
 export function useGetProject(projectId: string): ProjectHookReturn {
@@ -63,22 +78,19 @@ export function useGetProject(projectId: string): ProjectHookReturn {
       if (!projectId) return;
       
       try {
-        const response = await api.get<APIProject>(`/projects/${projectId}`);
-        const apiProject = response.data;
-        
-        // Preservar os dados existentes
+        const project = await projectApi.getProjectById(projectId);
         const convertedProject: ImportedProject = {
-          ...apiProject,
-          title: apiProject.name,
-          type: apiProject.type as ProjectType,
-          collaborators: apiProject.collaborators || [],
-          tags: apiProject.tags || [],
-          logo: apiProject.logo || "",
-          banner: apiProject.banner || "",
-          content: apiProject.content.map(item => ({
+          ...project,
+          title: project.name,
+          type: project.type as ProjectType,
+          collaborators: project.collaborators || [],
+          tags: project.tags || [],
+          logo: project.logo || "",
+          banner: project.banner || "",
+          content: project.content.map((item: ContentBlock) => ({
             ...item,
-            type: item.type as "heading" | "paragraph" | "image" | "bulletListItem"
-          })) as ContentBlock[]
+            type: item.type
+          }))
         };
         
         setProject(convertedProject);

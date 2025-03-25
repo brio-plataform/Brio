@@ -73,9 +73,64 @@ model Project {
   visibility  String   @default("public")
   progress    Int      @default(0)
   status      String   @default("Em Andamento")
+  type        String   @default("document")
+  citations   String[]
   tags        String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Relacionamentos
+  author      ProjectAuthor?
+  stats       ProjectStats?
+  versions    ProjectVersion[]
+  content     ContentBlock[]
+  collaborators ProjectCollaborator[]
+}
+
+model ProjectAuthor {
+  id          String   @id @default(cuid())
+  name        String
+  avatar      String
+  institution String
+  projectId   String   @unique
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectStats {
+  id          String   @id @default(cuid())
+  views       Int      @default(0)
+  stars       Int      @default(0)
+  forks       Int      @default(0)
+  comments    Int      @default(0)
+  shares      Int      @default(0)
+  projectId   String   @unique
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectVersion {
+  id          String   @id @default(cuid())
+  version     String
+  updatedAt   DateTime @updatedAt
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectCollaborator {
+  id          String   @id @default(cuid())
+  name        String
+  avatar      String
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ContentBlock {
+  id          String   @id @default(cuid())
+  type        String   // 'heading' | 'paragraph' | 'image' | 'bulletListItem'
+  props       Json     // Armazenará as propriedades do bloco
+  content     Json     // Armazenará o conteúdo do bloco
+  children    Json     // Armazenará os blocos filhos
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }

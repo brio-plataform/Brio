@@ -3,9 +3,9 @@
  * This file contains all type definitions related to projects
  */
 
-export type ProjectModel = 'article' | 'research' | 'thesis';
-export type ProjectVisibility = 'public' | 'private' | 'institutional';
-export type ProjectType = 'document' | 'presentation' | 'spreadsheet';
+export type ProjectModel = 'article' | 'document' | 'presentation';
+export type ProjectVisibility = 'public' | 'private' | 'shared';
+export type ProjectType = 'document' | 'presentation' | 'article';
 
 export interface ProjectAuthor {
   name: string;
@@ -39,22 +39,9 @@ export interface ContentBlock {
     backgroundColor?: string;
     textAlignment?: string;
     level?: number;
-    name?: string;
-    url?: string;
-    caption?: string;
-    showPreview?: boolean;
-    previewWidth?: number;
   };
-  content: {
-    type: string;
-    text: string;
-    styles: {
-      bold?: boolean;
-      italic?: boolean;
-      underline?: boolean;
-    };
-  }[];
-  children: ContentBlock[];
+  content: any[];
+  children: any[];
 }
 
 /**
@@ -62,38 +49,38 @@ export interface ContentBlock {
  */
 export interface Project {
   id: string;
-  userId: string;
   name: string;
   description: string;
   logo: string;
-  createdAt: string;
-  updatedAt: string;
   banner: string;
   wordCount: number;
-  citations: string[];
   model: ProjectModel;
   visibility: ProjectVisibility;
   progress: number;
+  status: string;
   type: ProjectType;
+  citations: string[];
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
   author: ProjectAuthor;
-  collaborators: ProjectCollaborator[];
   stats: ProjectStats;
   version: ProjectVersion[];
+  collaborators: ProjectCollaborator[];
   content: ContentBlock[];
-  tags: string[];
+  title?: string;
 }
 
 /**
  * Type for creating a new project
  */
-export type ProjectCreate = Omit<Project, 'id' | 'createdAt' | 'updatedAt' | 'version'>;
+export type ProjectCreate = Omit<Project, 'id' | 'createdAt' | 'updatedAt'>;
 
 /**
  * Type for updating a project
  */
-export type ProjectUpdate = Partial<ProjectCreate> & {
-  updatedAt?: string;
-};
+export type ProjectUpdate = Partial<ProjectCreate>;
 
 /**
  * Type for project store state and actions
@@ -116,4 +103,28 @@ export interface ProjectState {
   setEditorContent: (content: string | null) => void;
   saveEditorContent: () => Promise<Project>;
   updateProjectField: <T extends keyof Project>(field: T, value: Project[T]) => Promise<Project>;
+}
+
+export interface ProjectHookReturn {
+  project: Project | null;
+  isLoading: boolean;
+  error: Error | null;
+  name?: string;
+  description?: string;
+  type?: ProjectType;
+  content?: ContentBlock[];
+  versions?: ProjectVersion[];
+  lastVersion?: ProjectVersion;
+  updatedAt?: string;
+  createdAt?: string;
+  userId?: string;
+  logo?: string;
+  banner?: string;
+  wordCount?: number;
+  citations?: string[];
+  progress?: number;
+  model?: ProjectModel;
+  visibility?: ProjectVisibility;
+  author?: ProjectAuthor;
+  stats?: ProjectStats;
 } 

@@ -1,8 +1,28 @@
 import { create } from 'zustand'
 import { projectApi } from '../services/api'
-import type { Project, ProjectState, ProjectCreate, ProjectUpdate } from '../types/project'
+import type { Project, ProjectCreate, ProjectUpdate } from '../types/project'
 
-export const useProjectStore = create<ProjectState>((set, get) => ({
+interface ProjectStoreState {
+  // Estado
+  currentProject: Project | null;
+  projects: Project[];
+  loading: boolean;
+  error: string | null;
+  editorContent: string | null;
+
+  // Ações
+  setCurrentProject: (project: Project | null) => void;
+  fetchProjects: () => Promise<void>;
+  createProject: (data: ProjectCreate) => Promise<Project>;
+  updateProject: (data: ProjectUpdate) => Promise<Project>;
+  deleteProject: (id: string) => Promise<void>;
+  updateProjectContent: (content: any) => Promise<Project>;
+  setEditorContent: (content: string | null) => void;
+  saveEditorContent: () => Promise<Project>;
+  updateProjectField: <T extends keyof Project>(field: T, value: Project[T]) => Promise<Project>;
+}
+
+export const useProjectStore = create<ProjectStoreState>((set, get) => ({
   currentProject: null,
   projects: [],
   loading: false,
@@ -25,7 +45,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       const projects = await projectApi.getAll()
       set({ projects, loading: false })
     } catch (error) {
-      set({ error: 'Failed to fetch projects', loading: false })
+      set({ error: 'Erro ao buscar projetos', loading: false })
     }
   },
 
@@ -43,7 +63,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       }))
       return newProject
     } catch (error) {
-      set({ error: 'Failed to create project', loading: false })
+      set({ error: 'Erro ao criar projeto', loading: false })
       throw error
     }
   },
@@ -69,7 +89,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       }))
       return updatedProject
     } catch (error) {
-      set({ error: 'Failed to update project', loading: false })
+      set({ error: 'Erro ao atualizar projeto', loading: false })
       throw error
     }
   },
@@ -87,7 +107,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         loading: false
       }))
     } catch (error) {
-      set({ error: 'Failed to delete project', loading: false })
+      set({ error: 'Erro ao deletar projeto', loading: false })
       throw error
     }
   },
@@ -98,7 +118,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   updateProjectContent: async (content: any): Promise<Project> => {
     const currentProject = get().currentProject
     if (!currentProject) {
-      throw new Error('No project selected')
+      throw new Error('Nenhum projeto selecionado')
     }
 
     set({ loading: true, error: null })
@@ -113,7 +133,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       }))
       return updatedProject
     } catch (error) {
-      set({ error: 'Failed to update project content', loading: false })
+      set({ error: 'Erro ao atualizar conteúdo do projeto', loading: false })
       throw error
     }
   },
@@ -131,7 +151,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   saveEditorContent: async (): Promise<Project> => {
     const { currentProject, editorContent } = get()
     if (!currentProject || !editorContent) {
-      throw new Error('No project or content selected')
+      throw new Error('Nenhum conteúdo para salvar')
     }
 
     set({ loading: true, error: null })
@@ -146,11 +166,12 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         projects: state.projects.map(p => 
           p.id === updatedProject.id ? updatedProject : p
         ),
+        editorContent: null,
         loading: false
       }))
       return updatedProject
     } catch (error) {
-      set({ error: 'Failed to save editor content', loading: false })
+      set({ error: 'Erro ao salvar conteúdo', loading: false })
       throw error
     }
   },
@@ -164,7 +185,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   ): Promise<Project> => {
     const currentProject = get().currentProject
     if (!currentProject) {
-      throw new Error('No project selected')
+      throw new Error('Nenhum projeto selecionado')
     }
 
     set({ loading: true, error: null })
@@ -184,7 +205,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       }))
       return updatedProject
     } catch (error) {
-      set({ error: `Failed to update project ${field}`, loading: false })
+      set({ error: 'Erro ao atualizar campo do projeto', loading: false })
       throw error
     }
   }
