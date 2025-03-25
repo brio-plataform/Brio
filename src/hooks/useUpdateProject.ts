@@ -7,8 +7,33 @@ import type {
   ProjectType,
   ProjectVersion,
   ProjectModel,
-  ContentBlock
+  ContentBlock,
+  ProjectStats
 } from '@/types/types';
+
+interface Collaborator {
+  name: string;
+  avatar: string;
+}
+
+interface Author {
+  name: string;
+  avatar: string;
+  institution: string;
+}
+
+interface Stats {
+  views: number;
+  stars: number;
+  forks: number;
+  citations: number;
+  comments: number;
+}
+
+interface Version {
+  version: string;
+  updatedAt: string;
+}
 
 export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
   const utils = trpc.useUtils();
@@ -20,7 +45,64 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
   });
 
   const updateProject = async (data: UpdateProjectData): Promise<Project> => {
+    console.log('Updating project with data:', data);
     const project = await updateProjectMutation({ id: projectId, ...data });
+    console.log('Received updated project:', project);
+
+    // Ensure content is properly handled
+    const content = typeof project.content === 'string' 
+      ? JSON.parse(project.content) 
+      : project.content || [];
+
+    // Ensure other fields are properly typed
+    const collaborators = Array.isArray(project.collaborators) 
+      ? project.collaborators.map(c => {
+          const collaborator = c as unknown as Collaborator;
+          return {
+            name: collaborator?.name || '',
+            avatar: collaborator?.avatar || ''
+          };
+        })
+      : [];
+
+    const author = typeof project.author === 'object' && project.author !== null
+      ? {
+          name: String((project.author as unknown as Author)?.name || ''),
+          avatar: String((project.author as unknown as Author)?.avatar || ''),
+          institution: String((project.author as unknown as Author)?.institution || '')
+        }
+      : {
+          name: '',
+          avatar: '',
+          institution: ''
+        };
+
+    const stats = typeof project.stats === 'object' && project.stats !== null
+      ? {
+          views: Number((project.stats as unknown as Stats)?.views || 0),
+          stars: Number((project.stats as unknown as Stats)?.stars || 0),
+          forks: Number((project.stats as unknown as Stats)?.forks || 0),
+          citations: Number((project.stats as unknown as Stats)?.citations || 0),
+          comments: Number((project.stats as unknown as Stats)?.comments || 0)
+        }
+      : {
+          views: 0,
+          stars: 0,
+          forks: 0,
+          citations: 0,
+          comments: 0
+        };
+
+    const version = Array.isArray(project.version)
+      ? project.version.map(v => {
+          const versionObj = v as unknown as Version;
+          return {
+            version: versionObj?.version || '',
+            updatedAt: versionObj?.updatedAt || ''
+          };
+        })
+      : [];
+
     return {
       ...project,
       title: project.name,
@@ -32,22 +114,12 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
       banner: project.banner || '',
       createdAt: project.createdAt.toISOString(),
       updatedAt: project.updatedAt.toISOString(),
-      citations: [],
-      collaborators: [],
-      author: {
-        name: '',
-        avatar: '',
-        institution: ''
-      },
-      stats: {
-        views: 0,
-        stars: 0,
-        forks: 0,
-        citations: 0,
-        comments: 0
-      },
-      version: [],
-      content: []
+      citations: project.citations || [],
+      collaborators,
+      author,
+      stats,
+      version,
+      content
     };
   };
 
@@ -60,6 +132,7 @@ export function useUpdateProject(projectId: string): UpdateProjectHookReturn {
   };
 
   const updateContent = async (content: ContentBlock[]): Promise<Project> => {
+    console.log('Updating content:', content);
     return updateProject({ content });
   };
 

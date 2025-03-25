@@ -3,8 +3,6 @@
 import { Card, CardContent } from "../ui/card";
 
 import Editor from "../Editor/editor";
-import { ProjectBanner } from "./ProjectBanner/ProjectBanner";
-import { ProjectInfo } from "./ProjectInfo/ProjectInfo";
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
@@ -12,6 +10,8 @@ import { useGetProject } from '@/hooks/useGetProjectByID';
 
 import UnauthorizedPage from "../Error/Unauthorized/unauthorized";
 import LoadingEditor from "../Loading/loading-editor";
+import { ProjectBanner } from "../project/ProjectBanner/ProjectBanner";
+import { ProjectInfo } from "../project/ProjectInfo/ProjectInfo";
 
 interface ProjectProps {
   editable?: boolean
@@ -59,9 +59,63 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
   }
 
   // Garantir que sempre temos um conteúdo válido
-  const initialContent = project?.content 
-    ? JSON.stringify(project.content)
-    : JSON.stringify([{
+  const initialContent = (() => {
+    try {
+      if (project.content) {
+        // Se o conteúdo já é um array, converta para string
+        if (Array.isArray(project.content)) {
+          const content = project.content.map(block => ({
+            id: String(block.id || crypto.randomUUID()),
+            type: block.type || "paragraph",
+            props: {
+              textColor: block.props?.textColor || "default",
+              backgroundColor: block.props?.backgroundColor || "default",
+              textAlignment: block.props?.textAlignment || "left",
+              level: block.props?.level || 1
+            },
+            content: Array.isArray(block.content) ? block.content.map(cont => ({
+              type: cont.type || "text",
+              text: String(cont.text || ''),
+              styles: cont.styles || {}
+            })) : [{
+              type: "text",
+              text: "",
+              styles: {}
+            }],
+            children: Array.isArray(block.children) ? block.children : []
+          }));
+          console.log('Using array content:', content);
+          return JSON.stringify(content);
+        }
+        // Se é uma string, use-a diretamente
+        if (typeof project.content === 'string') {
+          console.log('Using string content:', project.content);
+          return project.content;
+        }
+      }
+      // Se chegou aqui, use o conteúdo padrão
+      const defaultContent = [{
+        id: crypto.randomUUID(),
+        type: "paragraph",
+        props: {
+          textColor: "default",
+          backgroundColor: "default",
+          textAlignment: "left"
+        },
+        content: [
+          {
+            type: "text",
+            text: "Comece a escrever seu projeto aqui...",
+            styles: {}
+          }
+        ],
+        children: []
+      }];
+      console.log('Using default content:', defaultContent);
+      return JSON.stringify(defaultContent);
+    } catch (error) {
+      console.error('Error processing content:', error);
+      return JSON.stringify([{
         id: crypto.randomUUID(),
         type: "paragraph",
         props: {
@@ -78,6 +132,10 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
         ],
         children: []
       }]);
+    }
+  })();
+
+  console.log('Final initial content:', initialContent);
 
   return (
     <div className="p-6 w-full">

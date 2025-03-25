@@ -12,6 +12,8 @@ const projectSchema = z.object({
   progress: z.number().default(0),
   status: z.string().default('Em Andamento'),
   tags: z.array(z.string()).default([]),
+  content: z.array(z.any()).optional(),
+  updatedAt: z.string().optional(),
 });
 
 export const projectRouter = router({
@@ -73,6 +75,8 @@ export const projectRouter = router({
         progress: z.number().optional(),
         status: z.string().optional(),
         tags: z.array(z.string()).optional(),
+        content: z.array(z.any()).optional(),
+        updatedAt: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }: { ctx: Context; input: { id: string } & Partial<z.infer<typeof projectSchema>> }) => {

@@ -28,6 +28,18 @@ export interface EditorTheme {
 export interface EditorBlock {
   id: string
   type: "paragraph" | "heading" | "bulletListItem" | "numberedListItem" | "image"
+  props: {
+    textAlignment?: "left" | "center" | "right" | "justify"
+    level?: 1 | 2 | 3
+    textColor?: "default" | string
+    backgroundColor?: "default" | string
+    start?: number
+    name?: string
+    url?: string
+    caption?: string
+    showPreview?: boolean
+    previewWidth?: number
+  }
   content: Array<{
     type: "text" | "link" | "image"
     text?: string
@@ -35,7 +47,6 @@ export interface EditorBlock {
       bold?: boolean
       italic?: boolean
       underline?: boolean
-      strike?: boolean
       code?: boolean
       textColor?: string
       backgroundColor?: string
@@ -43,12 +54,6 @@ export interface EditorBlock {
     href?: string
     url?: string
   }>
-  props?: {
-    textAlignment?: "left" | "center" | "right"
-    level?: 1 | 2 | 3
-    textColor?: "default" | string
-    backgroundColor?: "default" | string
-  }
   children?: EditorBlock[]
 }
 
