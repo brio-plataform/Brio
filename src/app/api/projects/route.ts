@@ -76,41 +76,94 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    // Log dos dados recebidos
     const data = await request.json();
+    console.log('Dados recebidos na API:', data);
     
-    const project = await prisma.project.create({
-      data: {
-        ...data,
+    try {
+      // Extrair o content para criar separadamente
+      const contentData = data.content || [];
+      
+      // Garantir que os dados mínimos obrigatórios estejam presentes
+      const projectData = {
+        name: data.name || 'Novo Projeto',
+        description: data.description || '',
+        logo: data.logo || '/placeholder.svg',
+        banner: data.banner || '/placeholder.svg',
+        model: data.model || 'article',
+        visibility: data.visibility || 'private',
+        type: data.type || 'document',
+        tags: Array.isArray(data.tags) ? data.tags : [],
+        status: data.status || 'Em Andamento',
+        wordCount: data.wordCount || 0,
+        progress: data.progress || 0,
+        citations: Array.isArray(data.citations) ? data.citations : [],
         userId: user.id,
-        author: {
-          create: {
-            userId: user.id
-          }
+      };
+      
+      // Criar o projeto primeiro, sem o content
+      const project = await prisma.project.create({
+        data: {
+          ...projectData,
+          author: {
+            create: {
+              userId: user.id
+            }
+          },
+          stats: {
+            create: {
+              views: 0,
+              stars: 0,
+              forks: 0,
+              comments: 0,
+              shares: 0,
+            }
+          },
+          versions: {
+            create: [{
+              version: '1.0.0',
+              updatedAt: new Date(),
+            }]
+          },
         },
-        stats: {
-          create: {
-            views: 0,
-            stars: 0,
-            forks: 0,
-            comments: 0,
-            shares: 0,
-          }
-        },
-        versions: {
-          create: [{
-            version: '1.0.0',
-            updatedAt: new Date(),
-          }]
-        },
-      },
-      include: projectInclude,
-    });
+        include: projectInclude,
+      });
 
-    return NextResponse.json(project);
+      // Se tiver conteúdo, criar os blocos de conteúdo separadamente
+      if (contentData.length > 0) {
+        for (const block of contentData) {
+          await prisma.contentBlock.create({
+            data: {
+              type: block.type,
+              props: block.props,
+              content: block.content,
+              children: block.children || [],
+              projectId: project.id
+            }
+          });
+        }
+        
+        // Buscar o projeto novamente com o conteúdo atualizado
+        const updatedProject = await prisma.project.findUnique({
+          where: { id: project.id },
+          include: projectInclude
+        });
+        
+        return NextResponse.json(updatedProject);
+      }
+
+      return NextResponse.json(project);
+    } catch (createError) {
+      console.error('Erro específico ao criar projeto:', createError);
+      return NextResponse.json(
+        { error: 'Erro ao criar projeto', details: String(createError) },
+        { status: 500 }
+      );
+    }
   } catch (error) {
-    console.error('Erro ao criar projeto:', error);
+    console.error('Erro geral ao criar projeto:', error);
     return NextResponse.json(
-      { error: 'Erro ao criar projeto' },
+      { error: 'Erro ao criar projeto', details: String(error) },
       { status: 500 }
     );
   }

@@ -35,12 +35,12 @@ export default function ViewProjectPage() {
       const currentUserId = session?.user?.id;
       
       // Verifica se o usuário é o proprietário (embora não seja o caso principal aqui)
-      const isOwner = currentUserId && project.userId === currentUserId;
+      const isOwner = currentUserId ? project.userId === currentUserId : false;
       
       // Verifica se o usuário é colaborador
-      const isCollaborator = currentUserId && project.collaborators?.some(
+      const isCollaborator = currentUserId ? project.collaborators?.some(
         (collaborator) => collaborator.userId === currentUserId
-      );
+      ) : false;
       
       // Verifica se o projeto é público ou institucional
       const isPublic = project.visibility === 'public';
@@ -58,10 +58,10 @@ export default function ViewProjectPage() {
       
       // Na rota de visualização, o usuário só pode ver projetos públicos/institucionais
       // ou se for proprietário/colaborador
-      const userHasAccess = isOwner || isCollaborator || isPublic || isInstitutional;
+      const userHasAccess = isPublic || isInstitutional || isOwner || isCollaborator;
       console.log("Usuário tem acesso (view):", userHasAccess);
       
-      setIsAuthorized(userHasAccess);
+      setIsAuthorized(Boolean(userHasAccess));
     }
   }, [project, session]);
 
@@ -71,7 +71,7 @@ export default function ViewProjectPage() {
   }
 
     // Se não tiver projeto ou acesso não autorizado
-    if (!project || !isAuthorized || (error && error.message === "403")) {
+    if (!project || !isAuthorized || (error && error.message?.includes('403'))) {
       return <UnauthorizedPage />;
     }
 
@@ -81,6 +81,9 @@ export default function ViewProjectPage() {
   }
 
 
+
+  // Extrair o nome do projeto de forma segura
+  const projectName = project?.name || "";
 
   return (
     <>
@@ -93,7 +96,7 @@ export default function ViewProjectPage() {
 
       <div className="sticky top-0 h-screen flex">
         <AISideBar 
-          context={project.name || ""} 
+          context={projectName} 
           onSendMessage={async (message) => {
             // Implementar lógica de envio
             console.log("Enviando mensagem:", message)

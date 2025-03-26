@@ -38,6 +38,9 @@ import {
   VISIBILITY_BADGE_STYLES,
   STATUS_BADGE_STYLES
 } from './types'
+import { projectApi } from '@/services/api'
+import { useSession } from 'next-auth/react'
+import { ProjectType } from '@/types/project'
 
 
 // Remover o TAG_BADGE_STYLES fixo e adicionar função para gerar cores
@@ -63,6 +66,9 @@ export default function MenagerProjects() {
   const [searchTerm, setSearchTerm] = useState("")
   const [filterType, setFilterType] = useState("all")
   
+  // Adicionar sessão do usuário
+  const { data: session } = useSession();
+  
   // Usar o store ao invés do hook
   const { projects, isLoading, error, fetchProjects, deleteProject, addProject } = useGetAllProjects()
   const router = useRouter()
@@ -79,39 +85,28 @@ export default function MenagerProjects() {
     return matchesSearch && matchesType
   })
 
-  // Atualizar função de criar projeto
+  // Atualizar função de criar projeto usando o serviço de API centralizado
   const handleCreateNewProject = async () => {
     try {
+      if (!session?.user?.id) {
+        console.error('Usuário não autenticado');
+        return;
+      }
+
+      // Criar um projeto com campos mínimos necessários
       const newProject = {
-        userId: "1", // Idealmente, pegar do contexto de autenticação
         name: "Novo Projeto",
         description: "Descrição do novo projeto",
         logo: "/placeholder.svg",
-        createdAt: new Date().toISOString(),
         banner: "/placeholder.svg",
-        wordCount: 0,
-        citations: [],
-        model: PROJECT_MODELS.ARTICLE,
+        model: "article",
         visibility: "private",
-        progress: 0,
-        author: {
-          userId: "1" // Idealmente, pegar do contexto de autenticação
-        },
-        stats: {
-          views: 0,
-          stars: 0,
-          forks: 0,
-          comments: 0
-        },
-        version: [
-          {
-            version: "1.0.0",
-            updatedAt: new Date().toISOString()
-          }
-        ],
+        type: "document",
+        status: "Em Andamento",
+        tags: [],
+        userId: session.user.id,
         content: [
           {
-            id: crypto.randomUUID(),
             type: "heading",
             props: {
               textColor: "default",
@@ -128,52 +123,71 @@ export default function MenagerProjects() {
             ],
             children: []
           }
-        ],
-        updatedAt: new Date().toISOString()
+        ]
+      };
+
+      console.log('Enviando dados de projeto:', newProject);
+
+      // Usar o serviço de API centralizado
+      try {
+        const createdProject = await projectApi.create(newProject);
+        console.log('Projeto criado com sucesso:', createdProject);
+        
+        // Função para mapear a visibilidade da API para o formato do store
+        const mapVisibility = (apiVisibility: string) => {
+          if (apiVisibility === "public") return PROJECT_VISIBILITY.PUBLIC;
+          if (apiVisibility === "shared") return PROJECT_VISIBILITY.INSTITUTIONAL;
+          return PROJECT_VISIBILITY.PRIVATE;
+        };
+
+        // Função para mapear o modelo da API para o formato do store
+        const mapModel = (apiModel: string) => {
+          if (apiModel === "article") return PROJECT_MODELS.ARTICLE;
+          if (apiModel === "document") return PROJECT_MODELS.ARTICLE; // Mapeando 'document' para 'article'
+          if (apiModel === "presentation") return PROJECT_MODELS.RESEARCH; // Mapeando 'presentation' para 'research'
+          return PROJECT_MODELS.ARTICLE; // Valor padrão
+        };
+        
+        // Adicionar ao store antes de redirecionar
+        addProject({
+          id: createdProject.id,
+          title: createdProject.name,
+          banner: createdProject.banner,
+          logo: createdProject.logo,
+          description: createdProject.description || "",
+          model: mapModel(createdProject.model),
+          visibility: mapVisibility(createdProject.visibility),
+          progress: createdProject.progress || 0,
+          institutional: true,
+          institution: {
+            name: "Instituição", // Informação padrão
+            avatar: createdProject.logo || "/placeholder.svg"
+          },
+          stats: {
+            views: createdProject.stats?.views || 0,
+            stars: createdProject.stats?.stars || 0,
+            forks: createdProject.stats?.forks || 0,
+            comments: createdProject.stats?.comments || 0,
+            shares: createdProject.stats?.shares || 0
+          },
+          status: createdProject.status,
+          tags: createdProject.tags,
+          collaborators: createdProject.collaborators?.map((c: any) => ({
+            userId: c.userId
+          })) || [],
+          author: {
+            userId: createdProject.author?.userId || session.user.id
+          }
+        });
+
+        router.push(`/user/projects/${createdProject.id}`);
+      } catch (error) {
+        console.error('Erro ao processar resposta da API:', error);
+        throw error;
       }
-
-      const response = await axios.post('http://localhost:3001/projects', newProject)
-      
-      // Adicionar ao store antes de redirecionar
-      addProject({
-        id: response.data.id,
-        title: response.data.name,
-        banner: response.data.banner,
-        logo: response.data.logo,
-        description: response.data.description || "",
-        model: response.data.model || PROJECT_MODELS.ARTICLE,
-        visibility: response.data.visibility || PROJECT_VISIBILITY.PRIVATE,
-        progress: response.data.progress || 0,
-        institutional: true,
-        institution: {
-          name: "Instituição", // Informação fictícia
-          avatar: response.data.logo || "/placeholder.svg"
-        },
-        stats: {
-          views: response.data.stats?.views || 0,
-          stars: response.data.stats?.stars || 0,
-          forks: response.data.stats?.forks || 0,
-          comments: response.data.stats?.comments || 0,
-          shares: response.data.stats?.shares || 0
-        },
-        status: response.data.status,
-        tags: response.data.tags,
-        collaborators: response.data.collaborators?.map((c: any) => ({
-          userId: c.userId || "1"
-        })) || [],
-        author: {
-          userId: response.data.author?.userId || "1"
-        }
-      })
-
-      router.push(`/user/projects/${response.data.id}`)
     } catch (error) {
-      console.error('Erro ao criar projeto:', error)
+      console.error('Erro ao criar projeto:', error);
     }
-  }
-
-  if (isLoading) {
-    return <div>Carregando projetos...</div>
   }
 
   if (error) {
@@ -240,22 +254,40 @@ export default function MenagerProjects() {
         </div>
       </div>
 
+      
       {/* Grid Flexível que alterna entre lista e grid */}
-      <div className={`grid gap-4 transition-all duration-300 ${
-        viewMode === "grid" 
-          ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-          : "grid-cols-1"
-      }`}>
-        {filteredProjects.map((project, index) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            colorClass={PROJECT_COLORS[index % PROJECT_COLORS.length]}
-            viewMode={viewMode}
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className={`grid gap-4 transition-all duration-300 ${
+          viewMode === "grid" 
+            ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
+            : "grid-cols-1"
+        }`}>
+          <div className="flex justify-center items-center w-full h-full">
+            {filteredProjects.length === 0 ? (
+              <div className="w-full h-full bg-gray-200 animate-pulse rounded-md" />
+            ) : (
+              <div className="w-full h-full bg-gray-200 animate-pulse rounded-md" />
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className={`grid gap-4 transition-all duration-300 ${
+          viewMode === "grid" 
+            ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
+            : "grid-cols-1"
+        }`}>
+          {filteredProjects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              colorClass={PROJECT_COLORS[index % PROJECT_COLORS.length]}
+              viewMode={viewMode}
+            />
+          ))}
+        </div>
+      )}
     </div>
+
   )
 }
 
@@ -521,12 +553,18 @@ function ProjectMenu({ project }: { project: MockProject }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const { deleteProject } = useGetAllProjects()
 
+  // Atualizar a função de exclusão para usar o serviço de API centralizado
   const handleDeleteProject = async () => {
     try {
-      await deleteProject(project.id)
-      setIsDeleteModalOpen(false)
+      // Primeiro, excluir na API
+      await projectApi.delete(project.id);
+      
+      // Depois, atualizar o estado local
+      deleteProject(project.id);
+      
+      setIsDeleteModalOpen(false);
     } catch (error) {
-      console.error('Erro ao excluir projeto:', error)
+      console.error('Erro ao excluir projeto:', error);
     }
   }
 

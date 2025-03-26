@@ -1,22 +1,52 @@
 import axios from 'axios';
 import type { 
   Project,
-  ProjectCreate,
-  ProjectUpdate,
   ProjectVersion,
   ProjectModel,
   ProjectVisibility,
   ProjectType
 } from '../types/project';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
+
+// Criar um tipo mais flexível para criação de projetos
+export interface ProjectCreate {
+  name: string;
+  description?: string;
+  logo?: string;
+  banner?: string;
+  model?: ProjectModel | string;
+  visibility?: ProjectVisibility | string;
+  progress?: number;
+  status?: string;
+  type?: ProjectType | string;
+  citations?: string[];
+  tags?: string[];
+  userId?: string;
+  wordCount?: number;
+  content?: any[];
+  collaborators?: { userId: string }[];
+  author?: { userId: string };
+  stats?: {
+    views?: number;
+    stars?: number;
+    forks?: number;
+    comments?: number;
+    shares?: number;
+  };
+  version?: ProjectVersion[];
+}
+
+// Tipo mais simples para atualização de projetos
+export type ProjectUpdate = Partial<ProjectCreate>;
 
 /**
  * Project API Service
@@ -43,8 +73,14 @@ export const projectApi = {
    * Create a new project
    */
   create: async (data: ProjectCreate): Promise<Project> => {
-    const response = await api.post<Project>('/projects', data);
-    return response.data;
+    console.log('Dados enviados para API:', data);
+    try {
+      const response = await api.post<Project>('/projects', data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Erro na API de criação:', error.response?.data || error.message);
+      throw error;
+    }
   },
 
   /**

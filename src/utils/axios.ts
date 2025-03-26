@@ -50,7 +50,7 @@ api.interceptors.response.use(
           break;
         case 500:
           // Erro interno do servidor
-          console.error('Erro interno do servidor');
+          console.error('Erro interno do servidor', error.response.data);
           break;
         default:
           console.error('Ocorreu um erro na requisição');
