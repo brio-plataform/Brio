@@ -36,9 +36,7 @@ async function main() {
         // Criar autor
         author: {
           create: {
-            name: project.author.name,
-            avatar: project.author.avatar,
-            institution: project.author.institution,
+            userId: user.id
           }
         },
         // Criar estatísticas
@@ -62,8 +60,7 @@ async function main() {
         collaborators: {
           createMany: {
             data: (project.collaborators || []).map(c => ({
-              name: c.name,
-              avatar: c.avatar,
+              userId: user.id // Usar o mesmo usuário para todos os colaboradores por enquanto
             }))
           }
         },

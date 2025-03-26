@@ -10,6 +10,7 @@ const projectInclude = {
   versions: true,
   collaborators: true,
   content: true,
+  user: true,
 } satisfies Prisma.ProjectInclude;
 
 // GET /api/projects - Listar todos os projetos do usuário
@@ -54,9 +55,7 @@ export async function POST(request: Request) {
         userId: user.id,
         author: {
           create: {
-            name: data.author.name,
-            avatar: data.author.avatar,
-            institution: data.author.institution,
+            userId: user.id
           }
         },
         stats: {

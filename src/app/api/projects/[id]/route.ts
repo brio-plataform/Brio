@@ -10,6 +10,7 @@ const projectInclude = {
   versions: true,
   collaborators: true,
   content: true,
+  user: true,
 } satisfies Prisma.ProjectInclude;
 
 // GET /api/projects/[id] - Buscar projeto específico
@@ -76,13 +77,23 @@ export async function PUT(
 
     const data = await request.json();
     
+    // Tratar os campos de author e collaborators
+    const { author, collaborators, ...restData } = data;
+    
     const project = await prisma.project.update({
       where: {
         id: params.id,
         userId: user.id,
       },
       data: {
-        ...data,
+        ...restData,
+        ...(author && {
+          author: {
+            update: {
+              userId: author.userId || user.id
+            }
+          }
+        }),
         versions: {
           create: [{
             version: '1.0.0',
@@ -93,7 +104,31 @@ export async function PUT(
       include: projectInclude,
     });
 
-    return NextResponse.json(project);
+    // Atualizar colaboradores em uma operação separada se fornecidos
+    if (collaborators && Array.isArray(collaborators)) {
+      // Primeiro remover todos os colaboradores existentes
+      await prisma.projectCollaborator.deleteMany({
+        where: { projectId: params.id }
+      });
+      
+      // Adicionar os novos colaboradores
+      for (const collaborator of collaborators) {
+        await prisma.projectCollaborator.create({
+          data: {
+            projectId: params.id,
+            userId: collaborator.userId || user.id
+          }
+        });
+      }
+    }
+
+    // Buscar o projeto atualizado com todos os relacionamentos
+    const updatedProject = await prisma.project.findUnique({
+      where: { id: params.id },
+      include: projectInclude
+    });
+
+    return NextResponse.json(updatedProject);
   } catch (error) {
     console.error('Erro ao atualizar projeto:', error);
     return NextResponse.json(
@@ -125,9 +160,12 @@ export async function PATCH(
 
     const data = await request.json();
     
+    // Tratar os campos de author e collaborators
+    const { author, collaborators, content, ...restData } = data;
+    
     // Se estiver atualizando o conteúdo, precisamos primeiro deletar o conteúdo existente
     // e depois criar o novo conteúdo
-    if (data.content) {
+    if (content) {
       // Primeiro, deleta todo o conteúdo existente
       await prisma.contentBlock.deleteMany({
         where: { projectId: params.id }
@@ -141,7 +179,7 @@ export async function PATCH(
         },
         data: {
           content: {
-            create: data.content.map((block: any) => ({
+            create: content.map((block: any) => ({
               type: block.type,
               props: block.props,
               content: block.content,
@@ -154,36 +192,61 @@ export async function PATCH(
               updatedAt: new Date(),
             }]
           },
-        },
-        include: projectInclude,
+        }
       });
-    } else {
-      // Para outros campos, faz a atualização normal
-      const project = await prisma.project.update({
+    }
+    
+    // Atualizar o autor se fornecido
+    if (author) {
+      await prisma.projectAuthor.update({
+        where: { projectId: params.id },
+        data: {
+          userId: author.userId || user.id
+        }
+      });
+    }
+    
+    // Atualizar colaboradores em uma operação separada se fornecidos
+    if (collaborators && Array.isArray(collaborators)) {
+      // Primeiro remover todos os colaboradores existentes
+      await prisma.projectCollaborator.deleteMany({
+        where: { projectId: params.id }
+      });
+      
+      // Adicionar os novos colaboradores
+      for (const collaborator of collaborators) {
+        await prisma.projectCollaborator.create({
+          data: {
+            projectId: params.id,
+            userId: collaborator.userId || user.id
+          }
+        });
+      }
+    }
+    
+    // Para outros campos, faz a atualização normal
+    if (Object.keys(restData).length > 0) {
+      await prisma.project.update({
         where: {
           id: params.id,
           userId: user.id,
         },
         data: {
-          ...data,
+          ...restData,
           versions: {
             create: [{
               version: '1.0.0',
               updatedAt: new Date(),
             }]
           },
-        },
-        include: projectInclude,
+        }
       });
-
-      return NextResponse.json(project);
     }
 
-    // Retorna o projeto atualizado após a atualização do conteúdo
+    // Retorna o projeto atualizado após a atualização
     const updatedProject = await prisma.project.findUnique({
       where: {
-        id: params.id,
-        userId: user.id,
+        id: params.id
       },
       include: projectInclude,
     });

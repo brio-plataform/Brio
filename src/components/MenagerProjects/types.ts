@@ -23,8 +23,7 @@ export interface Institution {
 }
 
 export interface Collaborator {
-  name: string
-  avatar: string
+  userId: string
 }
 
 export interface ProjectStats {
@@ -51,6 +50,9 @@ export interface MockProject {
   status?: ProjectStatus
   tags?: string[]
   collaborators?: Collaborator[]
+  author?: {
+    userId: string
+  }
 }
 
 // Types auxiliares

@@ -8,9 +8,7 @@ export type ProjectVisibility = 'public' | 'private' | 'shared';
 export type ProjectType = 'document' | 'presentation' | 'article';
 
 export interface ProjectAuthor {
-  name: string;
-  avatar: string;
-  institution: string;
+  userId: string;
 }
 
 export interface ProjectStats {
@@ -27,8 +25,7 @@ export interface ProjectVersion {
 }
 
 export interface ProjectCollaborator {
-  name: string;
-  avatar: string;
+  userId: string;
 }
 
 export interface ContentBlock {

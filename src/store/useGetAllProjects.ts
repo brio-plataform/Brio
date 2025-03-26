@@ -20,7 +20,7 @@ export const useGetAllProjects = create<ProjectsStore>((set, get) => ({
         progress: project.progress || 0,
         institutional: true,
         institution: {
-          name: project.author?.institution || "",
+          name: "Instituição", // Informação padrão
           avatar: project.logo || "/placeholder.svg"
         },
         stats: {
@@ -33,9 +33,11 @@ export const useGetAllProjects = create<ProjectsStore>((set, get) => ({
         status: project.status,
         tags: project.tags,
         collaborators: project.collaborators?.map((c: any) => ({
-          name: c.name,
-          avatar: c.avatar
-        })) || []
+          userId: c.userId || "1"
+        })) || [],
+        author: {
+          userId: project.author?.userId || "1"
+        }
       }))
 
       set({ projects: apiProjects, isLoading: false })

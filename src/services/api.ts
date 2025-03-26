@@ -95,6 +95,43 @@ export const projectApi = {
       updatedAt: new Date().toISOString()
     });
     return response.data;
+  },
+  
+  /**
+   * Add a collaborator to a project
+   */
+  addCollaborator: async (
+    projectId: string,
+    userId: string
+  ): Promise<Project> => {
+    const response = await api.post<Project>(`/projects/${projectId}/collaborators`, {
+      userId
+    });
+    return response.data;
+  },
+  
+  /**
+   * Remove a collaborator from a project
+   */
+  removeCollaborator: async (
+    projectId: string,
+    collaboratorId: string
+  ): Promise<Project> => {
+    const response = await api.delete<Project>(`/projects/${projectId}/collaborators/${collaboratorId}`);
+    return response.data;
+  },
+  
+  /**
+   * Update project author
+   */
+  updateAuthor: async (
+    projectId: string,
+    userId: string
+  ): Promise<Project> => {
+    const response = await api.patch<Project>(`/projects/${projectId}`, {
+      author: { userId }
+    });
+    return response.data;
   }
 };
 

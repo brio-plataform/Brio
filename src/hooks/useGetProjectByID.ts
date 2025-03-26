@@ -27,9 +27,7 @@ interface APIProject {
   progress: number;
   type: string;
   author: {
-    name: string;
-    avatar: string;
-    institution: string;
+    userId: string;
   };
   stats: ProjectStats;
   version: ProjectVersion[];
@@ -37,8 +35,7 @@ interface APIProject {
   updatedAt: string;
   createdAt: string;
   collaborators?: {
-    name: string;
-    avatar: string;
+    userId: string;
   }[];
   tags?: string[];
 }
@@ -83,7 +80,12 @@ export function useGetProject(projectId: string): ProjectHookReturn {
           ...project,
           title: project.name,
           type: project.type as ProjectType,
-          collaborators: project.collaborators || [],
+          collaborators: project.collaborators?.map((c: any) => ({
+            userId: c.userId
+          })) || [],
+          author: {
+            userId: project.author?.userId || ""
+          },
           tags: project.tags || [],
           logo: project.logo || "",
           banner: project.banner || "",

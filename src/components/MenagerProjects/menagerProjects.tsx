@@ -95,9 +95,7 @@ export default function MenagerProjects() {
         visibility: "private",
         progress: 0,
         author: {
-          name: "John Doe", // Idealmente, pegar do contexto de autenticação
-          avatar: "/path/to/avatar.jpg",
-          institution: "Institution Name"
+          userId: "1" // Idealmente, pegar do contexto de autenticação
         },
         stats: {
           views: 0,
@@ -148,7 +146,7 @@ export default function MenagerProjects() {
         progress: response.data.progress || 0,
         institutional: true,
         institution: {
-          name: response.data.author?.institution || "",
+          name: "Instituição", // Informação fictícia
           avatar: response.data.logo || "/placeholder.svg"
         },
         stats: {
@@ -161,9 +159,11 @@ export default function MenagerProjects() {
         status: response.data.status,
         tags: response.data.tags,
         collaborators: response.data.collaborators?.map((c: any) => ({
-          name: c.name,
-          avatar: c.avatar
-        })) || []
+          userId: c.userId || "1"
+        })) || [],
+        author: {
+          userId: response.data.author?.userId || "1"
+        }
       })
 
       router.push(`/user/projects/${response.data.id}`)
@@ -661,7 +661,7 @@ function ProjectTags({ tags }: { tags?: string[] }) {
   )
 }
 
-function ProjectCollaborators({ collaborators }: { collaborators?: Array<{ name: string; avatar: string }> }) {
+function ProjectCollaborators({ collaborators }: { collaborators?: Array<{ userId: string }> }) {
   if (!collaborators?.length) return null;
 
   return (

@@ -835,9 +835,11 @@ export interface MockProject {
   status?: string;
   tags?: string[];
   collaborators?: Array<{
-    name: string;
-    avatar: string;
+    userId: string;
   }>;
+  author?: {
+    userId: string;
+  };
 }
 
 export interface ProjectsStore {
