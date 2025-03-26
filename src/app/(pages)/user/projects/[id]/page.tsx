@@ -36,13 +36,15 @@ export default function ProjectPage() {
       // Verifica se o usuário é o proprietário do projeto
       const isOwner = project.userId === currentUserId;
       
-      // Se estamos na rota de projetos do usuário, ele deve poder ver todos os seus projetos
-      // independente da visibilidade
+      // Verificar se o usuário é colaborador usando o campo JSON
+      let isCollaborator = false;
       
-      // Para projetos que não são do usuário, verificamos se ele é colaborador
-      const isCollaborator = !isOwner && project.collaborators?.some(
-        (collaborator) => collaborator.userId === currentUserId
-      );
+      // Verificar se collaborators existe e é um array
+      if (project.collaborators && Array.isArray(project.collaborators)) {
+        isCollaborator = project.collaborators.some(
+          (collaborator) => collaborator.userId === currentUserId
+        );
+      }
       
       console.log("Verificação de autorização:", {
         currentUserId,

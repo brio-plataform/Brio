@@ -34,13 +34,18 @@ export default function ViewProjectPage() {
     if (project) {
       const currentUserId = session?.user?.id;
       
-      // Verifica se o usuário é o proprietário (embora não seja o caso principal aqui)
+      // Verifica se o usuário é o proprietário
       const isOwner = currentUserId ? project.userId === currentUserId : false;
       
-      // Verifica se o usuário é colaborador
-      const isCollaborator = currentUserId ? project.collaborators?.some(
-        (collaborator) => collaborator.userId === currentUserId
-      ) : false;
+      // Verifica se o usuário é colaborador (usando o campo JSON)
+      let isCollaborator = false;
+      
+      // Verificar se collaborators existe e é um array
+      if (currentUserId && project.collaborators && Array.isArray(project.collaborators)) {
+        isCollaborator = project.collaborators.some(
+          (collaborator) => collaborator.userId === currentUserId
+        );
+      }
       
       // Verifica se o projeto é público ou institucional
       const isPublic = project.visibility === 'public';

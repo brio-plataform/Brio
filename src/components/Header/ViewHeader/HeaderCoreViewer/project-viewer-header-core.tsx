@@ -14,6 +14,12 @@ import type { ProjectViewerHeaderCoreProps } from './types'
 import { PROJECT_TYPE_LABELS } from './types'
 
 export function ProjectViewerHeaderCore({ project }: ProjectViewerHeaderCoreProps) {
+  // Garantir que author exista e tenha campos padrão se estiverem faltando
+  const author = project?.author || { name: 'Usuário', avatar: '/default-avatar.jpg' };
+  const authorName = author?.name || 'Usuário';
+  const authorAvatar = author?.avatar || '/default-avatar.jpg';
+  const authorInitial = authorName && authorName.length > 0 ? authorName[0] : 'U';
+  
   return (
     <div className="flex flex-col gap-4 px-6 py-4">
       {/* Project Info Section */}
@@ -32,15 +38,15 @@ export function ProjectViewerHeaderCore({ project }: ProjectViewerHeaderCoreProp
 
           <div className="flex items-center gap-2 mt-2">
             <Avatar className="h-6 w-6">
-              <AvatarImage src={project.author.avatar} />
-              <AvatarFallback>{project.author.name[0]}</AvatarFallback>
+              <AvatarImage src={authorAvatar} />
+              <AvatarFallback>{authorInitial}</AvatarFallback>
             </Avatar>
-            <span className="text-sm">{project.author.name}</span>
-            {project.author.institution && (
+            <span className="text-sm">{authorName}</span>
+            {author.institution && (
               <>
                 <span className="text-muted-foreground">•</span>
                 <span className="text-sm text-muted-foreground">
-                  {project.author.institution}
+                  {author.institution}
                 </span>
               </>
             )}

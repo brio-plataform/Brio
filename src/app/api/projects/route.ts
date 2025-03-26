@@ -2,16 +2,6 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
-
-const projectInclude = {
-  author: true,
-  stats: true,
-  versions: true,
-  collaborators: true,
-  content: true,
-  user: true,
-} satisfies Prisma.ProjectInclude;
 
 // GET /api/projects - Listar todos os projetos do usuário
 export async function GET() {
@@ -30,23 +20,11 @@ export async function GET() {
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    // Buscar projetos onde o usuário é dono ou colaborador
+    // Buscar projetos onde o usuário é dono
     const projects = await prisma.project.findMany({
       where: {
-        OR: [
-          // Projetos onde o usuário é dono
-          { userId: user.id },
-          // Projetos onde o usuário é colaborador
-          {
-            collaborators: {
-              some: {
-                userId: user.id
-              }
-            }
-          }
-        ]
-      },
-      include: projectInclude,
+        userId: user.id
+      }
     });
 
     return NextResponse.json(projects);
@@ -81,10 +59,7 @@ export async function POST(request: Request) {
     console.log('Dados recebidos na API:', data);
     
     try {
-      // Extrair o content para criar separadamente
-      const contentData = data.content || [];
-      
-      // Garantir que os dados mínimos obrigatórios estejam presentes
+      // Preparar os dados básicos do projeto
       const projectData = {
         name: data.name || 'Novo Projeto',
         description: data.description || '',
@@ -99,58 +74,28 @@ export async function POST(request: Request) {
         progress: data.progress || 0,
         citations: Array.isArray(data.citations) ? data.citations : [],
         userId: user.id,
+        
+        // Campos JSON
+        author: { userId: user.id },
+        stats: {
+          views: 0,
+          stars: 0,
+          forks: 0,
+          comments: 0,
+          shares: 0
+        },
+        versions: [{ 
+          version: '1.0.0', 
+          updatedAt: new Date().toISOString()
+        }],
+        content: data.content || [],
+        collaborators: data.collaborators || []
       };
       
-      // Criar o projeto primeiro, sem o content
+      // Criar o projeto com todos os dados
       const project = await prisma.project.create({
-        data: {
-          ...projectData,
-          author: {
-            create: {
-              userId: user.id
-            }
-          },
-          stats: {
-            create: {
-              views: 0,
-              stars: 0,
-              forks: 0,
-              comments: 0,
-              shares: 0,
-            }
-          },
-          versions: {
-            create: [{
-              version: '1.0.0',
-              updatedAt: new Date(),
-            }]
-          },
-        },
-        include: projectInclude,
+        data: projectData as any // Usando cast para resolver problemas de tipagem
       });
-
-      // Se tiver conteúdo, criar os blocos de conteúdo separadamente
-      if (contentData.length > 0) {
-        for (const block of contentData) {
-          await prisma.contentBlock.create({
-            data: {
-              type: block.type,
-              props: block.props,
-              content: block.content,
-              children: block.children || [],
-              projectId: project.id
-            }
-          });
-        }
-        
-        // Buscar o projeto novamente com o conteúdo atualizado
-        const updatedProject = await prisma.project.findUnique({
-          where: { id: project.id },
-          include: projectInclude
-        });
-        
-        return NextResponse.json(updatedProject);
-      }
 
       return NextResponse.json(project);
     } catch (createError) {

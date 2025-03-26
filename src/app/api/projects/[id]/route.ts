@@ -2,16 +2,6 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
-
-const projectInclude = {
-  author: true,
-  stats: true,
-  versions: true,
-  collaborators: true,
-  content: true,
-  user: true,
-} satisfies Prisma.ProjectInclude;
 
 // GET /api/projects/[id] - Buscar projeto específico
 export async function GET(
@@ -38,10 +28,6 @@ export async function GET(
       where: {
         id: params.id,
       },
-      include: {
-        ...projectInclude,
-        collaborators: true
-      },
     });
 
     if (!project) {
@@ -50,9 +36,22 @@ export async function GET(
 
     // Verificar se o usuário é o dono ou colaborador do projeto
     const isOwner = project.userId === user.id;
-    const isCollaborator = project.collaborators.some(collab => collab.userId === user.id);
+    
+    // Verificar colaboradores usando o campo JSON
+    // @ts-ignore - Os tipos do Prisma não sabem que project.collaborators é um array
+    const collaborators = project.collaborators ? project.collaborators : [];
+    let isCollaborator = false;
+    
+    // Se collaborators for um array, verificamos se o usuário está nele
+    if (Array.isArray(collaborators)) {
+      isCollaborator = collaborators.some((collab: any) => collab.userId === user.id);
+    }
 
-    if (!isOwner && !isCollaborator) {
+    // Verificamos se o projeto é público ou compartilhado para permitir acesso
+    const isPublic = project.visibility === 'public';
+    const isShared = project.visibility === 'shared';
+
+    if (!isOwner && !isCollaborator && !isPublic && !isShared) {
       return NextResponse.json({ error: 'Não autorizado para acessar este projeto' }, { status: 403 });
     }
 
@@ -89,7 +88,6 @@ export async function PUT(
     // Verificar se o projeto existe e se o usuário é o dono
     const existingProject = await prisma.project.findUnique({
       where: { id: params.id },
-      include: { collaborators: true }
     });
 
     if (!existingProject) {
@@ -103,58 +101,25 @@ export async function PUT(
 
     const data = await request.json();
     
-    // Tratar os campos de author e collaborators
-    const { author, collaborators, ...restData } = data;
+    // Fazer a atualização, incluindo o campo versions para adicionar uma nova versão
+    const updatedData = {
+      ...data,
+      versions: data.versions || [{ 
+        version: '1.0.0', 
+        updatedAt: new Date().toISOString()
+      }]
+    };
     
+    // Atualizar o projeto com todos os dados
     const project = await prisma.project.update({
       where: {
         id: params.id,
         userId: user.id,
       },
-      data: {
-        ...restData,
-        ...(author && {
-          author: {
-            update: {
-              userId: author.userId || user.id
-            }
-          }
-        }),
-        versions: {
-          create: [{
-            version: '1.0.0',
-            updatedAt: new Date(),
-          }]
-        },
-      },
-      include: projectInclude,
+      data: updatedData as any
     });
 
-    // Atualizar colaboradores em uma operação separada se fornecidos
-    if (collaborators && Array.isArray(collaborators)) {
-      // Primeiro remover todos os colaboradores existentes
-      await prisma.projectCollaborator.deleteMany({
-        where: { projectId: params.id }
-      });
-      
-      // Adicionar os novos colaboradores
-      for (const collaborator of collaborators) {
-        await prisma.projectCollaborator.create({
-          data: {
-            projectId: params.id,
-            userId: collaborator.userId || user.id
-          }
-        });
-      }
-    }
-
-    // Buscar o projeto atualizado com todos os relacionamentos
-    const updatedProject = await prisma.project.findUnique({
-      where: { id: params.id },
-      include: projectInclude
-    });
-
-    return NextResponse.json(updatedProject);
+    return NextResponse.json(project);
   } catch (error) {
     console.error('Erro ao atualizar projeto:', error);
     return NextResponse.json(
@@ -184,135 +149,53 @@ export async function PATCH(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    // Verificar se o projeto existe e se o usuário é o dono ou colaborador
+    // Verificar se o projeto existe
     const existingProject = await prisma.project.findUnique({
       where: { id: params.id },
-      include: { collaborators: true }
     });
 
     if (!existingProject) {
       return NextResponse.json({ error: 'Projeto não encontrado' }, { status: 404 });
     }
 
+    // Verificar permissões
     const isOwner = existingProject.userId === user.id;
-    const isCollaborator = existingProject.collaborators.some(collab => collab.userId === user.id);
+    
+    // Verificar colaboradores usando o campo JSON
+    // @ts-ignore - Os tipos do Prisma não sabem que existingProject.collaborators é um array
+    const collaborators = existingProject.collaborators ? existingProject.collaborators : [];
+    let isCollaborator = false;
+    
+    if (Array.isArray(collaborators)) {
+      isCollaborator = collaborators.some((collab: any) => collab.userId === user.id);
+    }
 
     if (!isOwner && !isCollaborator) {
       return NextResponse.json({ error: 'Não autorizado para modificar este projeto' }, { status: 403 });
     }
 
-    // Certas operações só podem ser realizadas pelo dono do projeto
+    // Obter os dados enviados para atualização
     const data = await request.json();
-    const { author, collaborators } = data;
-
-    // Colaboradores podem editar conteúdo, mas não outras propriedades sensíveis
-    if (!isOwner && (author || collaborators)) {
-      return NextResponse.json(
-        { error: 'Apenas o proprietário pode modificar autores e colaboradores' },
-        { status: 403 }
-      );
-    }
     
-    // Tratar os campos de author e collaborators
-    const { content, ...restData } = data;
-    
-    // Se estiver atualizando o conteúdo, precisamos primeiro deletar o conteúdo existente
-    // e depois criar o novo conteúdo
-    if (content) {
-      // Primeiro, deleta todo o conteúdo existente
-      await prisma.contentBlock.deleteMany({
-        where: { projectId: params.id }
-      });
-
-      // Depois, cria o novo conteúdo
-      await prisma.project.update({
-        where: {
-          id: params.id,
-        },
-        data: {
-          content: {
-            create: content.map((block: any) => ({
-              type: block.type,
-              props: block.props,
-              content: block.content,
-              children: block.children,
-            }))
-          },
-          versions: {
-            create: [{
-              version: '1.0.0',
-              updatedAt: new Date(),
-            }]
-          },
-        }
-      });
-    }
-    
-    // Atualizar o autor se fornecido (apenas dono pode fazer isso)
-    if (isOwner && author) {
-      await prisma.projectAuthor.update({
-        where: { projectId: params.id },
-        data: {
-          userId: author.userId || user.id
-        }
-      });
-    }
-    
-    // Atualizar colaboradores em uma operação separada se fornecidos (apenas dono pode fazer isso)
-    if (isOwner && collaborators && Array.isArray(collaborators)) {
-      // Primeiro remover todos os colaboradores existentes
-      await prisma.projectCollaborator.deleteMany({
-        where: { projectId: params.id }
-      });
-      
-      // Adicionar os novos colaboradores
-      for (const collaborator of collaborators) {
-        await prisma.projectCollaborator.create({
-          data: {
-            projectId: params.id,
-            userId: collaborator.userId || user.id
-          }
-        });
-      }
-    }
-    
-    // Para outros campos, faz a atualização normal (apenas dono pode fazer isso)
-    if (isOwner && Object.keys(restData).length > 0) {
-      await prisma.project.update({
-        where: {
-          id: params.id,
-        },
-        data: {
-          ...restData,
-          versions: {
-            create: [{
-              version: '1.0.0',
-              updatedAt: new Date(),
-            }]
-          },
-        }
-      });
-    }
-
-    // Retorna o projeto atualizado após a atualização
-    const updatedProject = await prisma.project.findUnique({
+    // Atualizar o projeto
+    const updatedProject = await prisma.project.update({
       where: {
-        id: params.id
+        id: params.id,
       },
-      include: projectInclude,
+      data: data as any, // Cast para resolver problemas de tipagem
     });
 
     return NextResponse.json(updatedProject);
   } catch (error) {
-    console.error('Erro ao atualizar campo do projeto:', error);
+    console.error('Erro ao atualizar projeto:', error);
     return NextResponse.json(
-      { error: 'Erro ao atualizar campo do projeto' },
+      { error: 'Erro ao atualizar projeto' },
       { status: 500 }
     );
   }
 }
 
-// DELETE /api/projects/[id] - Deletar projeto
+// DELETE /api/projects/[id] - Excluir projeto
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
@@ -332,31 +215,31 @@ export async function DELETE(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    // Verificar se o projeto existe
-    const existingProject = await prisma.project.findUnique({
-      where: { id: params.id }
+    // Verificar se o projeto existe e se o usuário é o dono
+    const project = await prisma.project.findUnique({
+      where: { id: params.id },
     });
 
-    if (!existingProject) {
+    if (!project) {
       return NextResponse.json({ error: 'Projeto não encontrado' }, { status: 404 });
     }
 
-    // Apenas o proprietário pode excluir o projeto
-    if (existingProject.userId !== user.id) {
+    if (project.userId !== user.id) {
       return NextResponse.json({ error: 'Apenas o proprietário pode excluir este projeto' }, { status: 403 });
     }
 
+    // Excluir o projeto
     await prisma.project.delete({
       where: {
         id: params.id,
       },
     });
 
-    return NextResponse.json({ message: 'Projeto deletado com sucesso' });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Erro ao deletar projeto:', error);
+    console.error('Erro ao excluir projeto:', error);
     return NextResponse.json(
-      { error: 'Erro ao deletar projeto' },
+      { error: 'Erro ao excluir projeto' },
       { status: 500 }
     );
   }

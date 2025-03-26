@@ -105,6 +105,20 @@ export default function MenagerProjects() {
         status: "Em Andamento",
         tags: [],
         userId: session.user.id,
+        // Campos JSON diretamente no objeto
+        author: { userId: session.user.id },
+        stats: {
+          views: 0,
+          stars: 0,
+          forks: 0,
+          comments: 0,
+          shares: 0
+        },
+        versions: [{ 
+          version: '1.0.0', 
+          updatedAt: new Date().toISOString()
+        }],
+        collaborators: [],
         content: [
           {
             type: "heading",
@@ -172,9 +186,11 @@ export default function MenagerProjects() {
           },
           status: createdProject.status,
           tags: createdProject.tags,
-          collaborators: createdProject.collaborators?.map((c: any) => ({
-            userId: c.userId
-          })) || [],
+          collaborators: Array.isArray(createdProject.collaborators) 
+            ? createdProject.collaborators.map((c: any) => ({
+                userId: c.userId
+              })) 
+            : [],
           author: {
             userId: createdProject.author?.userId || session.user.id
           }

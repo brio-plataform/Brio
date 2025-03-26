@@ -51,25 +51,31 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
   }
 
   // Garantir que sempre temos um conteúdo válido
-  const initialContent = project?.content 
-    ? JSON.stringify(project.content)
-    : JSON.stringify([{
-        id: crypto.randomUUID(),
-        type: "paragraph",
-        props: {
-          textColor: "default",
-          backgroundColor: "default",
-          textAlignment: "left"
-        },
-        content: [
-          {
-            type: "text",
-            text: "Comece a escrever seu projeto aqui...",
-            styles: {}
-          }
-        ],
-        children: []
-      }]);
+  const defaultBlock = {
+    id: crypto.randomUUID(),
+    type: "paragraph",
+    props: {
+      textColor: "default",
+      backgroundColor: "default",
+      textAlignment: "left"
+    },
+    content: [
+      {
+        type: "text",
+        text: "Comece a escrever seu projeto aqui...",
+        styles: {}
+      }
+    ],
+    children: []
+  };
+
+  // Verifica se content já é um array e se tem elementos
+  const contentArray = Array.isArray(project.content) && project.content.length > 0 
+    ? project.content 
+    : [defaultBlock];
+
+  // Converter para string para o editor
+  const initialContent = JSON.stringify(contentArray);
 
   return (
     <div className="p-6 w-full">

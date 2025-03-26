@@ -50,12 +50,22 @@ export default function Editor({ initialContent, editable = true }: EditorProps)
     fontFamily: "Inter, sans-serif",
   };
 
+  // Garantir que temos um conteúdo inicial válido
+  let parsedContent = state.defaultContent;
+  
+  if (initialContent && typeof initialContent === 'string' && initialContent.trim()) {
+    try {
+      const parsed = JSON.parse(initialContent);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        parsedContent = parsed;
+      }
+    } catch (error) {
+      console.error("Erro ao analisar initialContent:", error);
+    }
+  }
+
   const editor = useCreateBlockNote({
-    initialContent: initialContent 
-      ? (typeof initialContent === 'string' && initialContent.trim() 
-          ? JSON.parse(initialContent)
-          : state.defaultContent)
-      : state.defaultContent
+    initialContent: parsedContent as any
   });
 
   useEffect(() => {

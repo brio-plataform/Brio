@@ -23,20 +23,22 @@ export const useGetAllProjects = create<ProjectsStore>((set, get) => ({
           name: "Instituição", // Informação padrão
           avatar: project.logo || "/placeholder.svg"
         },
-        stats: {
-          views: project.stats?.views || 0,
-          stars: project.stats?.stars || 0,
-          forks: project.stats?.forks || 0,
-          comments: project.stats?.comments || 0,
-          shares: project.stats?.shares || 0
+        stats: project.stats || {
+          views: 0,
+          stars: 0,
+          forks: 0,
+          comments: 0,
+          shares: 0
         },
         status: project.status,
         tags: project.tags,
-        collaborators: project.collaborators?.map((c: any) => ({
-          userId: c.userId || "1"
-        })) || [],
-        author: {
-          userId: project.author?.userId || "1"
+        collaborators: Array.isArray(project.collaborators) 
+          ? project.collaborators.map((c: any) => ({
+              userId: c.userId || "1"
+            }))
+          : [],
+        author: project.author || {
+          userId: "1"
         }
       }))
 
