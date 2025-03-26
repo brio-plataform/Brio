@@ -1,61 +1,92 @@
-import { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { prisma } from './prisma';
-import { compare } from 'bcryptjs';
+import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { prisma } from "./prisma";
+import { compare } from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 dias
+  },
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Senha", type: "password" }
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('Credenciais inválidas');
+          return null;
         }
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
+          where: {
+            email: credentials.email,
+          },
         });
 
         if (!user || !user.password) {
-          throw new Error('Usuário não encontrado');
+          return null;
         }
 
-        const isValid = await compare(credentials.password, user.password);
+        const isPasswordValid = await compare(credentials.password, user.password);
 
-        if (!isValid) {
-          throw new Error('Senha incorreta');
+        if (!isPasswordValid) {
+          return null;
         }
 
         return {
           id: user.id,
+          name: user.name || "",
           email: user.email,
-          name: user.name,
+          image: user.image || "",
         };
-      }
-    })
+      },
+    }),
   ],
-  session: {
-    strategy: 'jwt'
-  },
-  pages: {
-    signIn: '/login',
-  },
   callbacks: {
-    async jwt({ token, user }) {
+    jwt: ({ token, user }) => {
       if (user) {
-        token.id = user.id;
+        return {
+          ...token,
+          id: user.id,
+        };
       }
       return token;
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-      }
-      return session;
-    }
+    session: ({ session, token }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id as string,
+        },
+      };
+    },
+  },
+  pages: {
+    signIn: "/login",
+    error: "/login",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
+};
+
+// Ampliando os tipos para incluir o ID do usuário na sessão
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
   }
-}; 
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+  }
+} 

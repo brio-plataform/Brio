@@ -1,12 +1,15 @@
 import axios from 'axios';
 
-// Criando uma instância personalizada do axios
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+
+// Criar instância do Axios com configuração para incluir cookies
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 10000, // 10 segundos
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  // Importante: esta configuração permite enviar cookies com as requisições
+  withCredentials: true, 
 });
 
 // Interceptor para requisições

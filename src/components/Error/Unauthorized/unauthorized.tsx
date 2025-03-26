@@ -21,6 +21,7 @@ export default function UnauthorizedPage({
   iconSize = "w-16 h-16"
 }: UnauthorizedPageProps) {
   return (
+    <div className="flex justify-center items-center w-full h-full">
     <div className={cn("flex flex-col items-center justify-center min-h-screen px-4", className)}>
       <div className="text-center max-w-md w-full justify-center items-center flex flex-col">
         {showIcon && (
@@ -53,6 +54,7 @@ export default function UnauthorizedPage({
       <footer className="mt-16 text-center text-gray-400 text-sm">
         <p>{supportMessage}</p>
       </footer>
+    </div>
     </div>
   )
 }

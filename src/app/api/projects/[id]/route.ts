@@ -33,16 +33,27 @@ export async function GET(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    const project = await prisma.project.findFirst({
+    // Verificar se o projeto existe primeiro
+    const project = await prisma.project.findUnique({
       where: {
         id: params.id,
-        userId: user.id,
       },
-      include: projectInclude,
+      include: {
+        ...projectInclude,
+        collaborators: true
+      },
     });
 
     if (!project) {
       return NextResponse.json({ error: 'Projeto não encontrado' }, { status: 404 });
+    }
+
+    // Verificar se o usuário é o dono ou colaborador do projeto
+    const isOwner = project.userId === user.id;
+    const isCollaborator = project.collaborators.some(collab => collab.userId === user.id);
+
+    if (!isOwner && !isCollaborator) {
+      return NextResponse.json({ error: 'Não autorizado para acessar este projeto' }, { status: 403 });
     }
 
     return NextResponse.json(project);
@@ -73,6 +84,21 @@ export async function PUT(
 
     if (!user) {
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
+    }
+
+    // Verificar se o projeto existe e se o usuário é o dono
+    const existingProject = await prisma.project.findUnique({
+      where: { id: params.id },
+      include: { collaborators: true }
+    });
+
+    if (!existingProject) {
+      return NextResponse.json({ error: 'Projeto não encontrado' }, { status: 404 });
+    }
+
+    // Apenas o proprietário pode fazer atualizações completas
+    if (existingProject.userId !== user.id) {
+      return NextResponse.json({ error: 'Apenas o proprietário pode atualizar este projeto' }, { status: 403 });
     }
 
     const data = await request.json();
@@ -158,10 +184,37 @@ export async function PATCH(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    // Verificar se o projeto existe e se o usuário é o dono ou colaborador
+    const existingProject = await prisma.project.findUnique({
+      where: { id: params.id },
+      include: { collaborators: true }
+    });
+
+    if (!existingProject) {
+      return NextResponse.json({ error: 'Projeto não encontrado' }, { status: 404 });
+    }
+
+    const isOwner = existingProject.userId === user.id;
+    const isCollaborator = existingProject.collaborators.some(collab => collab.userId === user.id);
+
+    if (!isOwner && !isCollaborator) {
+      return NextResponse.json({ error: 'Não autorizado para modificar este projeto' }, { status: 403 });
+    }
+
+    // Certas operações só podem ser realizadas pelo dono do projeto
     const data = await request.json();
+    const { author, collaborators } = data;
+
+    // Colaboradores podem editar conteúdo, mas não outras propriedades sensíveis
+    if (!isOwner && (author || collaborators)) {
+      return NextResponse.json(
+        { error: 'Apenas o proprietário pode modificar autores e colaboradores' },
+        { status: 403 }
+      );
+    }
     
     // Tratar os campos de author e collaborators
-    const { author, collaborators, content, ...restData } = data;
+    const { content, ...restData } = data;
     
     // Se estiver atualizando o conteúdo, precisamos primeiro deletar o conteúdo existente
     // e depois criar o novo conteúdo
@@ -175,7 +228,6 @@ export async function PATCH(
       await prisma.project.update({
         where: {
           id: params.id,
-          userId: user.id,
         },
         data: {
           content: {
@@ -196,8 +248,8 @@ export async function PATCH(
       });
     }
     
-    // Atualizar o autor se fornecido
-    if (author) {
+    // Atualizar o autor se fornecido (apenas dono pode fazer isso)
+    if (isOwner && author) {
       await prisma.projectAuthor.update({
         where: { projectId: params.id },
         data: {
@@ -206,8 +258,8 @@ export async function PATCH(
       });
     }
     
-    // Atualizar colaboradores em uma operação separada se fornecidos
-    if (collaborators && Array.isArray(collaborators)) {
+    // Atualizar colaboradores em uma operação separada se fornecidos (apenas dono pode fazer isso)
+    if (isOwner && collaborators && Array.isArray(collaborators)) {
       // Primeiro remover todos os colaboradores existentes
       await prisma.projectCollaborator.deleteMany({
         where: { projectId: params.id }
@@ -224,12 +276,11 @@ export async function PATCH(
       }
     }
     
-    // Para outros campos, faz a atualização normal
-    if (Object.keys(restData).length > 0) {
+    // Para outros campos, faz a atualização normal (apenas dono pode fazer isso)
+    if (isOwner && Object.keys(restData).length > 0) {
       await prisma.project.update({
         where: {
           id: params.id,
-          userId: user.id,
         },
         data: {
           ...restData,
@@ -281,10 +332,23 @@ export async function DELETE(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    // Verificar se o projeto existe
+    const existingProject = await prisma.project.findUnique({
+      where: { id: params.id }
+    });
+
+    if (!existingProject) {
+      return NextResponse.json({ error: 'Projeto não encontrado' }, { status: 404 });
+    }
+
+    // Apenas o proprietário pode excluir o projeto
+    if (existingProject.userId !== user.id) {
+      return NextResponse.json({ error: 'Apenas o proprietário pode excluir este projeto' }, { status: 403 });
+    }
+
     await prisma.project.delete({
       where: {
         id: params.id,
-        userId: user.id,
       },
     });
 

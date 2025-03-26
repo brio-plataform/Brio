@@ -16,7 +16,36 @@ const projectInclude = {
 // GET /api/projects - Listar todos os projetos do usuário
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
+    }
+
+    // Buscar projetos onde o usuário é dono ou colaborador
     const projects = await prisma.project.findMany({
+      where: {
+        OR: [
+          // Projetos onde o usuário é dono
+          { userId: user.id },
+          // Projetos onde o usuário é colaborador
+          {
+            collaborators: {
+              some: {
+                userId: user.id
+              }
+            }
+          }
+        ]
+      },
       include: projectInclude,
     });
 

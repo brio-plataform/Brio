@@ -23,7 +23,7 @@ import {
   SelectTrigger, SelectValue 
 } from "@/components/ui/select"
 import { Modal } from "@/components/Modal/modal"
-import { Project } from "@/components/Project/Project"
+import { Project } from "@/components/project/Project"
 import { useGetAllProjects } from '@/store/useGetAllProjects'
 import axios from 'axios'
 import {

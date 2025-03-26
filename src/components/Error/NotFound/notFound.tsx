@@ -21,6 +21,7 @@ export default function NotFound({
   iconSize = "w-16 h-16"
 }: ErrorPageProps) {
   return (
+    <div className="flex justify-center items-center w-full h-full">
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
       <div className="text-center max-w-md w-full justify-center items-center flex flex-col">
         <div className="mb-8">
@@ -62,6 +63,7 @@ export default function NotFound({
       <footer className="mt-16 text-center text-gray-400 text-sm">
         <p>{footerText}</p>
       </footer>
+    </div>
     </div>
   )
 } 

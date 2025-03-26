@@ -3,15 +3,13 @@
 import { Card, CardContent } from "../ui/card";
 
 import Editor from "../Editor/editor";
-import { ProjectBanner } from "./ProjectBanner/ProjectBanner";
-import { ProjectInfo } from "./ProjectInfo/ProjectInfo";
 
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
 import { useGetProject } from '@/hooks/useGetProjectByID';
 
-import UnauthorizedPage from "../Error/Unauthorized/unauthorized";
 import LoadingEditor from "../Loading/loading-editor";
+import { ProjectBanner } from "./ProjectBanner/ProjectBanner";
+import { ProjectInfo } from "./ProjectInfo/ProjectInfo";
 
 interface ProjectProps {
   editable?: boolean
@@ -22,7 +20,6 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
   const params = useParams();
   // Usar o projectId da prop se fornecido, senão usar o da URL
   const projectId = propProjectId || (params?.id as string);
-  const [userId] = useState("1");
   
   // Se não houver projectId, mostrar erro
   if (!projectId) {
@@ -39,11 +36,6 @@ export function Project({ editable = true, projectId: propProjectId }: ProjectPr
     name,
     description
   } = useGetProject(projectId);
-
-  // Verificação de autorização
-  if (project && project.userId !== userId) {
-    return <UnauthorizedPage />;
-  }
 
   // Não renderizar nada até que os dados estejam carregados
   if (isLoading) {

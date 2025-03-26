@@ -76,6 +76,8 @@ export function useGetProject(projectId: string): ProjectHookReturn {
       
       try {
         const project = await projectApi.getProjectById(projectId);
+        console.log("Dados do projeto recebidos:", project);
+        
         const convertedProject: ImportedProject = {
           ...project,
           title: project.name,
